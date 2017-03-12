@@ -1,5 +1,5 @@
 # Futbolin UI (Under development)
-## Soccer team management game using Futbolin soccer matches simmulator
+## Soccer team management game using Futbolin soccer matches simulator
 
 This game is developed using **Laravel 5.4** and the objetive of the users is to create and manage their own soccer teams and play against other users.
 
