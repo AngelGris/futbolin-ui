@@ -15,4 +15,8 @@ Auth::routes();
 
 Route::get('/', 'Auth\LoginController@showLoginForm');
 
-Route::get('/vestuario', 'HomeController@index');
+Route::get('/vestuario', ['as' => 'home', 'uses' => 'HomeController@index']);
+
+//Route::get('/equipo', 'TeamController@index');
+Route::get('/equipo/crear', 'TeamController@create');
+Route::post('/equipo', ['as' => 'team.store', 'uses' => 'TeamController@store']);

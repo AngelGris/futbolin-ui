@@ -11,16 +11,15 @@
                     You are logged in!
                 </div>
             </div>
-                <a href="{{ url('/logout') }}"
-                    onclick="event.preventDefault();
-                             document.getElementById('logout-form').submit();">
-                    Logout
-                </a>
+            <a href="{{ url('/logout') }}"
+                onclick="event.preventDefault();
+                         document.getElementById('logout-form').submit();">
+                Salir
+            </a>
 
-                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                    {{ csrf_field() }}
-                </form>
-            <a href="{{ route('logout') }}">Salir</a>
+            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+            </form>
         </div>
     </div>
 </div>

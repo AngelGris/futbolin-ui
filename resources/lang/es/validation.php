@@ -144,6 +144,9 @@ return [
         'time'                  => 'hora',
         'subject'               => 'asunto',
         'message'               => 'mensaje',
+        'stadium_name'          => 'nombre del estadio',
+        'primary_color'         => 'color primario',
+        'secondary_color'       => 'color secundario',
     ],
 
 ];

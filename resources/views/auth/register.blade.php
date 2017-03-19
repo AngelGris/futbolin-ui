@@ -7,7 +7,7 @@
         <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
             {{ csrf_field() }}
             <div class="inputwrapper{{ $errors->has('first_name') ? ' has-error' : '' }}">
-                <input id="fisrt_name" type="text" name="first_name" value="{{ old('first_name') }}" placeholder="Nombre" required autofocus>
+                <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" placeholder="Nombre" required autofocus>
 
                 @if ($errors->has('first_name'))
                 <label class="error">

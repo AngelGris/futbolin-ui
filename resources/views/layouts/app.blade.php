@@ -21,6 +21,7 @@
     <body {!! $bodyclass or '' !!} {!! $bodystyle or '' !!}>
         @yield('content')
         <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ asset('js/functions.js') }}"></script>
         @yield('javascript')
     </body>
 </html>

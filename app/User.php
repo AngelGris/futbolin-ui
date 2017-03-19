@@ -26,4 +26,31 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get the team associated with the user
+     */
+    public function team()
+    {
+        return $this->hasOne(Team::class);
+    }
+
+    /**
+     * Create a new team for the user
+     */
+    public function createTeam($request)
+    {
+        if (!is_null($this->team)) {
+            $this->updateTeam($request);
+        }
+        $this->team()->create($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color']));
+    }
+
+    /**
+     * Update user's team
+     */
+    public function updateTeam($request)
+    {
+        $this->team()->update($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color']));
+    }
 }
