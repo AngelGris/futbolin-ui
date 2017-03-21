@@ -19,9 +19,12 @@ class CreateTeamsTable extends Migration
             $table->char('primary_color', 7);
             $table->char('secondary_color', 7);
             $table->string('stadium_name');
+            $table->integer('strategy_id')->unsigned()->default(1);
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
+
+            $table->foreign('strategy_id')->references('id')->on('strategies');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

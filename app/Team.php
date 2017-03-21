@@ -17,9 +17,17 @@ class Team extends Model
     /**
      * Get the user associated with the team
      */
-    public function owner()
+    public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the team's strategy
+     */
+    public function strategy()
+    {
+        return $this->belongsTo(Strategy::class);
     }
 
     /**
