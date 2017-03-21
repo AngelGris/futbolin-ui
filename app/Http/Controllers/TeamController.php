@@ -34,6 +34,10 @@ class TeamController extends Controller
      */
     public function create()
     {
+        if (!is_null(Auth::user()->team)) {
+            return redirect('/vestuario');
+        }
+
         $params['title'] = config('app.name') . ' - Crear Equipo';
         $params['bodyclass'] = 'class="loginpage"';
 
@@ -51,6 +55,9 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
+        /**
+         * Create Team
+         */
         $this->validate($request, [
             'name' => 'required|min:3|max:255',
             'stadium_name' => 'required|min:3|max:255',
@@ -58,7 +65,37 @@ class TeamController extends Controller
             'secondary_color' => 'required|size:7'
         ]);
 
-        Auth::user()->createTeam($request);
+        $team = Auth::user()->createTeam($request);
+
+        /**
+         * Create players
+         */
+        $players = [
+            1   => 'ARQ',
+            2   => 'DEF',
+            3   => 'DEF',
+            4   => 'DEF',
+            5   => 'DEF',
+            6   => 'MED',
+            7   => 'MED',
+            8   => 'MED',
+            9   => 'MED',
+            10  => 'ATA',
+            11  => 'ATA',
+            12  => 'ARQ',
+            13  => 'DEF',
+            14  => 'DEF',
+            15  => 'DEF',
+            16  => 'MED',
+            17  => 'MED',
+            18  => 'ATA',
+            19  => 'ATA',
+            20  => 'ARQ',
+        ];
+
+        foreach ($players as $num => $pos) {
+            $team->createPlayer($num, $pos);
+        }
 
         return redirect('/vestuario');
     }

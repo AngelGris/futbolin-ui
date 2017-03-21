@@ -41,9 +41,10 @@ class User extends Authenticatable
     public function createTeam($request)
     {
         if (!is_null($this->team)) {
-            $this->updateTeam($request);
+            return $this->updateTeam($request);
+        } else {
+            return $this->team()->create($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color']));
         }
-        $this->team()->create($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color']));
     }
 
     /**
@@ -51,6 +52,6 @@ class User extends Authenticatable
      */
     public function updateTeam($request)
     {
-        $this->team()->update($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color']));
+        return $this->team()->update($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color']));
     }
 }
