@@ -27,7 +27,7 @@
             </div>
             <div class="inputwrapper">
                 <div class="pull-right">¿No es miembro? <a href="{{ route('register') }}">Afiliarse</a></div>
-                <label><input type="checkbox" class="remember" name="remember" {{ old('remember') ? 'checked' : '' }} /> Recordarme</label>
+                <label><input type="checkbox" class="remember" name="remember" {{ old('remember') | true ? 'checked' : '' }} /> Recordarme</label>
             </div>
             <div class="inputwrapper">
                 <div class="pull-right">¿Olvidó su contraseña? <a href="{{ route('password.request') }}">Recuperarla</a></div>
