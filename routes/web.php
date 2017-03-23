@@ -15,6 +15,10 @@ Auth::routes();
 
 Route::get('/', 'Auth\LoginController@showLoginForm');
 
+Route::get('/perfil/editar', ['as' => 'profile.edit', 'uses' => 'AccountSettingsController@index']);
+Route::post('/perfil/editar', 'AccountSettingsController@update');
+Route::get('/perfil/contrasena', ['as' => 'profile.password', 'uses' => 'AccountSettingsController@password']);
+
 Route::get('/vestuario', ['as' => 'home', 'uses' => 'HomeController@index']);
 
 //Route::get('/equipo', 'TeamController@index');

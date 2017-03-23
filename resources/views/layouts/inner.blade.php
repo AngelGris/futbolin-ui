@@ -17,7 +17,7 @@
 <div class="mainwrapper">
     <div class="header">
         <div class="logo">
-            <a href="{{ url('/vestuario') }}">Futbolin</a>
+            <a href="{{ route('home') }}">Futbolin</a>
         </div>
         <div class="headerinner">
             <ul class="headmenu">
@@ -107,9 +107,9 @@
                                 <small>{{ $user['email'] }}</small>
                             </h5>
                             <ul>
-                                <li><a href="editprofile.html">Edit Profile</a></li>
-                                <li><a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Salir</a></li>
-                                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                <li><a href="{{ route('profile.edit') }}">Editar Perfil</a></li>
+                                <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Salir</a></li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     {{ csrf_field() }}
                                 </form>
                             </ul>
@@ -123,7 +123,9 @@
         <div class="leftmenu">
             <ul class="nav nav-tabs nav-stacked">
                 <li class="nav-header">Navegación</li>
-                <li class="active"><a href="{{ url('/vestuario') }}"><span class="iconfa-home"></span> Vestuario</a></li>
+                @foreach ($navigation as $link)
+                <li{{ (Request::path() == $link['url']) ? ' class=active' : '' }}><a href="{{ url('/' . $link['url']) }}"><span class="{{ $link['icon'] }}"></span> {{ $link['name'] }}</a></li>
+                @endforeach
             </ul>
         </div>
     </div>
@@ -134,15 +136,27 @@
                 <div class="primarycolor" style="background-color:{{ $team['primary_color'] }};border-color:{{ ($team['primary_color'] == '#ffffff') ? $team['secondary_color'] : $team['primary_color'] }}"></div>
                 <div class="secondarycolor" style="background-color:{{ $team['secondary_color'] }};border-color:{{ ($team['secondary_color'] == '#ffffff') ? $team['primary_color'] : $team['secondary_color'] }}"></div>
             </div>
-            <div class="pageicon"><span class="iconfa-home"></span></div>
+            <div class="pageicon"><span class="{{ $icon }}"></span></div>
             <div class="pagetitle">
-                <h5>Aquí comienza todo</h5>
-                <h1>Vestuario</h1>
+                <h5>{{ $subtitle }}</h5>
+                <h1>{{ $title }}</h1>
             </div>
         </div>
         <div class="maincontent">
             <div class="maincontentinner">
-                <div class="row">
+                @if(Session::has('flash_success'))
+                <div class="alert alert-success" role="alert"><em>{!! session('flash_success') !!}</em></div>
+                @endif
+                @if(Session::has('flash_info'))
+                <div class="alert alert-info" role="alert"><em>{!! session('flash_success') !!}</em></div>
+                @endif
+                @if(Session::has('flash_warning'))
+                <div class="alert alert-warning" role="alert"><em>{!! session('flash_success') !!}</em></div>
+                @endif
+                @if(Session::has('flash_danger'))
+                <div class="alert alert-danger" role="alert"><em>{!! session('flash_success') !!}</em></div>
+                @endif
+                <div class="row" style="width:100%;">
                     @yield('content-inner')
                 </div>
                 <div class="footer">

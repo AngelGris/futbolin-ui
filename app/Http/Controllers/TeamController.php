@@ -35,7 +35,7 @@ class TeamController extends Controller
     public function create()
     {
         if (!is_null(Auth::user()->team)) {
-            return redirect('/vestuario');
+            return redirect()->route('home');
         }
 
         $params['title'] = config('app.name') . ' - Crear Equipo';
@@ -97,7 +97,7 @@ class TeamController extends Controller
             $team->createPlayer($num, $pos);
         }
 
-        return redirect('/vestuario');
+        return redirect()->route('home');
     }
 
     /**

@@ -29,6 +29,12 @@ class HomeController extends Controller
             return redirect('/equipo/crear');
         }
 
-        return view('home');
+        $vars = [
+            'icon' => 'iconfa-home',
+            'title' => 'Vestuario',
+            'subtitle' => 'Aquí comienza todo'
+        ];
+
+        return view('home', $vars);
     }
 }

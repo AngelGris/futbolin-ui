@@ -15,8 +15,13 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*', function($view){
+            $navigation = [
+                ['url' => 'vestuario', 'icon' => 'iconfa-home', 'name' => 'Vesturario'],
+            ];
+
             $view->with('user', Auth::user())
-                 ->with('team', Auth::user()->team);
+                 ->with('team', Auth::user()->team)
+                 ->with('navigation', $navigation);
         });
     }
 
