@@ -1653,7 +1653,6 @@ strong, .headmenu .nav-header,
 
 .input-default {
 	padding: 10px;
-	height: auto;
 	font-size: 13px;
 }
 
@@ -1779,8 +1778,10 @@ div.btradio input {
 	border-radius: 0 !important;
 }
 
-.form-group .control-label {
-	margin-top: 5px;
+.form-group .control-label,
+.form-group div {
+	height: 34px;
+	line-height: 34px;
 }
 
 label.error {
