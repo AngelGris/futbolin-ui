@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AccountSettingsController extends Controller
 {
@@ -54,5 +55,40 @@ class AccountSettingsController extends Controller
         \Session::flash('flash_success', 'Perfil actualizado');
 
         return redirect()->route('profile.edit');
+    }
+
+    public function editPassword()
+    {
+        $vars = [
+            'icon' => 'iconfa-user',
+            'title' => 'Cambiar Contraseña',
+            'subtitle' => 'La palabrita mágica'
+        ];
+
+        return view('accountsettings.password', $vars);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $this->validate($request, [
+            'old_password' => 'required',
+            'new_password' => 'required|confirmed',
+        ]);
+
+        $user = Auth::user();
+        if (Hash::check($request->input('old_password'), $user->password))
+        {
+            $user->password = Hash::make($request->input('new_password'));
+            $user->save();
+
+            \Session::flash('flash_success', 'Contraseña actualizada');
+
+            return redirect()->route('profile.edit');
+        } else {
+            return redirect()
+                    ->route('profile.password')
+                    ->withErrors(['old_password' => 'Contraseña Actual incorrecta'])
+                    ->withInput($request->only('old_password', 'new_password', 'new_password_confirmation'));
+        }
     }
 }

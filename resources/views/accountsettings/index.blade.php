@@ -2,6 +2,7 @@
 
 @section('content-inner')
 <form method="POST" action="{{ route('profile.edit') }}" class="form-horizontal" role="form">
+    <input type="hidden" name="_method" value="PATCH">
     {{ csrf_field() }}
     <div class="form-group">
         <label class="col-md-2 control-label">Email</label>

@@ -147,6 +147,8 @@ return [
         'stadium_name'          => 'nombre del estadio',
         'primary_color'         => 'color primario',
         'secondary_color'       => 'color secundario',
+        'old_password'          => 'contraseña actual',
+        'new_password'          => 'contraseña nueva',
     ],
 
 ];
