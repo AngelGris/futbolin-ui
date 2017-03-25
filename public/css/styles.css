@@ -1780,7 +1780,7 @@ div.btradio input {
 
 .form-group .control-label,
 .form-group div {
-	height: 34px;
+	min-height: 34px;
 	line-height: 34px;
 }
 
