@@ -19,6 +19,7 @@ class ComposerServiceProvider extends ServiceProvider
             {
                 $navigation = [
                     ['url' => 'vestuario', 'icon' => 'iconfa-home', 'name' => 'Vesturario'],
+                    ['url' => 'equipo', 'icon' => 'iconfa-shield', 'name' => 'Equipo'],
                 ];
 
                 $view->with('user', Auth::user())

@@ -20,10 +20,12 @@ Route::get('/contrasena/recuperar/{token}', ['as' => 'password.reset', 'uses' =>
 Route::get('/vestuario', ['as' => 'home', 'uses' => 'HomeController@index']);
 
 Route::get('/perfil/editar', ['as' => 'profile.edit', 'uses' => 'AccountSettingsController@index']);
-Route::patch('/perfil/editar', 'AccountSettingsController@update');
+Route::patch('/perfil', ['as' => 'profile', 'uses' => 'AccountSettingsController@update']);
 Route::get('/perfil/contrasena', ['as' => 'profile.password', 'uses' => 'AccountSettingsController@editPassword']);
 Route::patch('/perfil/contrasena', 'AccountSettingsController@updatePassword');
 
-//Route::get('/equipo', 'TeamController@index');
+Route::get('/equipo', 'TeamController@index');
 Route::get('/equipo/crear', 'TeamController@create');
 Route::post('/equipo', ['as' => 'team.store', 'uses' => 'TeamController@store']);
+Route::get('/equipo/editar', ['as' => 'team.edit', 'uses' => 'TeamController@edit']);
+Route::patch('/equipo', ['as' => 'team', 'uses' => 'TeamController@update']);

@@ -24,7 +24,13 @@ class TeamController extends Controller
      */
     public function index()
     {
-        //
+        $vars = [
+            'icon' => 'iconfa-shield',
+            'title' => Auth::user()->team->name,
+            'subtitle' => 'El club de tus amores'
+        ];
+
+        return view('team.index', $vars);
     }
 
     /**
@@ -38,13 +44,13 @@ class TeamController extends Controller
             return redirect()->route('home');
         }
 
-        $params['title'] = 'Crear Equipo';
-        $params['bodyclass'] = 'class="loginpage"';
+        $vars['title'] = 'Crear Equipo';
+        $vars['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);
-        $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+        $vars['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
 
-        return view('team.create', $params);
+        return view('team.create', $vars);
     }
 
     /**
@@ -117,9 +123,15 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        //
+        $vars = [
+            'icon' => 'iconfa-shield',
+            'title' => Auth::user()->team->name,
+            'subtitle' => 'El club de tus amores'
+        ];
+
+        return view('team.edit', $vars);
     }
 
     /**
@@ -129,9 +141,25 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|min:3|max:255',
+            'stadium_name' => 'required|min:3|max:255',
+            'primary_color' => 'required|size:7',
+            'secondary_color' => 'required|size:7'
+        ]);
+
+        $team = Auth::user()->team;
+        $team->name = $request->name;
+        $team->stadium_name = $request->stadium_name;
+        $team->primary_color = $request->primary_color;
+        $team->secondary_color = $request->secondary_color;
+        $team->save();
+
+        \Session::flash('flash_success', 'Equipo actualizado');
+
+        return redirect()->route('team');
     }
 
     /**

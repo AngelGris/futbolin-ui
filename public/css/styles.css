@@ -262,6 +262,13 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	right: 0;
 }
 
+.teamprimarycolor,
+.teamsecondarycolor {
+	border: solid 1px transparent;
+	margin: 0;
+	padding: 0;
+}
+
 .maincontent { float: left; width: 100%; }
 .maincontentinner { padding: 20px; }
 .subtitle { text-transform: uppercase; font-size: 11px; color: #999; margin-bottom: 5px; }
@@ -1778,10 +1785,18 @@ div.btradio input {
 	border-radius: 0 !important;
 }
 
+.form-group {
+	min-height: 34px;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
 .form-group .control-label,
 .form-group div {
-	min-height: 34px;
 	line-height: 34px;
+	min-height: 34px;
+	padding: 0;
+	text-align: left;
 }
 
 label.error {

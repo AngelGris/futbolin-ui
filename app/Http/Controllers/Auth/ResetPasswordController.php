@@ -44,13 +44,13 @@ class ResetPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
-        $params['title'] = 'Entrar al vestuario';
-        $params['bodyclass'] = 'class="loginpage"';
+        $vars['title'] = 'Entrar al vestuario';
+        $vars['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);
-        $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+        $vars['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
 
-        return view('auth.passwords.email', $params);
+        return view('auth.passwords.email', $vars);
     }
 
     /**
@@ -64,15 +64,15 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-        $params['title'] = 'Entrar al vestuario';
-        $params['bodyclass'] = 'class="loginpage"';
+        $vars['title'] = 'Entrar al vestuario';
+        $vars['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);
-        $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+        $vars['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
 
-        /*$params['token'] = $token;
-        $params['email'] = $request->email;*/
+        /*$vars['token'] = $token;
+        $vars['email'] = $request->email;*/
 
-        return view('auth.passwords.reset', $params);
+        return view('auth.passwords.reset', $vars);
     }
 }

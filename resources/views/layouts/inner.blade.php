@@ -145,18 +145,18 @@
         <div class="maincontent">
             <div class="maincontentinner">
                 @if(Session::has('flash_success'))
-                <div class="alert alert-success" role="alert"><em>{!! session('flash_success') !!}</em></div>
+                <div class="alert alert-success" role="alert">{!! session('flash_success') !!}</div>
                 @endif
                 @if(Session::has('flash_info'))
-                <div class="alert alert-info" role="alert"><em>{!! session('flash_success') !!}</em></div>
+                <div class="alert alert-info" role="alert">{!! session('flash_success') !!}</div>
                 @endif
                 @if(Session::has('flash_warning'))
-                <div class="alert alert-warning" role="alert"><em>{!! session('flash_success') !!}</em></div>
+                <div class="alert alert-warning" role="alert">{!! session('flash_success') !!}</div>
                 @endif
                 @if(Session::has('flash_danger'))
-                <div class="alert alert-danger" role="alert"><em>{!! session('flash_success') !!}</em></div>
+                <div class="alert alert-danger" role="alert">{!! session('flash_success') !!}</div>
                 @endif
-                <div class="row" style="width:100%;">
+                <div class="row" style="margin:0;width:100%;">
                     @yield('content-inner')
                 </div>
                 <div class="footer">
