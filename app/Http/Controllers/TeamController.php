@@ -38,7 +38,7 @@ class TeamController extends Controller
             return redirect()->route('home');
         }
 
-        $params['title'] = config('app.name') . ' - Crear Equipo';
+        $params['title'] = 'Crear Equipo';
         $params['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);

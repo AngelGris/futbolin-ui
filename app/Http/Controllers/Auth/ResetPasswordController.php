@@ -44,7 +44,7 @@ class ResetPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
-        $params['title'] = config('app.name') . ' - Entrar al vestuario';
+        $params['title'] = 'Entrar al vestuario';
         $params['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);
@@ -64,7 +64,7 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-        $params['title'] = config('app.name') . ' - Entrar al vestuario';
+        $params['title'] = 'Entrar al vestuario';
         $params['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);

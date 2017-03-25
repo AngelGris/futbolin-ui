@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        <title>{{ $title or 'Futbolin' }}</title>
+        <title>{{ config('app.name') . ' - ' . $title }}</title>
 
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}" type="text/css" />

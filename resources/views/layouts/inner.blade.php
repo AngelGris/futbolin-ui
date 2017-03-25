@@ -164,7 +164,7 @@
                         <span>Futbolin</span>
                     </div>
                     <div class="footer-right">
-                        <span>Developed by: <a href="https://github.com/AngelGris" target="_blank">Luciano García Bes</a> - Shamcey template by: <a href="http://themepixels.com/" target="_blank">ThemePixels</a></span>
+                        <span>Developed by: <a href="https://github.com/AngelGris" target="_blank">Angel Gris</a> - Shamcey template by: <a href="http://themepixels.com/" target="_blank">ThemePixels</a></span>
                     </div>
                 </div>
             </div>
