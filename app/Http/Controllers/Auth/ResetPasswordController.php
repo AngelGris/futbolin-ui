@@ -36,4 +36,43 @@ class ResetPasswordController extends Controller
     {
         $this->middleware('guest');
     }
+
+    /**
+     * Display the form to request a password reset link.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLinkRequestForm()
+    {
+        $params['title'] = config('app.name') . ' - Entrar al vestuario';
+        $params['bodyclass'] = 'class="loginpage"';
+
+        $num = rand(1, 9);
+        $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+
+        return view('auth.passwords.email', $params);
+    }
+
+    /**
+     * Display the password reset view for the given token.
+     *
+     * If no token is present, display the link request form.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string|null  $token
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function showResetForm(Request $request, $token = null)
+    {
+        $params['title'] = config('app.name') . ' - Entrar al vestuario';
+        $params['bodyclass'] = 'class="loginpage"';
+
+        $num = rand(1, 9);
+        $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+
+        /*$params['token'] = $token;
+        $params['email'] = $request->email;*/
+
+        return view('auth.passwords.reset', $params);
+    }
 }

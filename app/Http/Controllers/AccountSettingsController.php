@@ -72,7 +72,7 @@ class AccountSettingsController extends Controller
     {
         $this->validate($request, [
             'old_password' => 'required',
-            'new_password' => 'required|confirmed',
+            'new_password' => 'required|min:6|confirmed',
         ]);
 
         $user = Auth::user();

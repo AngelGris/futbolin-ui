@@ -14,13 +14,15 @@
 Auth::routes();
 
 Route::get('/', 'Auth\LoginController@showLoginForm');
+Route::get('/contrasena/recuperar', ['as' => 'password.request', 'uses' => 'Auth\ResetPasswordController@showLinkRequestForm']);
+Route::get('/contrasena/recuperar/{token}', ['as' => 'password.reset', 'uses' => 'Auth\ResetPasswordController@showResetForm']);
+
+Route::get('/vestuario', ['as' => 'home', 'uses' => 'HomeController@index']);
 
 Route::get('/perfil/editar', ['as' => 'profile.edit', 'uses' => 'AccountSettingsController@index']);
 Route::patch('/perfil/editar', 'AccountSettingsController@update');
 Route::get('/perfil/contrasena', ['as' => 'profile.password', 'uses' => 'AccountSettingsController@editPassword']);
 Route::patch('/perfil/contrasena', 'AccountSettingsController@updatePassword');
-
-Route::get('/vestuario', ['as' => 'home', 'uses' => 'HomeController@index']);
 
 //Route::get('/equipo', 'TeamController@index');
 Route::get('/equipo/crear', 'TeamController@create');

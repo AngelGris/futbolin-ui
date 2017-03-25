@@ -7,7 +7,7 @@
         <form id="login" action="{{ route('login') }}" method="POST" role="form">
             {{ csrf_field() }}
             <div class="inputwrapper">
-                <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Enter your e-mail" class="form-control" required autofocus>
+                <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Dirección de e-mail" class="form-control" required autofocus>
                 @if ($errors->has('email'))
                 <label class="error">
                     <strong>{{ $errors->first('email') }}</strong>
@@ -15,7 +15,7 @@
                 @endif
             </div>
             <div class="inputwrapper">
-                <input id="password" type="password" class="form-control" name="password" placeholder="Enter your password" required>
+                <input id="password" type="password" class="form-control" name="password" placeholder="Contraseña" required>
                 @if ($errors->has('password'))
                 <label class="error">
                     <strong>{{ $errors->first('password') }}</strong>
