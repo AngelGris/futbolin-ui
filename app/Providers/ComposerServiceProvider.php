@@ -20,6 +20,7 @@ class ComposerServiceProvider extends ServiceProvider
                 $navigation = [
                     ['url' => 'vestuario', 'icon' => 'iconfa-home', 'name' => 'Vesturario'],
                     ['url' => 'equipo', 'icon' => 'iconfa-shield', 'name' => 'Equipo'],
+                    ['url' => 'jugadores', 'icon' => 'iconfa-group', 'name' => 'Jugadores'],
                 ];
 
                 $view->with('user', Auth::user())

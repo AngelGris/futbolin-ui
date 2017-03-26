@@ -29,3 +29,5 @@ Route::get('/equipo/crear', 'TeamController@create');
 Route::post('/equipo', ['as' => 'team.store', 'uses' => 'TeamController@store']);
 Route::get('/equipo/editar', ['as' => 'team.edit', 'uses' => 'TeamController@edit']);
 Route::patch('/equipo', ['as' => 'team', 'uses' => 'TeamController@update']);
+
+Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showListing']);

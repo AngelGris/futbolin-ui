@@ -912,7 +912,7 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
 
 /*** TABLES ***/
-
+table th { text-align: center; }
 .dataTable { margin-bottom: 0; }
 .dataTable th, .dataTable td { font-size: 12px; }
 .dataTables_wrapper { position: relative; }
