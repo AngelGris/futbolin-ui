@@ -943,6 +943,38 @@ table th { text-align: center; }
 
 .dataTables_filter input { border: 1px solid #ccc; height: auto; padding: 3px 5px; }
 
+.table .arq {
+	background-color: #ffffaf;
+}
+.table .arq:nth-child(even) {
+	background-color: #eeee9e;
+}
+
+.table .def {
+	background-color: #afffaf;
+}
+.table .def:nth-child(even) {
+	background-color: #9eee9e;
+}
+
+.table .med {
+	background-color: #afafff;
+}
+.table .med:nth-child(even) {
+	background-color: #9e9eee;
+}
+
+.table .ata {
+	background-color: #ffafaf;
+}
+.table .ata:nth-child(even) {
+	background-color: #ee9e9e;
+}
+
+th span {
+	border-bottom: dashed 1px #fff;
+}
+
 
 /*** GRAPHS & CHARTS ***/
 

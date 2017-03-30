@@ -1,27 +1,40 @@
 @extends('layouts.inner')
 
+@section('javascript-inner')
+<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery('#dyntable').dataTable({
+        "paging": false,
+        "searching": false,
+        "info": false
+    });
+});
+</script>
+@endsection
+
 @section('content-inner')
 <table id="dyntable" class="table table-bordered responsive">
     <thead>
         <tr>
-            <th class="head0" align="right">#</th>
-            <th class="head1" style="width:50%">Nombre</th>
-            <th class="head0">POS</th>
-            <th class="head1">ARQ</th>
-            <th class="head0">DEF</th>
-            <th class="head1">GAM</th>
-            <th class="head0">CAB</th>
-            <th class="head1">SAL</th>
-            <th class="head0">PAS</th>
-            <th class="head1">PRE</th>
-            <th class="head0">VEL</th>
-            <th class="head1">FUE</th>
-            <th class="head0">QUI</th>
+            <th>#</th>
+            <th style="width:50%">Nombre</th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Posición">POS</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Arquero">ARQ</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Defensa">DEF</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Gambeta">GAM</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Cabeceo">CAB</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Salto">SAL</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Pase">PAS</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Precisión">PRE</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Velocidad">VEL</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Fuerza">FUE</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Quite">QUI</span></th>
         </tr>
     </thead>
     <tbody>
         @foreach ($players as $player)
-        <tr>
+        <tr class="{{ strtolower($player['position']) }}">
             <td align="right">{{ $player['number'] }}</td>
             <td>{{ $player['first_name'] . ' ' . $player['last_name'] }}</td>
             <td align="center">{{ $player['position'] }}</td>
