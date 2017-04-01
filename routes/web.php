@@ -31,3 +31,5 @@ Route::get('/equipo/editar', ['as' => 'team.edit', 'uses' => 'TeamController@edi
 Route::patch('/equipo', ['as' => 'team', 'uses' => 'TeamController@update']);
 
 Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showListing']);
+
+Route::get('/estrategia', ['as' => 'strategy', 'uses' => 'TeamController@showStrategy']);

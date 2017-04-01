@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TeamController extends Controller
 {
@@ -99,9 +100,15 @@ class TeamController extends Controller
             20  => 'ARQ',
         ];
 
+        $formation = [];
         foreach ($players as $num => $pos) {
-            $team->createPlayer($num, $pos);
+            $player = $team->createPlayer($num, $pos);
+            $formation[] = $player->id;
         }
+        $formation = array_slice($formation, 0, 18);
+
+        $team->formation = $formation;
+        $team->save();
 
         return redirect()->route('home');
     }
@@ -163,13 +170,30 @@ class TeamController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Show strategy page
      */
-    public function destroy($id)
+    public function showStrategy()
     {
-        //
+        $vars = [
+            'icon' => 'iconfa-beaker',
+            'title' => 'Estratégia',
+            'subtitle' => 'El laboratorio del fútbol',
+            'players' => Auth::user()->team->players,
+            'strategy' => Auth::user()->team->strategy->id,
+        ];
+
+        $strategies = DB::table('strategies')->orderBy('name')->get();
+
+        foreach ($strategies as $strategy) {
+            $vars['strategies'][$strategy->id]['id'] = $strategy->id;
+            $vars['strategies'][$strategy->id]['name'] = $strategy->name;
+            for ($i = 1; $i <= 11; $i++) {
+                $vars['strategies'][$strategy->id][$i]['pos'] = strtolower($strategy->{sprintf('j%02d_pos', $i)});
+                $vars['strategies'][$strategy->id][$i]['left'] = (int)(100 - ($strategy->{sprintf('j%02d_start_x', $i)} / 0.9));
+                $vars['strategies'][$strategy->id][$i]['top'] = (int)(100 - ($strategy->{sprintf('j%02d_start_y', $i)} / 0.6));
+            }
+        }
+
+        return view('team.strategy', $vars);
     }
 }

@@ -20,6 +20,7 @@ class CreateTeamsTable extends Migration
             $table->char('secondary_color', 7);
             $table->string('stadium_name');
             $table->integer('strategy_id')->unsigned()->default(1);
+            $table->string('formation')->default('');
             $table->integer('user_id')->unsigned();
             $table->timestamps();
 

@@ -15,6 +15,15 @@ class Team extends Model
     protected $guarded = ['id', 'user_id'];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'formation' => 'array',
+    ];
+
+    /**
      * Get the user associated with the team
      */
     public function user()
@@ -98,7 +107,7 @@ class Team extends Model
             ]
         ];
 
-        $this->players()->create([
+        return $this->players()->create([
             'first_name' => $faker->firstName('male'),
             'last_name' => $faker->lastName('male'),
             'position' => $position,

@@ -3,8 +3,8 @@
 @section('javascript-inner')
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script type="text/javascript">
-jQuery(document).ready(function(){
-    jQuery('#dyntable').dataTable({
+$(function(){
+    $('#dyntable').dataTable({
         "paging": false,
         "searching": false,
         "info": false
@@ -20,6 +20,7 @@ jQuery(document).ready(function(){
             <th>#</th>
             <th style="width:50%">Nombre</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Posición">POS</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Promedio">PRO</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Arquero">ARQ</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Defensa">DEF</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Gambeta">GAM</span></th>
@@ -38,6 +39,7 @@ jQuery(document).ready(function(){
             <td align="right">{{ $player['number'] }}</td>
             <td>{{ $player['first_name'] . ' ' . $player['last_name'] }}</td>
             <td align="center">{{ $player['position'] }}</td>
+            <td align="right"><strong>{{ $player['average'] }}</strong></td>
             <td align="right">{{ $player['goalkeeping'] }}</td>
             <td align="right">{{ $player['defending'] }}</td>
             <td align="right">{{ $player['dribbling'] }}</td>
