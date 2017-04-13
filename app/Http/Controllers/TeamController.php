@@ -170,16 +170,21 @@ class TeamController extends Controller
      */
     public function showStrategy()
     {
+        $team = Auth::user()->team;
+
         $vars = [
             'icon' => 'iconfa-beaker',
             'title' => 'Estratégia',
             'subtitle' => 'El laboratorio del fútbol',
-            'players' => Auth::user()->team->players,
-            'strategy' => Auth::user()->team->strategy->id,
-            'formation' => Auth::user()->team->formation,
+            'strategy' => $team->strategy->id,
+            'formation' => $team->formation,
         ];
 
         $strategies = DB::table('strategies')->orderBy('name')->get();
+
+        foreach ($team->players as $player) {
+            $vars['players'][$player['id']] = $player;
+        }
 
         foreach ($strategies as $strategy) {
             $vars['strategies'][$strategy->id]['id'] = $strategy->id;
