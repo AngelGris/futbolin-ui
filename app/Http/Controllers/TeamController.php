@@ -100,14 +100,10 @@ class TeamController extends Controller
             20  => 'ARQ',
         ];
 
-        $formation = [];
         foreach ($players as $num => $pos) {
             $player = $team->createPlayer($num, $pos);
-            $formation[] = $player->id;
         }
-        $formation = array_slice($formation, 0, 18);
 
-        $team->formation = $formation;
         $team->save();
 
         return redirect()->route('home');
@@ -180,6 +176,7 @@ class TeamController extends Controller
             'subtitle' => 'El laboratorio del fútbol',
             'players' => Auth::user()->team->players,
             'strategy' => Auth::user()->team->strategy->id,
+            'formation' => Auth::user()->team->formation,
         ];
 
         $strategies = DB::table('strategies')->orderBy('name')->get();
@@ -195,5 +192,25 @@ class TeamController extends Controller
         }
 
         return view('team.strategy', $vars);
+    }
+
+    /**
+     * Save team formation
+     */
+    public function updateFormation(Request $request)
+    {
+        $team = Auth::user()->team;
+        $team->formation = $request->formation;
+        $team->save();
+    }
+
+    /**
+     * Save team strategy
+     */
+    public function updateStrategy(Request $request)
+    {
+        $team = Auth::user()->team;
+        $team->strategy_id = $request->strategy;
+        $team->save();
     }
 }

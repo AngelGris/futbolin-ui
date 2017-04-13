@@ -9,6 +9,7 @@
 
 @section('javascript')
 <script src="{{ asset('js/jquery-1.10.2.min.js') }}"></script>
+<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 @yield('javascript-inner')
 @endsection

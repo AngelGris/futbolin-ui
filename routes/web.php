@@ -25,10 +25,12 @@ Route::get('/perfil/contrasena', ['as' => 'profile.password', 'uses' => 'Account
 Route::patch('/perfil/contrasena', 'AccountSettingsController@updatePassword');
 
 Route::get('/equipo', 'TeamController@index');
-Route::get('/equipo/crear', 'TeamController@create');
 Route::post('/equipo', ['as' => 'team.store', 'uses' => 'TeamController@store']);
-Route::get('/equipo/editar', ['as' => 'team.edit', 'uses' => 'TeamController@edit']);
 Route::patch('/equipo', ['as' => 'team', 'uses' => 'TeamController@update']);
+Route::get('/equipo/crear', 'TeamController@create');
+Route::get('/equipo/editar', ['as' => 'team.edit', 'uses' => 'TeamController@edit']);
+Route::post('/equipo/estrategia', ['as' => 'team.strategy', 'uses' => 'TeamController@updateStrategy']);
+Route::post('/equipo/formacion', ['as' => 'team.formation', 'uses' => 'TeamController@updateFormation']);
 
 Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showListing']);
 

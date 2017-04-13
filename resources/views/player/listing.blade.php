@@ -20,7 +20,7 @@ $(function(){
             <th>#</th>
             <th style="width:50%">Nombre</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Posición">POS</span></th>
-            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Promedio">PRO</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Arquero">ARQ</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Defensa">DEF</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Gambeta">GAM</span></th>

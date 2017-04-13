@@ -347,12 +347,12 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	top: 0;
 	transform: matrix3d(1,0,0.00,0,0.00,1.12,0.98,-0.0009,0,-0.98,0.17,0,0,0,0,1);
 	-webkit-transform: matrix3d(1,0,0.00,0,0.00,1.12,0.98,-0.0009,0,-0.98,0.17,0,0,0,0,1);
-    transform-origin: center top 0px;
-    transition: all 0.2s ease 0s;
+    transform-origin: center bottom 0px;
     -webkit-transform-origin: center bottom 0px;
     -moz-transform-origin: center bottom 0px;
     -o-transform-origin: center bottom 0px;
     -ms-transform-origin: center bottom 0px;
+    transition: all 0.5s ease 0s;
     width: 100%;
 }
 
@@ -371,6 +371,26 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	width: 30px;
 }
 
+.arq {
+	background-color: rgba(255, 255, 175, 0.7);
+	border-color: #eeee9e;
+}
+
+.def {
+	background-color: rgba(175, 255, 175, 0.7);
+	border-color: #9eee9e;
+}
+
+.med {
+	background-color: rgba(175, 175, 255, 0.6);
+	border-color: #9e9eee;
+}
+
+.ata {
+	background-color: rgba(255, 175, 175, 0.8);
+	border-color: #ee9e9e;
+}
+
 #strategy-container .player-container {
 	font-size: 20px;
 	height: 36px;
@@ -380,24 +400,28 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	width: 36px;
 }
 
-#strategy-container .player-container.arq {
-	background-color: rgba(255, 255, 175, 0.7);
-	border-color: #eeee9e;
+.player-draggable {
+	cursor: pointer;
 }
 
-#strategy-container .player-container.def {
-	background-color: rgba(175, 255, 175, 0.7);
-	border-color: #9eee9e;
+.player-helper {
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 20px;
+	font-weight: bold;
+	height:36px;
+	left: 0;
+	line-height:32px;
+	position: absolute;
+	text-align: center;
+	width:36px;
 }
 
-#strategy-container .player-container.med {
-	background-color: rgba(175, 175, 255, 0.6);
-	border-color: #9e9eee;
-}
-
-#strategy-container .player-container.ata {
-	background-color: rgba(255, 175, 175, 0.8);
-	border-color: #ee9e9e;
+#strategy-container .player-helper {
+	margin: -36px 0 0 -18px;
+	transform: none;
+	-webkit-transform: none;
+	transition: all 0s ease 0s;
 }
 
 /*** HEADERS AND BOXES ***/
