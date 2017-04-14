@@ -417,7 +417,7 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	width:36px;
 }
 
-#strategy-container .player-helper {
+.player-helper-div {
 	margin: -36px 0 0 -18px;
 	transform: none;
 	-webkit-transform: none;

@@ -39,7 +39,8 @@ $(function() {
     $('#dyntable').dataTable({
         "paging": false,
         "searching": false,
-        "info": false
+        "info": false,
+        "sScrollY": "405px"
     });
 
     $('.change-formation').click(function(e) {
@@ -89,9 +90,10 @@ $(function() {
 
     $('.player-draggable').draggable({
         cursorAt: { left: 18, top: 18 },
+        appendTo: 'body',
         helper: function() {
             var id = parseInt($(this).data('player-id'));
-            return '<div class="player-helper ' + players[id]['position'].toLowerCase() + '">' + players[id]['number'] + '</div>';
+            return '<div class="player-helper ' + players[id]['position'].toLowerCase() + (($(this)[0].tagName == 'DIV') ? ' player-helper-div' : '') + '">' + players[id]['number'] + '</div>';
         },
         start: function() {
             clearTimeout(fieldTimeout);
@@ -120,12 +122,16 @@ $(function() {
             $(this).addClass(players[id]['position'].toLowerCase());
             if (ui.draggable[0].tagName == 'DIV') {
                 ui.draggable.data('player-id', old_id);
-                ui.draggable.text(players[old_id]['number']);
                 ui.draggable.removeClass('arq');
                 ui.draggable.removeClass('def');
                 ui.draggable.removeClass('med');
                 ui.draggable.removeClass('ata');
-                ui.draggable.addClass(players[old_id]['position'].toLowerCase());
+                if (old_id > 0) {
+                    ui.draggable.text(players[old_id]['number']);
+                    ui.draggable.addClass(players[old_id]['position'].toLowerCase());
+                } else {
+                    ui.draggable.text('');
+                }
             } else {
                 $('tr.player-draggable#subs-' + (id < 10 ? '0' : '') + id).hide();
                 $('tr.player-draggable#subs-' + (old_id < 10 ? '0' : '') + old_id).show();
