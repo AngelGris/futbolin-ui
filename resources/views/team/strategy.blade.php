@@ -130,8 +130,10 @@ $(function() {
     <div class="widgetbox">
         <div class="headtitle">
             <div class="btn-group">
-                <button data-toggle="dropdown" class="btn dropdown-toggle"><span id="strategy-name">{{ $strategies[$strategy]['name'] }}</span> <span class="caret"></span></button>
-                <ul class="dropdown-menu">
+                <button data-toggle="dropdown" class="btn dropdown-toggle" data-target="#">
+                    <span id="strategy-name">{{ $strategies[$strategy]['name'] }}</span> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
                     @foreach ($strategies as $str)
                     <li><a href="{{ $str['id'] }}" class="change-formation">{{ $str['name'] }}</a></li>
                     @endforeach
