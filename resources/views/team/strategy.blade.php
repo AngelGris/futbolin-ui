@@ -42,7 +42,7 @@ $(function() {
 
     $('.rollover-player').mouseover(function() {
         var id = parseInt($(this).data('player-id'));
-        $('#player-header').text(players[id]['number'] + '. ' + players[id]['name']);
+        $('#player-header').text(players[id]['number'] + '. ' + players[id]['first_name'] + ' ' + players[id]['last_name']);
         $('#player-info .widgetcontent').html('<div class="col-md-6"><strong>POS: ' + players[id]['position'] + '</strong><br>ARQ: ' + players[id]['goalkeeping'] + '<br>GAM: ' + players[id]['dribbling'] + '<br>SAL: ' + players[id]['jumping'] + '<br>PRE: ' + players[id]['precision'] + '<br>FUE: ' + players[id]['strength'] + '</div><div class="col-md-6"><strong>MED: ' + players[id]['average'] + '</strong><br>DEF: ' + players[id]['defending'] + '<br>CAB: ' + players[id]['heading'] + '<br>PAS: ' + players[id]['passing'] + '<br>VEL: ' + players[id]['speed'] + '<br>QUI: ' + players[id]['tackling'] + '</div>');
         $('#player-info').stop().fadeTo(0, 1);
     }).mouseleave(function() {
@@ -65,7 +65,7 @@ $(function() {
         appendTo: 'body',
         helper: function() {
             var id = parseInt($(this).data('player-id'));
-            return '<div class="player-helper ' + players[id]['position'].toLowerCase() + (($(this)[0].tagName == 'DIV') ? ' player-helper-div' : '') + '">' + players[id]['number'] + '</div>';
+            return '<div class="player-helper ' + players[id]['position'].toLowerCase() + (($(this).parent().hasClass('strategy-players-container')) ? ' player-helper-div' : '') + '">' + players[id]['number'] + '</div>';
         },
         start: function() {
             clearTimeout(fieldTimeout);

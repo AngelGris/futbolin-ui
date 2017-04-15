@@ -13,6 +13,8 @@ class Player extends Model
      */
     protected $guarded = ['id', 'team_id'];
 
+    protected $appends = ['short_name', 'average'];
+
     /**
      * Get the player's team
      */
