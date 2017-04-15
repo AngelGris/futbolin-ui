@@ -19,9 +19,20 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->boolean('is_admin')->default(FALSE);
             $table->rememberToken();
             $table->timestamps();
         });
+
+        DB::table('users')->insert(
+            [
+                'first_name' => 'Admin',
+                'last_name' => 'Admin',
+                'email' => 'admin',
+                'password' => bcrypt('admin'),
+                'is_admin' => TRUE
+            ]
+        );
     }
 
     /**

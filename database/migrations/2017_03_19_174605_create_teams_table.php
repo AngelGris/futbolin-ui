@@ -16,6 +16,7 @@ class CreateTeamsTable extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->char('short_name', 5);
             $table->char('primary_color', 7);
             $table->char('secondary_color', 7);
             $table->string('stadium_name');
