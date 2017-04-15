@@ -22,7 +22,7 @@
         </div>
         <div class="headerinner">
             <ul class="headmenu">
-                <li class="odd">
+                <!--<li class="odd">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <span class="count">4</span>
                         <span class="head-icon head-message"></span>
@@ -98,7 +98,7 @@
                         <li><a href=""><span class="glyphicon glyphicon-align-left"></span> Most Viewed in <strong>Blog</strong> <small class="muted"> - 1 week ago</small></a></li>
                         <li class="viewmore"><a href="charts.html">View More Statistics</a></li>
                     </ul>
-                </li>
+                </li>-->
                 <li class="right">
                     <div class="userloggedinfo">
                         <img src="{{ asset('img/thumb1.png') }}" alt="" />
