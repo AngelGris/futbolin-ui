@@ -67,6 +67,7 @@ class TeamController extends Controller
          */
         $this->validate($request, [
             'name' => 'required|min:3|max:255',
+            'short_name' => 'required|max:5',
             'stadium_name' => 'required|min:3|max:255',
             'primary_color' => 'required|size:7',
             'secondary_color' => 'required|size:7'
@@ -164,7 +165,7 @@ class TeamController extends Controller
 
         $team->save();
 
-        return redirect()->route('home');
+        return redirect()->route('strategy');
     }
 
     /**
@@ -206,6 +207,7 @@ class TeamController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|min:3|max:255',
+            'short_name' => 'required|max:5',
             'stadium_name' => 'required|min:3|max:255',
             'primary_color' => 'required|size:7',
             'secondary_color' => 'required|size:7'
@@ -213,6 +215,7 @@ class TeamController extends Controller
 
         $team = Auth::user()->team;
         $team->name = $request->name;
+        $team->short_name = $request->short_name;
         $team->stadium_name = $request->stadium_name;
         $team->primary_color = $request->primary_color;
         $team->secondary_color = $request->secondary_color;

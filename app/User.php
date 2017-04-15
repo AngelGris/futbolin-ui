@@ -43,7 +43,7 @@ class User extends Authenticatable
         if (!is_null($this->team)) {
             return $this->updateTeam($request);
         } else {
-            return $this->team()->create($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color']));
+            return $this->team()->create($request->only(['name', 'short_name', 'stadium_name', 'primary_color', 'secondary_color']));
         }
     }
 

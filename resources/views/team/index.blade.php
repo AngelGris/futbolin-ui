@@ -6,6 +6,10 @@
     <div class="col-md-10">{{ $team['name'] }}</div>
 </div>
 <div class="form-group">
+    <label class="col-md-2 control-label">Nombre corto del equipo</label>
+    <div class="col-md-10">{{ $team['short_name'] }}</div>
+</div>
+<div class="form-group">
     <label class="col-md-2 control-label">Nombre del estadio</label>
     <div class="col-md-10">{{ $team['stadium_name'] }}</div>
 </div>

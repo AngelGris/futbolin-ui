@@ -28,6 +28,17 @@
             @endif
         </div>
     </div>
+    <div class="form-group{{ $errors->has('short_name') ? ' has-error' : '' }}">
+        <label for="short_name" class="col-md-2 control-label">Nombre corto del equipo</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control input-default" name="short_name" maxlength="5" value="{{ old('short_name', $team['short_name']) }}" required>
+            @if ($errors->has('short_name'))
+            <label class="error">
+                <strong>{{ $errors->first('short_name') }}</strong>
+            </label>
+            @endif
+        </div>
+    </div>
     <div class="form-group{{ $errors->has('stadium_name') ? ' has-error' : '' }}">
         <label class="col-md-2 control-label">Nombre del estadio</label>
         <div class="col-md-10">

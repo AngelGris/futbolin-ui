@@ -28,6 +28,15 @@
                 </label>
                 @endif
             </div>
+            <div class="inputwrapper{{ $errors->has('short_name') ? ' has-error' : '' }}">
+                <input id="short_name" type="text" name="short_name" value="{{ old('short_name') }}" maxlength="5" placeholder="Nombre corto del equipo (5 caractéres)" required>
+
+                @if ($errors->has('short_name'))
+                <label class="error">
+                    <strong>{{ $errors->first('short_name') }}</strong>
+                </label>
+                @endif
+            </div>
             <div class="inputwrapper{{ $errors->has('stadium_name') ? ' has-error' : '' }}">
                 <input id="stadium_name" type="text" name="stadium_name" value="{{ old('stadium_name') }}" placeholder="Nombre del estadio" required>
 
