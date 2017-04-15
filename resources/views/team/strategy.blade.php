@@ -5,36 +5,8 @@
 <script type="text/javascript">
 $(function() {
     var fieldTimeout;
-
-    var strategies = {};
-    @foreach ($strategies as $str)
-    strategies[{{ $str['id'] }}] = {
-        'name':'{{ $str['name'] }}',
-        @for ($i = 1; $i <= 11; $i++)
-        {{ $i }}:{'left':{{ $str[$i]['left'] }}, 'top':{{ $str[$i]['top'] }}},
-        @endfor
-    };
-    @endforeach
-
-    var players = {};
-    @foreach ($players as $player)
-    players[{{ $player['id'] }}] = {
-        'name': '{{ $player['first_name'] . ' ' . $player['last_name'] }}',
-        'number': {{ $player['number'] }},
-        'position': '{{ $player['position'] }}',
-        'average': {{ $player['average'] }},
-        'goalkeeping': {{ $player['goalkeeping'] }},
-        'defending': {{ $player['defending'] }},
-        'dribbling': {{ $player['dribbling'] }},
-        'heading': {{ $player['heading'] }},
-        'jumping': {{ $player['jumping'] }},
-        'passing': {{ $player['passing'] }},
-        'precision': {{ $player['precision'] }},
-        'speed': {{ $player['speed'] }},
-        'strength': {{ $player['strength'] }},
-        'tackling': {{ $player['tackling'] }},
-    }
-    @endforeach
+    var strategies = {!! json_encode($strategies) !!};
+    var players = {!! json_encode($players) !!};
 
     $('#dyntable').dataTable({
         "paging": false,
