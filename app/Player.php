@@ -29,9 +29,10 @@ class Player extends Model
     public function getShortNameAttribute()
     {
         $names = explode(' ', $this->first_name);
+
         $initials = '';
         foreach ($names as $name) {
-            $initials .= substr($name, 0, 1) . '. ';
+            $initials .= mb_substr($name, 0, 1) . '. ';
         }
 
         return $initials . $this->last_name;
