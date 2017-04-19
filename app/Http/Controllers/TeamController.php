@@ -98,8 +98,8 @@ class TeamController extends Controller
             17  => 'MED',
             18  => 'MED',
             19  => 'ATA',
-            20  => 'ATA',
-            21  => 'ARQ',
+            20  => 'ARQ',
+            21  => 'DEF',
         ];
 
         if (rand(1, 100) > 75) {
