@@ -40,6 +40,22 @@ class RegisterController extends Controller
     }
 
     /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $params['title'] = config('app.name') . ' - Afiliarse';
+        $params['bodyclass'] = 'class="loginpage"';
+
+        $num = rand(1, 9);
+        $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+
+        return view('auth.register', $params);
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data

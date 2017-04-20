@@ -36,4 +36,20 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        $params['title'] = 'Entrar al vestuario';
+        $params['bodyclass'] = 'class="loginpage"';
+
+        $num = rand(1, 9);
+        $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+
+        return view('auth.login', $params);
+    }
 }
