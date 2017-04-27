@@ -39,7 +39,7 @@ class Player extends Model
     }
 
     /**
-     * Get player's avg attribute
+     * Get player's average attribute
      */
     public function getAverageAttribute()
     {
@@ -55,6 +55,9 @@ class Player extends Model
                 break;
             case 'ATA':
                 return (int)(($this->dribbling + ($this->heading * 2) + ($this->jumping * 2) + ($this->precision * 2) + $this->speed + ($this->strength * 2)) / 10);
+                break;
+            default:
+                return (int)(($this->goalkeeping + $this->defending + $this->dribbling + $this->heading + $this->jumping + $this->passing + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
                 break;
         }
     }

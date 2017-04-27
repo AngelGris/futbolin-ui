@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Team;
 
 class TeamController extends Controller
 {
@@ -278,5 +279,21 @@ class TeamController extends Controller
         $team = Auth::user()->team;
         $team->strategy_id = $request->strategy;
         $team->save();
+    }
+
+    /**
+     * Show all teams
+     */
+    public function showAll()
+    {
+        $vars = [
+            'icon' => 'iconfa-list',
+            'title' => 'Equipos',
+            'subtitle' => 'Estos son, aquí están',
+            'sparrings' => Team::where('user_id', '=', 1)->get(),
+            'teams' => Team::where('user_id', '>', 1)->get(),
+        ];
+
+        return view('team.listing', $vars);
     }
 }

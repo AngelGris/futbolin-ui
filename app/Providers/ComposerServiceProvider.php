@@ -22,6 +22,7 @@ class ComposerServiceProvider extends ServiceProvider
                     ['url' => 'equipo', 'icon' => 'iconfa-shield', 'name' => 'Equipo'],
                     ['url' => 'jugadores', 'icon' => 'iconfa-group', 'name' => 'Jugadores'],
                     ['url' => 'estrategia', 'icon' => 'iconfa-beaker', 'name' => 'Estratégia'],
+                    ['url' => 'equipos', 'icon' => 'iconfa-list', 'name' => 'Equipos'],
                 ];
 
                 $view->with('user', Auth::user())

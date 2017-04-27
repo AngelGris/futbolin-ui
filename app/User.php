@@ -54,4 +54,12 @@ class User extends Authenticatable
     {
         return $this->team()->update($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color']));
     }
+
+    /**
+     * Get user's complete name
+     */
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 }

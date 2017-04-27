@@ -35,3 +35,5 @@ Route::post('/equipo/formacion', ['as' => 'team.formation', 'uses' => 'TeamContr
 Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showListing']);
 
 Route::get('/estrategia', ['as' => 'strategy', 'uses' => 'TeamController@showStrategy']);
+
+Route::get('/equipos', ['as' => 'teams', 'uses' => 'TeamController@showAll']);

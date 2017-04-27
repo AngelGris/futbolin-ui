@@ -124,4 +124,31 @@ class Team extends Model
             'number' => $number,
         ]);
     }
+
+    /**
+     * Get team's average attribute
+     */
+    public function getAverageAttribute()
+    {
+        $lineup = array_slice($this->formation, 0, 11);
+        $total = $count = 0;
+        if ($this->user_id > 1) {
+            foreach ($this->players as $player) {
+                if (in_array($player->id, $lineup))
+                {
+                    $count++;
+                    $total += $player->average;
+                }
+            }
+        } else {
+            foreach ($lineup as $p) {
+                if ($p > 0) {
+                    $count++;
+                    $player = Player::find($p);
+                    $total += $player->average;
+                }
+            }
+        }
+        return (int)($total / $count);
+    }
 }
