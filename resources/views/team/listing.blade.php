@@ -8,6 +8,7 @@
             <th style="width:100%">Equipo</th>
             <th>Formacion</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
+            <th>Jugar</th>
         </tr>
     </thead>
     <tbody>
@@ -16,6 +17,7 @@
             <td>{{ $team['name'] }}</td>
             <td align="center">{{ $team['strategy']['name'] }}</td>
             <td align="center">{{ $team['average'] }}</td>
+            <td align="center">Entrenamiento</td>
         </tr>
         @endforeach
     </tbody>
@@ -27,6 +29,7 @@
             <th style="width:50%">Equipo</th>
             <th style="width:50%">Entrenador</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
+            <th>Jugar</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +38,7 @@
             <td>{{ $team['name'] }}</td>
             <td>{{ $team['user']['name'] }}</td>
             <td align="center">{{ $team['average'] }}</td>
+            <td align="center">Amistoso</td>
         </tr>
         @endforeach
     </tbody>

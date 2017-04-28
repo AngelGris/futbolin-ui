@@ -18,11 +18,11 @@ class ComposerServiceProvider extends ServiceProvider
             if (Auth::check())
             {
                 $navigation = [
-                    ['url' => 'vestuario', 'icon' => 'iconfa-home', 'name' => 'Vestuario'],
-                    ['url' => 'equipo', 'icon' => 'iconfa-shield', 'name' => 'Equipo'],
-                    ['url' => 'jugadores', 'icon' => 'iconfa-group', 'name' => 'Jugadores'],
-                    ['url' => 'estrategia', 'icon' => 'iconfa-beaker', 'name' => 'Estratégia'],
-                    ['url' => 'equipos', 'icon' => 'iconfa-list', 'name' => 'Equipos'],
+                    ['url' => 'vestuario', 'icon' => 'fa fa-home', 'name' => 'Vestuario'],
+                    ['url' => 'equipo', 'icon' => 'fa fa-star', 'name' => 'Equipo'],
+                    ['url' => 'jugadores', 'icon' => 'fa fa-group', 'name' => 'Jugadores'],
+                    ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estratégia'],
+                    ['url' => 'equipos', 'icon' => 'fa fa-futbol-o', 'name' => 'Equipos'],
                 ];
 
                 $view->with('user', Auth::user())

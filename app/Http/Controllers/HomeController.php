@@ -30,7 +30,7 @@ class HomeController extends Controller
         }
 
         $vars = [
-            'icon' => 'iconfa-home',
+            'icon' => 'fa fa-home',
             'title' => 'Vestuario',
             'subtitle' => 'Aquí comienza todo'
         ];

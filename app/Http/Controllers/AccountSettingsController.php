@@ -26,7 +26,7 @@ class AccountSettingsController extends Controller
     public function index()
     {
         $vars = [
-            'icon' => 'iconfa-user',
+            'icon' => 'fa fa-user',
             'title' => 'Editar Perfil',
             'subtitle' => 'Dime quién eres'
         ];
@@ -60,7 +60,7 @@ class AccountSettingsController extends Controller
     public function editPassword()
     {
         $vars = [
-            'icon' => 'iconfa-user',
+            'icon' => 'fa fa-user',
             'title' => 'Cambiar Contraseña',
             'subtitle' => 'La palabrita mágica'
         ];

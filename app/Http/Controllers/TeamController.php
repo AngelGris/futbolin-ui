@@ -27,7 +27,7 @@ class TeamController extends Controller
     public function index()
     {
         $vars = [
-            'icon' => 'iconfa-shield',
+            'icon' => 'fa fa-shield',
             'title' => Auth::user()->team->name,
             'subtitle' => 'El club de tus amores'
         ];
@@ -189,7 +189,7 @@ class TeamController extends Controller
     public function edit()
     {
         $vars = [
-            'icon' => 'iconfa-shield',
+            'icon' => 'fa fa-shield',
             'title' => Auth::user()->team->name,
             'subtitle' => 'El club de tus amores'
         ];
@@ -235,9 +235,9 @@ class TeamController extends Controller
         $team = Auth::user()->team;
 
         $vars = [
-            'icon' => 'iconfa-beaker',
+            'icon' => 'fa fa-gears',
             'title' => 'Estratégia',
-            'subtitle' => 'El laboratorio del fútbol',
+            'subtitle' => 'Los engranajes de la máquina',
             'strategy' => $team->strategy->id,
             'formation' => $team->formation,
         ];
@@ -287,7 +287,7 @@ class TeamController extends Controller
     public function showAll()
     {
         $vars = [
-            'icon' => 'iconfa-list',
+            'icon' => 'fa fa-soccer-ball-o',
             'title' => 'Equipos',
             'subtitle' => 'Estos son, aquí están',
             'sparrings' => Team::where('user_id', '=', 1)->get(),

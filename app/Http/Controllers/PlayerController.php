@@ -10,7 +10,7 @@ class PlayerController extends Controller
     public function showListing()
     {
         $vars = [
-            'icon' => 'iconfa-group',
+            'icon' => 'fa fa-group',
             'title' => 'Jugadores',
             'subtitle' => 'Los engranajes de la máquina',
             'players' => Auth::user()->team->players
