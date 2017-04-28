@@ -1,6 +1,7 @@
 /node_modules
 /public/storage
 /public/hot
+/python
 /storage/*.key
 /vendor
 /.idea
