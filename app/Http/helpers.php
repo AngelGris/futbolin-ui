@@ -12,4 +12,30 @@ function randomGauss($min, $max, $std_deviation, $step=1) {
 
     return $random_number;
 }
+
+function lumdiff($color1,$color2){
+    $L1 = 0.2126 * pow($color1[0]/255, 2.2) +
+          0.7152 * pow($color1[1]/255, 2.2) +
+          0.0722 * pow($color1[2]/255, 2.2);
+
+    $L2 = 0.2126 * pow($color2[0]/255, 2.2) +
+          0.7152 * pow($color2[1]/255, 2.2) +
+          0.0722 * pow($color2[2]/255, 2.2);
+
+    if($L1 > $L2){
+        return ($L1+0.05) / ($L2+0.05);
+    }else{
+        return ($L2+0.05) / ($L1+0.05);
+    }
+}
+
+function textColor($bgColor, $optColor) {
+    if (lumdiff($bgColor, $optColor) >= 5) {
+        return '#' . dechex($optColor[0]) . dechex($optColor[1]) . dechex($optColor[2]);
+    } else if (lumdiff($bgColor, [0, 0, 0]) >= 5) {
+        return '#000000';
+    } else {
+        return '#ffffff';
+    }
+}
 ?>

@@ -37,3 +37,6 @@ Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showLis
 Route::get('/estrategia', ['as' => 'strategy', 'uses' => 'TeamController@showStrategy']);
 
 Route::get('/equipos', ['as' => 'teams', 'uses' => 'TeamController@showAll']);
+
+Route::post('/partido/jugar', ['as' => 'match.play', 'uses' => 'MatchController@play']);
+Route::get('/partido/cargar', ['as' => 'match.load', 'uses' => 'MatchController@load']);

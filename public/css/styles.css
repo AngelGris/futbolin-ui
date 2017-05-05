@@ -424,6 +424,114 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	transition: all 0s ease 0s;
 }
 
+/*** MATCH RESULT MODAL ***/
+.modal-match-result .modal-match-result-teams {
+	text-align: center;
+}
+
+.modal-match-result .modal-match-result-teams h4 {
+	margin-bottom: 5px;
+}
+
+.modal-match-result .primarycolor,
+.modal-match-result .secondarycolor {
+	border: solid 1px transparent;
+	bottom: 0;
+	height: 5px;
+	position: absolute;
+	width: 50%;
+}
+
+.modal-match-result .primarycolor {
+	border-right: 0;
+	left: 0;
+}
+
+.modal-match-result .secondarycolor {
+	border-left: 0;
+	right: 0;
+}
+
+.modal-match-result-goals {
+	margin-bottom: 20px;
+}
+
+.modal-match-result-goals div:nth-child(1) {
+	text-align: right;
+}
+
+.modal-match-result-formations {
+	margin-bottom: 20px;
+}
+
+.modal-match-result-goals ul,
+.modal-match-result-formations ul {
+	list-style: none;
+}
+
+.modal-match-result-goals ul li span,
+.modal-match-result-formations ul li span {
+	color:#aaa;
+}
+
+.modal-match-result-formations div:nth-child(1) {
+	padding-left: 0;
+	text-align: right;
+}
+
+.modal-match-result-formations div:nth-child(2) {
+	padding: 0;
+}
+
+
+.modal-match-result-formations div:nth-child(2) img {
+	vertical-align: bottom;
+	width:100%;
+}
+
+.modal-match-result-formations div:nth-last-child(1) {
+	padding-right: 0;
+	text-align: left;
+}
+
+.modal-match-result-formations div.player-container {
+	font-size: 14px;
+	height: 24px;
+	line-height: 24px;
+	position: absolute;
+	text-align: center;
+	width:24px;
+}
+
+.modal-match-result-formations .player-container-local {
+	margin: 0 0 0 -12px;
+}
+
+.modal-match-result-formations div.player-container-visit {
+	margin: -24px 0 0 -12px;
+}
+
+.modal-match-result-actions {
+	margin-bottom: 20px;
+}
+
+.modal-match-result-statistics>div:nth-child(odd) {
+	background-color: #eee;
+}
+
+.modal-match-result-statistics div div:nth-child(1) {
+	text-align: right;
+}
+
+.modal-match-result-statistics div div:nth-child(2) {
+	text-align: center;
+}
+
+.modal-match-result-statistics .best {
+	font-size: 13px;
+	font-weight: bold;
+}
+
 /*** HEADERS AND BOXES ***/
 
 .title-danger { background-color: #dd0000 !important; }

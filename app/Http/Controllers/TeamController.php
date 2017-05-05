@@ -74,6 +74,8 @@ class TeamController extends Controller
             'secondary_color' => 'required|size:7'
         ]);
 
+        $request['text_color'] = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
+
         $team = Auth::user()->createTeam($request);
 
         /**
@@ -220,6 +222,7 @@ class TeamController extends Controller
         $team->stadium_name = $request->stadium_name;
         $team->primary_color = $request->primary_color;
         $team->secondary_color = $request->secondary_color;
+        $team->text_color = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
         $team->save();
 
         \Session::flash('flash_success', 'Equipo actualizado');
