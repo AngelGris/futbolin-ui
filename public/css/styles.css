@@ -330,6 +330,33 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .userlist-favorites li .link a:first-child { background: #e9c72a; color: #fff; }
 .userlist-favorites li .link a:hover { text-decoration: none; color: #fff; }
 
+/*** HOME ***/
+#home-container #home-strategy {
+	position: relative;
+}
+
+#home-container #home-strategy  img {
+	vertical-align: bottom;
+	width: 100%;
+}
+
+#home-container #home-strategy .player-container {
+	font-size: 16px;
+	height: 30px;
+	line-height: 26px;
+	margin: -15px 0 0 0;
+	position: absolute;
+	width: 30px;
+}
+
+#home-container #home-strategy .overlay {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
 /*** STRATEGIES ***/
 #strategy-container {
 	position: relative;
