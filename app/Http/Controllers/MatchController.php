@@ -50,7 +50,7 @@ class MatchController extends Controller
 
         $actions = [];
         foreach ($data['plays'] as $play) {
-            if (in_array($play[2], [6, 8, 12, 18, 19])) {
+            if (in_array($play[2], [1, 2, 6, 8, 9, 12, 18, 19])) {
                 if (in_array($play[2], [6, 19])) {
                     $play[3] = '<strong>' . $play[3] . '</strong>';
                 }
