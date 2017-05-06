@@ -19,6 +19,7 @@ $(function(){
         <tr>
             <th>#</th>
             <th style="width:50%">Nombre</th>
+            <th>Edad</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Posición">POS</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Arquero">ARQ</span></th>
@@ -38,6 +39,7 @@ $(function(){
         <tr class="{{ strtolower($player['position']) }}">
             <td align="right">{{ $player['number'] }}</td>
             <td>{{ $player['first_name'] . ' ' . $player['last_name'] }}</td>
+            <td align="center">{{ $player['age'] }}</td>
             <td align="center">{{ $player['position'] }}</td>
             <td align="right"><strong>{{ $player['average'] }}</strong></td>
             <td align="right">{{ $player['goalkeeping'] }}</td>

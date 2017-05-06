@@ -18,6 +18,7 @@ class CreatePlayersTable extends Migration
             $table->string('first_name', 50);
             $table->string('last_name', 50);
             $table->char('position', 3);
+            $table->tinyInteger('age')->unsigned();
             $table->tinyInteger('goalkeeping')->unsigned();
             $table->tinyInteger('defending')->unsigned();
             $table->tinyInteger('dribbling')->unsigned();
@@ -120,8 +121,10 @@ class CreatePlayersTable extends Migration
 
         for ($i = 0; $i < 36; $i++) {
             if ($i < 18) {
+                $age = 16;
                 $value = 40;
             } else {
+                $age = 17;
                 $value = 60;
             }
 
@@ -130,6 +133,7 @@ class CreatePlayersTable extends Migration
                     'first_name' => $faker->firstName('male'),
                     'last_name' => $faker->lastName('male'),
                     'position' => 'SPA',
+                    'age' => $age,
                     'goalkeeping' => $value,
                     'defending' => $value,
                     'dribbling' => $value,
