@@ -32,7 +32,7 @@
     <div class="col-md-3">
         <ul>
             @for ($i = 0; $i < 18; $i++)
-                @if ($i <= 11)
+                @if ($i < 11)
                 <li>{{ $local['formation'][$i]['short_name'] }} <span>({{ $local['formation'][$i]['number'] }})</span></li>
                 @else
                 <li><span>{{ $local['formation'][$i]['short_name'] }} ({{ $local['formation'][$i]['number'] }})</span></li>
@@ -50,7 +50,7 @@
     <div class="col-md-3">
         <ul>
             @for ($i = 0; $i < 18; $i++)
-                @if ($i <= 11)
+                @if ($i < 11)
                 <li><span>({{ $visit['formation'][$i]['number'] }})</span> {{ $visit['formation'][$i]['short_name'] }}</li>
                 @else
                 <li><span>({{ $visit['formation'][$i]['number'] }}) {{ $visit['formation'][$i]['short_name'] }}</span></li>
