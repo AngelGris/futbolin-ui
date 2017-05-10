@@ -15,7 +15,8 @@ $(function(){
 
         $('#modal-playing-message').text('Se está disputando el encuentro, no dejen de alentar!');
         $('#modal-playing').modal({
-            'backdrop' : 'static'
+            'backdrop' : 'static',
+            'keyboard' : false
         });
 
         $.ajax({
