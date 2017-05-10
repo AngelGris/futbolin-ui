@@ -135,29 +135,57 @@ class Team extends Model
     }
 
     /**
+     * Get if the team meats the requirements to play a match
+     */
+    public function getTeamPlayableAttribute()
+    {
+        $playable = FALSE;
+
+        if (count($this->formation) >= 11) {
+            $lineup = array_slice($this->formation, 0, 11);
+            $count = 0;
+            foreach ($lineup as $player) {
+                if ($player != 0) {
+                    $count++;
+                }
+            }
+
+            if ($count == 11) {
+                $playable = TRUE;
+            }
+        }
+
+        return $playable;
+    }
+
+    /**
      * Get team's average attribute
      */
     public function getAverageAttribute()
     {
-        $lineup = array_slice($this->formation, 0, 11);
-        $total = $count = 0;
-        if ($this->user_id > 1) {
-            foreach ($this->players as $player) {
-                if (in_array($player->id, $lineup))
-                {
-                    $count++;
-                    $total += $player->average;
-                }
-            }
+        if (count($this->formation) == 0) {
+            return 0;
         } else {
-            foreach ($lineup as $p) {
-                if ($p > 0) {
-                    $count++;
-                    $player = Player::find($p);
-                    $total += $player->average;
+            $lineup = array_slice($this->formation, 0, 11);
+            $total = $count = 0;
+            if ($this->user_id > 1) {
+                foreach ($this->players as $player) {
+                    if (in_array($player->id, $lineup))
+                    {
+                        $count++;
+                        $total += $player->average;
+                    }
+                }
+            } else {
+                foreach ($lineup as $p) {
+                    if ($p > 0) {
+                        $count++;
+                        $player = Player::find($p);
+                        $total += $player->average;
+                    }
                 }
             }
+            return (int)($total / $count);
         }
-        return (int)($total / $count);
     }
 }

@@ -9,7 +9,7 @@ $(function(){
         "searching": false,
         "info": false
     });
-
+@if ($playable)
     $('.play').click(function(event) {
         event.preventDefault();
 
@@ -29,8 +29,10 @@ $(function(){
             loadResult(data.file);
         });
     });
+@endif
 });
 
+@if ($playable)
 function loadResult(fileName) {
     $.ajax({
         'method' : 'GET',
@@ -42,10 +44,14 @@ function loadResult(fileName) {
         $('#modal-match-result').modal('show');
     });
 }
+@endif
 </script>
 @endsection
 
 @section('content-inner')
+@if (!$playable)
+<div class="alert alert-danger" role="alert">Para poder jugar partidos necesita completar su formación en la página de <a href="{{ route('strategy') }}">Estratégia</a></div>
+@endif
 <h3>Sparrings</h3>
 <table id="dynsparrings" class="table table-bordered responsive">
     <thead>
@@ -62,7 +68,11 @@ function loadResult(fileName) {
             <td>{{ $t['name'] }}</td>
             <td align="center">{{ $t['strategy']['name'] }}</td>
             <td align="center">{{ $t['average'] }}</td>
-            <td align="center"><a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-futbol-o" title="Entrenamiento"></span></a></td>
+            <td align="center">
+                @if ($playable)
+                <a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-futbol-o" title="Entrenamiento"></span></a>
+                @endif
+            </td>
         </tr>
         @endforeach
     </tbody>
@@ -84,7 +94,7 @@ function loadResult(fileName) {
             <td>{{ $t['user']['name'] }}</td>
             <td align="center">{{ $t['average'] }}</td>
             <td align="center">
-                @if ($t['id'] != $team['id'])
+                @if ($playable && $t['id'] != $team['id'])
                 <a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-handshake-o" title="Amistoso"></span></a>
                 @endif
             </td>
