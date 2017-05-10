@@ -34,8 +34,7 @@ class HomeController extends Controller
             }
         }
         ksort($ages);
-        print_r($ages);
-        exit;
+
         $team = Auth::user()->team;
 
         if (is_null($team)) {
