@@ -14,12 +14,12 @@ class MatchController extends Controller
     public function play(Request $request)
     {
         $file_name = $_SERVER['REQUEST_TIME'] . '-' . Auth::user()->team->id . '-' . $request->rival . '.log';
-        $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' 0 ' . $file_name);
+        $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' -1 ' . $file_name);
         exec($command, $out, $status);
         if ($status == 0) {
             return json_encode(['file' => $file_name]);
         } else {
-            return FALSE;
+            return json_encode(['err_no' => $status]);
         }
     }
 
