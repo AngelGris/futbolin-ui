@@ -26,14 +26,6 @@ $(function(){
         });
     });
 
-    $('.view-match').live('click', function(event) {
-        event.preventDefault();
-
-        loadResult($(this).data('logfile'));
-    });
-
-    $('body').on('click', '.view-match', function() { alert("hello"); })
-
 @if ($playable)
     $('.play').click(function(event) {
         event.preventDefault();
