@@ -137,7 +137,7 @@ class Team extends Model
     /**
      * Get if the team meats the requirements to play a match
      */
-    public function getTeamPlayableAttribute()
+    public function getPlayableAttribute()
     {
         $playable = FALSE;
 

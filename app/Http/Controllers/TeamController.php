@@ -295,7 +295,7 @@ class TeamController extends Controller
             'subtitle' => 'Estos son, aquí están',
             'sparrings' => Team::where('user_id', '=', 1)->get(),
             'teams' => Team::where('user_id', '>', 1)->get(),
-            'playable' => Auth::user()->team->teamPlayable
+            'playable' => Auth::user()->team->playable
         ];
 
         return view('team.listing', $vars);

@@ -94,7 +94,7 @@ function loadResult(fileName) {
             <td>{{ $t['user']['name'] }}</td>
             <td align="center">{{ $t['average'] }}</td>
             <td align="center">
-                @if ($playable && $t['id'] != $team['id'])
+                @if ($playable && $t['playable'] && $t['id'] != $team['id'])
                 <a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-handshake-o" title="Amistoso"></span></a>
                 @endif
             </td>
