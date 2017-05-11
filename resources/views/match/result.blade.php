@@ -1,4 +1,8 @@
 <div class="col-md-12 modal-match-result-teams">
+    @if ($show_remaining)
+    <div class="col-md-12" style="margin-bottom:20px;text-align:center;">En {{ $remaining_time }} podrás jugar un nuevo amistoso contra éste equipo</div>
+    @endif
+    <h4 style="margin-bottom:20px;">{{ $stadium }} ({{ $datetime }})</h4>
     <div class="col-md-4">
         <h4>{{ $local['name'] }}</h4>
         <div class="primarycolor" style="background-color:{{ $local['primary_color'] }};border-color:{{ ($local['primary_color'] == '#ffffff') ? $local['secondary_color'] : $local['primary_color'] }}"></div>

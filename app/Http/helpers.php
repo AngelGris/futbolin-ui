@@ -13,7 +13,7 @@ function randomGauss($min, $max, $std_deviation, $step=1) {
     return $random_number;
 }
 
-function lumdiff($color1,$color2){
+function lumdiff($color1, $color2) {
     $L1 = 0.2126 * pow($color1[0]/255, 2.2) +
           0.7152 * pow($color1[1]/255, 2.2) +
           0.0722 * pow($color1[2]/255, 2.2);
@@ -27,6 +27,17 @@ function lumdiff($color1,$color2){
     }else{
         return ($L2+0.05) / ($L1+0.05);
     }
+}
+
+function readableTime($seconds) {
+    if ($seconds > 3600) {
+        $hours = (int)($seconds / 3600);
+        $output = $hours . ' hora' . ($hours > 1 ? 's' : '');
+    } else {
+        $minutes = (int)($seconds / 60);
+        $output = $minutes . ' minuto' . ($minutes > 1 ? 's' : '');
+    }
+    return $output;
 }
 
 function textColor($bgColor, $optColor) {

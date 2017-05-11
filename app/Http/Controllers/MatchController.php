@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use App\Team;
 
 class MatchController extends Controller
@@ -13,13 +14,27 @@ class MatchController extends Controller
      */
     public function play(Request $request)
     {
-        $file_name = $_SERVER['REQUEST_TIME'] . '-' . Auth::user()->team->id . '-' . $request->rival . '.log';
-        $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' -1 ' . $file_name);
-        exec($command, $out, $status);
-        if ($status == 0) {
-            return json_encode(['file' => $file_name]);
+        $last_match = $this->loadLastFriendlyMatch(Auth::user()->team->id, $request->rival);
+
+        $remaining_time = 0;
+        if (!empty($last_match)) {
+            $last_match_time = strtotime($last_match->created_at);
+
+            $remaining_time = 86400 - ($_SERVER['REQUEST_TIME'] - $last_match_time);
+        }
+
+        if ($remaining_time > 0) {
+            return json_encode(['file' => $last_match->logfile, 'remaining' => readableTime($remaining_time)]);
         } else {
-            return json_encode(['err_no' => $status]);
+            $file_name = $_SERVER['REQUEST_TIME'] . '-' . Auth::user()->team->id . '-' . $request->rival . '.log';
+            $last_match =
+            $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' -1 ' . $file_name);
+            exec($command, $out, $status);
+            if ($status == 0) {
+                return json_encode(['file' => $file_name, 'remaining' => readableTime(86400)]);
+            } else {
+                return json_encode(['err_no' => $status]);
+            }
         }
     }
 
@@ -58,7 +73,21 @@ class MatchController extends Controller
             }
         }
 
+        $match_type = \DB::table('matches')
+            ->select('type')
+            ->where('logfile', '=', $request->file)
+            ->first();
+
+        $show_remaining = FALSE;
+        if ($match_type->type == 0 && $visit->user->id > 1) {
+            $show_remaining = TRUE;
+        }
+
         $params = [
+            'show_remaining' => $show_remaining,
+            'remaining_time' => readableTime(86400 - ($_SERVER['REQUEST_TIME'] - $data['timestamp'])),
+            'datetime' => date('d/m/Y H:i', $data['timestamp']),
+            'stadium' => $data['stadium'],
             'local' => [
                 'name' => $local->name,
                 'primary_color' => $local->primary_color,
@@ -88,5 +117,33 @@ class MatchController extends Controller
         ];
 
         return view('match.result', $params);
+    }
+
+    /**
+     * Load last friendly match between 2 teams (fixed local/visit)
+     */
+    public function loadLastFriendlyMatch($local_id, $visit_id) {
+        $match = \DB::table('matches')
+            ->select('id', 'logfile', 'created_at')
+            ->where('local_id', '=', $local_id)
+            ->where('visit_id', '=', $visit_id)
+            ->latest()
+            ->first();
+
+        return $match;
+    }
+
+    /**
+     * Load last match between 2 teams
+     */
+    public function loadLastMatch($local_id, $visit_id) {
+        $match = \DB::table('matches')
+            ->select('id', 'logfile', 'created_at')
+            ->whereIn('local_id', [$local_id, $visit_id])
+            ->whereIn('visit_id', [$local_id, $visit_id])
+            ->latest()
+            ->first();
+
+        return $match;
     }
 }

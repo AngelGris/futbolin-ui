@@ -53,6 +53,7 @@ function loadResult(fileName) {
 <div class="alert alert-danger" role="alert">Para poder jugar partidos necesita completar su formación en la página de <a href="{{ route('strategy') }}">Estratégia</a></div>
 @endif
 <h3>Sparrings</h3>
+<p style="margin-bottom:10px;">Con los sparrings pueden jugar todos los partidos de entrenamiento que quieras, para probar las diferentes estrategias de tu equipo</p>
 <table id="dynsparrings" class="table table-bordered responsive">
     <thead>
         <tr>
@@ -78,6 +79,7 @@ function loadResult(fileName) {
     </tbody>
 </table>
 <h3>Amistosos</h3>
+<p style="margin-bottom:10px;">Sólo podrás jugar un amistoso con cada equipo cada 24 horas.</p>
 <table id="dynteams" class="table table-bordered responsive">
     <thead>
         <tr>
