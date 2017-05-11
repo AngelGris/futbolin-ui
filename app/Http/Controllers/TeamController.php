@@ -231,6 +231,63 @@ class TeamController extends Controller
     }
 
     /**
+     * Show versus statistics
+     */
+    public function showStatsVersus($rival)
+    {
+        $team_id = Auth::user()->team->id;
+
+        $matches = \DB::table('matches')
+            ->select('id', 'stadium', 'type', 'local_id', 'local_goals', 'visit_goals', 'winner', 'logfile', 'created_at')
+            ->whereIn('local_id', [$team_id, $rival])
+            ->WhereIn('visit_id', [$team_id, $rival])
+            ->latest()
+            ->get();
+
+        $games = [[0, 0, 0], [0, 0, 0]];
+        $goals = [[0, 0], [0, 0]];
+        $last_matches = [];
+
+        foreach ($matches as $match)
+        {
+            $pos = 0;
+            if ($match->local_id != $team_id)
+            {
+                $pos = 1;
+            }
+
+            $games[$pos][$match->winner]++;
+            $goals[$pos][0] += $match->local_goals;
+            $goals[$pos][1] += $match->visit_goals;
+
+            if (count($last_matches) < 5)
+            {
+                $score = $match->local_goals . '-' . $match->visit_goals;
+                if (($pos == 0 && $match->winner == 1) || ($pos == 1 && $match->winner == 2))
+                {
+                    $score = '<strong>' . $score . '</strong>';
+                }
+
+                $last_matches[] = [
+                    'date' => date('d/m/Y', strtotime($match->created_at)),
+                    'condition' => ($pos == 0 ? 'Local' : 'Visitante'),
+                    'score' => $score,
+                    'logfile' => $match->logfile,
+                ];
+            }
+        }
+
+        $vars = [
+            'rival' => Team::find($rival),
+            'matches' => $games,
+            'goals' => $goals,
+            'last_matches' => $last_matches,
+        ];
+
+        return view('team.stats.versus', $vars);
+    }
+
+    /**
      * Show strategy page
      */
     public function showStrategy()

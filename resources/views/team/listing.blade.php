@@ -9,6 +9,31 @@ $(function(){
         "searching": false,
         "info": false
     });
+
+    $('.stats').click(function(event) {
+        event.preventDefault();
+
+        $('#modal-stats-versus-content').html('Cargando las estadísticas');
+        $('#modal-stats-versus-loading').show();
+        $('#modal-stats-versus').modal('show');
+
+        $.ajax({
+            'method' : 'GET',
+            'url' : '/equipo/estadisticas/' + $(this).data('id'),
+        }).done(function(data){
+            $('#modal-stats-versus-loading').hide();
+            $('#modal-stats-versus-content').html(data);
+        });
+    });
+
+    $('.view-match').live('click', function(event) {
+        event.preventDefault();
+
+        loadResult($(this).data('logfile'));
+    });
+
+    $('body').on('click', '.view-match', function() { alert("hello"); })
+
 @if ($playable)
     $('.play').click(function(event) {
         event.preventDefault();
@@ -32,7 +57,6 @@ $(function(){
 @endif
 });
 
-@if ($playable)
 function loadResult(fileName) {
     $.ajax({
         'method' : 'GET',
@@ -44,7 +68,6 @@ function loadResult(fileName) {
         $('#modal-match-result').modal('show');
     });
 }
-@endif
 </script>
 @endsection
 
@@ -60,6 +83,7 @@ function loadResult(fileName) {
             <th style="width:100%">Equipo</th>
             <th>Formacion</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
+            <th>Estad.</th>
             <th>Jugar</th>
         </tr>
     </thead>
@@ -69,6 +93,7 @@ function loadResult(fileName) {
             <td>{{ $t['name'] }}</td>
             <td align="center">{{ $t['strategy']['name'] }}</td>
             <td align="center">{{ $t['average'] }}</td>
+            <td align="center"><a href="#" class="stats" data-id="{{ $t['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></span></a></td>
             <td align="center">
                 @if ($playable)
                 <a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-futbol-o" title="Entrenamiento"></span></a>
@@ -86,6 +111,7 @@ function loadResult(fileName) {
             <th style="width:50%">Equipo</th>
             <th style="width:50%">Entrenador</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
+            <th>Estad.</th>
             <th>Jugar</th>
         </tr>
     </thead>
@@ -95,6 +121,7 @@ function loadResult(fileName) {
             <td>{{ $t['name'] }}</td>
             <td>{{ $t['user']['name'] }}</td>
             <td align="center">{{ $t['average'] }}</td>
+            <td align="center"><a href="#" class="stats" data-id="{{ $t['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></a></td>
             <td align="center">
                 @if ($playable && $t['playable'] && $t['id'] != $team['id'])
                 <a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-handshake-o" title="Amistoso"></span></a>
@@ -104,6 +131,23 @@ function loadResult(fileName) {
         @endforeach
     </tbody>
 </table>
+<div class="modal fade" id="modal-stats-versus">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Estadísticas de enfrentamientos</h4>
+            </div>
+            <div class="modal-body">
+                <p id="modal-stats-versus-content">Cargando las estadísticas</p>
+                <div id="modal-stats-versus-loading" style="margin-top:20px;"><img src="{{ asset('img/loader.gif') }}" /></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="modal-playing">
     <div class="modal-dialog">
         <div class="modal-content">
