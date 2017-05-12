@@ -113,7 +113,11 @@ function loadResult(fileName) {
             <td>{{ $t['name'] }}</td>
             <td>{{ $t['user']['name'] }}</td>
             <td align="center">{{ $t['average'] }}</td>
-            <td align="center"><a href="#" class="stats" data-id="{{ $t['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></a></td>
+            <td align="center">
+                @if ($t['id'] != $team['id'])
+                <a href="#" class="stats" data-id="{{ $t['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></a>
+                @endif
+            </td>
             <td align="center">
                 @if ($playable && $t['playable'] && $t['id'] != $team['id'])
                 <a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-handshake-o" title="Amistoso"></span></a>
