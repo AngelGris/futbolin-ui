@@ -180,7 +180,7 @@ $(function() {
             <tr id="subs-{{ sprintf('%02d', $player['id']) }}" data-player-id="{{ $player['id'] }}" class="rollover-player player-draggable {{ strtolower($player['position']) }}" {!! !empty($formation) ? (in_array($player['id'], $formation) ? 'style="display:none;"' : '') : '' !!}>
                 <td align="right" class="player-number">{{ $player['number'] }}</td>
                 <td class="player-name">{{ $player['short_name'] }}</td>
-                <td align="center" class="player-position">{{ $player['position'] }}</td>
+                <td align="center" class="player-position"><span data-placement="top" data-toggle="tooltip" data-original-title="{{ $player['position_long'] }}">{{ $player['position'] }}</span></td>
                 <td align="right" class="player-average"><strong>{{ $player['average'] }}</strong></td>
             </tr>
             @endforeach

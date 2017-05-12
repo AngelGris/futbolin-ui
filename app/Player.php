@@ -24,26 +24,12 @@ class Player extends Model
     }
 
     /**
-     * Get player's short name
-     */
-    public function getShortNameAttribute()
-    {
-        $names = explode(' ', $this->first_name);
-
-        $initials = '';
-        foreach ($names as $name) {
-            $initials .= mb_substr($name, 0, 1) . '. ';
-        }
-
-        return $initials . $this->last_name;
-    }
-
-    /**
      * Get player's average attribute
      */
     public function getAverageAttribute()
     {
-        switch ($this->position) {
+        switch ($this->position)
+        {
             case 'ARQ':
                 return (int)((($this->goalkeeping * 8) + $this->passing + $this->strength) / 10);
                 break;
@@ -60,5 +46,46 @@ class Player extends Model
                 return (int)(($this->goalkeeping + $this->defending + $this->dribbling + $this->heading + $this->jumping + $this->passing + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
                 break;
         }
+    }
+
+    /**
+     * Get position complete name
+     */
+    public function getPositionLongAttribute()
+    {
+        switch ($this->position)
+        {
+            case 'ARQ':
+                return 'Arquero';
+                break;
+            case 'DEF':
+                return 'Defensor';
+                break;
+            case 'MED':
+                return 'Mediocampista';
+                break;
+            case 'ATA':
+                return 'Atacante';
+                break;
+            default:
+                return 'Sparring';
+                break;
+        }
+    }
+
+    /**
+     * Get player's short name
+     */
+    public function getShortNameAttribute()
+    {
+        $names = explode(' ', $this->first_name);
+
+        $initials = '';
+        foreach ($names as $name)
+        {
+            $initials .= mb_substr($name, 0, 1) . '. ';
+        }
+
+        return $initials . $this->last_name;
     }
 }

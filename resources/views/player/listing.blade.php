@@ -40,7 +40,7 @@ $(function(){
             <td align="right">{{ $player['number'] }}</td>
             <td>{{ $player['first_name'] . ' ' . $player['last_name'] }}</td>
             <td align="center">{{ $player['age'] }}</td>
-            <td align="center">{{ $player['position'] }}</td>
+            <td align="center"><span data-placement="top" data-toggle="tooltip" data-original-title="{{ $player['position_long'] }}">{{ $player['position'] }}</span></td>
             <td align="right"><strong>{{ $player['average'] }}</strong></td>
             <td align="right">{{ $player['goalkeeping'] }}</td>
             <td align="right">{{ $player['defending'] }}</td>
