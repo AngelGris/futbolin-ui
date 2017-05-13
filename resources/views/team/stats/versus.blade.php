@@ -1,5 +1,5 @@
 <h4>Estadísticas contra {{ $rival['name'] }}</h4>
-<table class="table table-bordered responsive">
+<table class="table table-bordered table-stats-versus responsive">
     <thead>
         <tr>
             <th></th>
@@ -51,9 +51,9 @@
     <thead>
         <tr>
             <th>Fecha</th>
-            <th>Condición</th>
-            <th>Resultado</th>
-            <th>Detalles</th>
+            <th>Cond.</th>
+            <th>Res.</th>
+            <th>Det.</th>
         </tr>
     </thead>
     <tbody>
