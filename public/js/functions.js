@@ -33,5 +33,9 @@ function loadTeamColorsPickers(primary_color, secondary_color) {
 }
 
 $(function(){
+    $(document).on('click',function(){
+        $('.collapse').collapse('hide');
+    })
+
     $('[data-toggle="tooltip"]').tooltip();
 });
