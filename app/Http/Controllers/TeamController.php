@@ -99,67 +99,35 @@ class TeamController extends Controller
             15  => 'MED',
             16  => 'MED',
             17  => 'MED',
-            18  => 'MED',
-            19  => 'ATA',
+            18  => 'ATA',
+            19  => 'DEF',
             20  => 'ARQ',
             21  => 'DEF',
         ];
 
-        if (rand(1, 100) > 75) {
-            $players[4] = 'MED';
-        }
-        if (rand(1, 100) > 50) {
+        if (rand(1, 100) > 60) {
             $players[5] = 'MED';
         }
-        if (rand(1, 100) <= 25) {
+        if (rand(1, 100) <= 40) {
             $players[6] = 'DEF';
         }
-        if (rand(1, 100) > 75) {
+        if (rand(1, 100) > 50) {
             $players[10] = 'ATA';
         }
         if ($value = rand(1, 100) > 50) {
-            if ($value <= 75) {
-                $players[14] = 'MED';
-            } else {
-                $players[14] = 'ATA';
-            }
-        }
-        if ($value = rand(1, 100) > 50) {
-            if ($value <= 75) {
-                $players[15] = 'DEF';
-            } else {
-                $players[15] = 'ATA';
-            }
-        }
-        if ($value = rand(1, 100) > 33) {
-            if ($value <= 66) {
-                $players[17] = 'DEF';
-            } else {
-                $players[17] = 'ATA';
-            }
-        }
-        if ($value = rand(1, 100) > 50) {
-            if ($value <= 75) {
-                $players[18] = 'DEF';
-            } else {
-                $players[18] = 'ATA';
-            }
-        }
-        if ($value = rand(1, 100) > 50) {
-            if ($value <= 75) {
-                $players[19] = 'DEF';
-            } else {
-                $players[19] = 'MED';
-            }
+            $players[19] = 'ATA';
         }
         if ($value = rand(1, 100) > 40) {
             if ($value <= 60) {
-                $players[21] = 'DEF';
+                $player[20] = 'DEF';
             } elseif ($value <= 80) {
-                $players[21] = 'MED';
+                $player[20] = 'MED';
             } else {
-                $players[21] = 'ATA';
+                $player[20] = 'ATA';
             }
+        }
+        if ($value = rand(1, 100) > 50) {
+            $players[21] = 'MED';
         }
 
         foreach ($players as $num => $pos) {
