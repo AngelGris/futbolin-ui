@@ -79,13 +79,14 @@ class MatchController extends Controller
             ->first();
 
         $show_remaining = FALSE;
-        if ($match_type->type == 0 && $visit->user->id > 1) {
+        $remaining_time = 86400 - ($_SERVER['REQUEST_TIME'] - $data['timestamp']);
+        if ($match_type->type == 0 && $visit->user->id > 1 && $remaining_time > 0) {
             $show_remaining = TRUE;
         }
 
         $params = [
             'show_remaining' => $show_remaining,
-            'remaining_time' => readableTime(86400 - ($_SERVER['REQUEST_TIME'] - $data['timestamp'])),
+            'remaining_time' => readableTime($remaining_time),
             'datetime' => date('d/m/Y H:i', $data['timestamp']),
             'stadium' => $data['stadium'],
             'local' => [
