@@ -458,6 +458,10 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 }
 
 /*** MATCH RESULT MODAL ***/
+.modal-match-result h3 {
+	text-align: center;
+}
+
 .modal-match-result .modal-match-result-teams {
 	text-align: center;
 }
@@ -508,16 +512,21 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 }
 
 .modal-match-result-formations div:nth-child(1) {
+	float: left;
 	padding-left: 0;
 	text-align: right;
 }
 
 .modal-match-result-formations div:nth-child(2) {
+	float:right;
+}
+
+.modal-match-result-formations div:nth-child(3) {
 	padding: 0;
 }
 
 
-.modal-match-result-formations div:nth-child(2) img {
+.modal-match-result-formations div:nth-child(3) img {
 	vertical-align: bottom;
 	width:100%;
 }
@@ -2376,15 +2385,12 @@ label.error {
 }
 
 
-@media screen and (max-width: 768px) {
-
-		  /* forms */
-		  #elm1_toolbargroup { width: 680px; }
-
-		  /* messages */
-		  .messageview .subject { padding-right: 110px; padding-left: 10px; }
-		  .msgauthor, .msgbody { padding: 10px; }
-		  .msgauthor .authorinfo h5 span { margin-left: 0; display: block; }
+@media screen and (max-width: 767px) {
+	.leftmenu {
+		left: 0;
+		position: absolute;
+		width: 100%;
+	}
 }
 
 @media screen and (max-width: 720px) {
@@ -2392,6 +2398,12 @@ label.error {
 		  #dashboard-left, #dashboard-right { width: 100%; margin: 0; }
 
 		  .teamname { position: static; margin-bottom: 15px; }
+
+		  .teamname .primarycolor,
+		  .teamname .secondarycolor {
+		  	float:left;
+		  	position: relative;
+		  }
 
 		  /* calendar */
 		  .ui-datepicker-calendar td a { padding: 10px; font-size: 12px; }
@@ -2552,7 +2564,7 @@ label.error {
 
 @media screen and (max-width: 360px) {
 
-		  .header { height: 90px; }
+		  .header { height: 50px; }
 		  .headmenu > li { font-size: 12px; }
 		  .headmenu > li > a { padding: 25px 5px 9px; }
 		  .headmenu > li > a .head-icon { width: 30px; height: 30px; background-size: cover; }

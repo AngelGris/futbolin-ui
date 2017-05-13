@@ -73,7 +73,7 @@
     <div class="rightpanel">
         <div class="pageheader">
             <div class="teamname">
-                {{ $team['name'] }}
+                <h2 style="text-align:center;">{{ $team['name'] }}</h2>
                 <div class="primarycolor" style="background-color:{{ $team['primary_color'] }};border-color:{{ ($team['primary_color'] == '#ffffff') ? $team['secondary_color'] : $team['primary_color'] }}"></div>
                 <div class="secondarycolor" style="background-color:{{ $team['secondary_color'] }};border-color:{{ ($team['secondary_color'] == '#ffffff') ? $team['primary_color'] : $team['secondary_color'] }}"></div>
             </div>
