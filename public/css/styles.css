@@ -2394,16 +2394,20 @@ label.error {
 }
 
 @media screen and (max-width: 720px) {
+		#dashboard-left, #dashboard-right { width: 100%; margin: 0; }
 
-		  #dashboard-left, #dashboard-right { width: 100%; margin: 0; }
+		.teamname { position: static; margin-bottom: 15px; }
 
-		  .teamname { position: static; margin-bottom: 15px; }
-
-		  .teamname .primarycolor,
-		  .teamname .secondarycolor {
+		.teamname .primarycolor,
+		.teamname .secondarycolor {
 		  	float:left;
 		  	position: relative;
-		  }
+		}
+
+		.table-players th:nth-child(n+6),
+		.table-players td:nth-child(n+6) {
+		  	display: none;
+		}
 
 		  /* calendar */
 		  .ui-datepicker-calendar td a { padding: 10px; font-size: 12px; }
@@ -2481,7 +2485,6 @@ label.error {
 
 		  /* table */
 		  .dataTable th, .dataTable td { font-size: 11px; padding: 5px; }
-		  .dataTable th:nth-child(2), .dataTable td:nth-child(2) { display: none; }
 		  .dataTables_paginate { position: relative; margin: -25px 0 0 20px; }
 		  .dataTables_info { height: 50px; }
 		  #dyntable2_info { height: auto; }

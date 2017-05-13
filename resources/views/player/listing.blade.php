@@ -14,11 +14,11 @@ $(function(){
 @endsection
 
 @section('content-inner')
-<table id="dyntable" class="table table-bordered responsive">
+<table id="dyntable" class="table table-bordered table-players responsive">
     <thead>
         <tr>
             <th>#</th>
-            <th style="width:50%">Nombre</th>
+            <th>Nombre</th>
             <th>Edad</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Posición">POS</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
