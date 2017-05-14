@@ -318,7 +318,7 @@ class TeamController extends Controller
             'icon' => 'fa fa-soccer-ball-o',
             'title' => 'Equipos',
             'subtitle' => 'Estos son, aquí están',
-            'sparrings' => Team::where('user_id', '=', 1)->get(),
+            'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
             'teams' => Team::where('user_id', '>', 1)->get(),
             'playable' => Auth::user()->team->playable
         ];
