@@ -14,4 +14,7 @@
         <a href="{{ route('strategy') }}"><div class="overlay"></div></a>
     </div>
 </div>
+<div class="col-md-6" id="home-last-matches">
+    Last matches here
+</div>
 @endsection

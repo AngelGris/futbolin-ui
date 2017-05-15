@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Matches;
+use App\Team;
 
 class HomeController extends Controller
 {
@@ -52,6 +54,27 @@ class HomeController extends Controller
             $strategy[$i - 1]['top'] = (int)(100 - $team->strategy->{sprintf('j%02d_start_x', $i)} * 1.11);
         }
 
+        $matches = Matches::loadLastMatches($team->id);
+        $last_matches = [];
+        $teams = [$team->id => $team];
+        foreach($matches as $match) {
+            if (empty($teams[$match->local_id])) {
+                $teams[$match->local_id] = Team::find($match->local_id);
+            }
+            if (empty($teams[$match->visit_id])) {
+                $teams[$match->visit_id] = Team::find($match->visit_id);
+            }
+
+            $last_matches[] = [
+                'date' => date('d/m/Y', strtotime($match->created_at)),
+                'local' => $teams[$match->local_id]->name,
+                'local_goals' => $match->local_goals,
+                'visit' => $teams[$match->visit_id]->name,
+                'visit_goals' => $match->visit_goals,
+                'log_file' => $match->logfile,
+            ];
+        }
+
         $vars = [
             'icon' => 'fa fa-home',
             'title' => 'Vestuario',
@@ -59,6 +82,7 @@ class HomeController extends Controller
             'formation' => $team->formation,
             'players' => $players,
             'strategy' => $strategy,
+            'last_matches' => $last_matches
         ];
 
         return view('home', $vars);

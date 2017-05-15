@@ -206,7 +206,7 @@ class TeamController extends Controller
         $team_id = Auth::user()->team->id;
 
         $matches = \DB::table('matches')
-            ->select('id', 'stadium', 'type', 'local_id', 'local_goals', 'visit_goals', 'winner', 'logfile', 'created_at')
+            ->select('id', 'stadium', 'type_id', 'local_id', 'local_goals', 'visit_goals', 'winner', 'logfile', 'created_at')
             ->whereIn('local_id', [$team_id, $rival])
             ->WhereIn('visit_id', [$team_id, $rival])
             ->latest()

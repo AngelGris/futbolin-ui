@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use App\Team;
+use App\Matches;
 
 class MatchController extends Controller
 {
@@ -14,7 +15,7 @@ class MatchController extends Controller
      */
     public function play(Request $request)
     {
-        $last_match = $this->loadLastFriendlyMatch(Auth::user()->team->id, $request->rival);
+        $last_match = Matches::loadLastFriendlyMatch(Auth::user()->team->id, $request->rival);
 
         $remaining_time = 0;
         if (!empty($last_match)) {
@@ -28,7 +29,7 @@ class MatchController extends Controller
         } else {
             $file_name = $_SERVER['REQUEST_TIME'] . '-' . Auth::user()->team->id . '-' . $request->rival . '.log';
             $last_match =
-            $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' -1 ' . $file_name);
+            $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' ' . $request->match_type . ' -1 ' . $file_name);
             exec($command, $out, $status);
             if ($status == 0) {
                 return json_encode(['file' => $file_name, 'remaining' => readableTime(86400)]);
@@ -74,13 +75,13 @@ class MatchController extends Controller
         }
 
         $match_type = \DB::table('matches')
-            ->select('type')
+            ->select('type_id')
             ->where('logfile', '=', $request->file)
             ->first();
 
         $show_remaining = FALSE;
         $remaining_time = 86400 - ($_SERVER['REQUEST_TIME'] - $data['timestamp']);
-        if ($match_type->type == 0 && $visit->user->id > 1 && $remaining_time > 0) {
+        if ($match_type->type_id > 1 && $remaining_time > 0) {
             $show_remaining = TRUE;
         }
 
@@ -118,33 +119,5 @@ class MatchController extends Controller
         ];
 
         return view('match.result', $params);
-    }
-
-    /**
-     * Load last friendly match between 2 teams (fixed local/visit)
-     */
-    public function loadLastFriendlyMatch($local_id, $visit_id) {
-        $match = \DB::table('matches')
-            ->select('id', 'logfile', 'created_at')
-            ->where('local_id', '=', $local_id)
-            ->where('visit_id', '=', $visit_id)
-            ->latest()
-            ->first();
-
-        return $match;
-    }
-
-    /**
-     * Load last match between 2 teams
-     */
-    public function loadLastMatch($local_id, $visit_id) {
-        $match = \DB::table('matches')
-            ->select('id', 'logfile', 'created_at')
-            ->whereIn('local_id', [$local_id, $visit_id])
-            ->whereIn('visit_id', [$local_id, $visit_id])
-            ->latest()
-            ->first();
-
-        return $match;
     }
 }

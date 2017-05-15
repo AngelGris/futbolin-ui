@@ -16,7 +16,7 @@ class CreateMatchesTable extends Migration
         Schema::create('matches', function (Blueprint $table) {
             $table->increments('id');
             $table->string('stadium');
-            $table->integer('type')->unsigned()->default(0);
+            $table->integer('type_id')->unsigned()->default(0);
             $table->integer('local_id')->unsigned();
             $table->tinyInteger('local_goals')->unsigned();
             $table->integer('visit_id')->unsigned();
@@ -25,6 +25,7 @@ class CreateMatchesTable extends Migration
             $table->string('logfile');
             $table->timestamps();
 
+            $table->foreign('type_id')->references('id')->on('match_types');
             $table->foreign('local_id')->references('id')->on('teams');
             $table->foreign('visit_id')->references('id')->on('teams');
         });

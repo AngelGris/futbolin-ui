@@ -68,7 +68,7 @@ $(function(){
             'method' : 'POST',
             'url' : '{{ route('match.play') }}',
             'dataType' : 'json',
-            'data' : {rival : $(this).data('id'), _token : '{{ csrf_token() }}'},
+            'data' : {rival : $(this).data('id'), match_type : $(this).data('type'), _token : '{{ csrf_token() }}'},
         }).done(function(data){
             $('#modal-playing-message').text('Cargando el resultado...');
             loadResult(data.file);
@@ -117,7 +117,7 @@ function loadResult(fileName) {
                 <td align="center"><a href="#" class="stats" data-id="{{ $t['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></span></a></td>
                 <td align="center">
                     @if ($playable)
-                    <a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-futbol-o" title="Entrenamiento"></span></a>
+                    <a href="#" class="play" data-id="{{ $t['id'] }}" data-type="1"><span class="fa fa-futbol-o" title="Entrenamiento"></span></a>
                     @endif
                 </td>
             </tr>
@@ -151,7 +151,7 @@ function loadResult(fileName) {
                 </td>
                 <td align="center">
                     @if ($playable && $t['playable'] && $t['id'] != $team['id'])
-                    <a href="#" class="play" data-id="{{ $t['id'] }}"><span class="fa fa-handshake-o" title="Amistoso"></span></a>
+                    <a href="#" class="play" data-id="{{ $t['id'] }}" data-type="2"><span class="fa fa-handshake-o" title="Amistoso"></span></a>
                     @endif
                 </td>
             </tr>
