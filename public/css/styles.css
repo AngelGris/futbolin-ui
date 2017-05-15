@@ -2334,6 +2334,12 @@ label.error {
 }
 
 @media screen and (max-width: 800px) {
+	body { font-size: 12px; }
+
+	/* boxes */
+	.slide_img, .entry_img { float: none; margin-bottom: 10px; }
+	.slide_content, .entry_content { margin-left: 0; }
+
 	.header {
 		height: 50px;
 		width: 100%;
@@ -2376,12 +2382,20 @@ label.error {
 
 	.rightpanel { margin-left: 0; width: 100%; }
 
-		  body { font-size: 12px; }
+	#player-info {
+		max-height: 0;
+		-webkit-overflow-scrolling: auto;
+	}
 
-		  /* boxes */
-		  .slide_img, .entry_img { float: none; margin-bottom: 10px; }
-		  .slide_content, .entry_content { margin-left: 0; }
-
+	::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 7px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(0,0,0,.5);
+        -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
 }
 
 
