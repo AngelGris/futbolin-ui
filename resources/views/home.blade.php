@@ -1,5 +1,24 @@
 @extends('layouts.inner')
 
+@section('javascript-inner')
+<script type="text/javascript">
+$(function() {
+    $('.load-match').click(function (event) {
+        event.preventDefault();
+
+        $.ajax({
+            'method' : 'GET',
+            'url' : '{{ route('match.load') }}',
+            'data' : {file : $(this).data('file'), _token : '{{ csrf_token() }}'},
+        }).done(function(data){
+            $('#modal-match-result-content').html(data);
+            $('#modal-match-result').modal('show');
+        });
+    });
+});
+</script>
+@endsection
+
 @section('content-inner')
 <div class="col-md-6" id="home-container">
     <div id="home-strategy">
@@ -14,7 +33,34 @@
         <a href="{{ route('strategy') }}"><div class="overlay"></div></a>
     </div>
 </div>
+@if (!empty($last_matches))
 <div class="col-md-6" id="home-last-matches">
-    Last matches here
+    <h3 style="margin-bottom:20px;text-align:center;">Últimos partidos</h3>
+    @foreach ($last_matches as $match)
+    <div class="col-md-12"{!! $match['won'] ? ' style="font-weight:bold;"' : '' !!}>
+        <div class="col-md-2">{{ $match['date'] }}</div>
+        <div class="col-md-3" style="text-align:right;">{{ $match['local'] }}</div>
+        <div class="col-md-1">{{ $match['local_goals'] }}</div>
+        <div class="col-md-1">{{ $match['visit_goals'] }}</div>
+        <div class="col-md-3">{{ $match['visit'] }}</div>
+        <div class="col-md-2"><a href="#" class="load-match" data-file="{{ $match['log_file'] }}"><span class="fa fa-search"></span></a></div>
+    </div>
+    @endforeach
 </div>
+<div class="modal fade" id="modal-match-result">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Resumen del partido</h4>
+            </div>
+            <div class="modal-body modal-match-result" id="modal-match-result-content">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection

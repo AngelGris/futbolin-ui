@@ -65,13 +65,19 @@ class HomeController extends Controller
                 $teams[$match->visit_id] = Team::find($match->visit_id);
             }
 
+            $won = FALSE;
+            if (($team['id'] == $match->local_id && $match->local_goals > $match->visit_goals) || ($team['id'] == $match->visit_id && $match->local_goals < $match->visit_goals)) {
+                $won = TRUE;
+            }
+
             $last_matches[] = [
                 'date' => date('d/m/Y', strtotime($match->created_at)),
-                'local' => $teams[$match->local_id]->name,
+                'local' => $teams[$match->local_id]->short_name,
                 'local_goals' => $match->local_goals,
-                'visit' => $teams[$match->visit_id]->name,
+                'visit' => $teams[$match->visit_id]->short_name,
                 'visit_goals' => $match->visit_goals,
                 'log_file' => $match->logfile,
+                'won' => $won,
             ];
         }
 

@@ -81,7 +81,7 @@ function loadResult(fileName) {
     $.ajax({
         'method' : 'GET',
         'url' : '{{ route('match.load') }}',
-        'data' : {file : fileName, _token : '{{ csrf_token() }}'},
+        'data' : {file : fileName, show_remaining : true, _token : '{{ csrf_token() }}'},
     }).done(function(data){
         $('#modal-playing').modal('hide');
         $('#modal-match-result-content').html(data);

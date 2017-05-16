@@ -81,8 +81,10 @@ class MatchController extends Controller
 
         $show_remaining = FALSE;
         $remaining_time = 86400 - ($_SERVER['REQUEST_TIME'] - $data['timestamp']);
-        if ($match_type->type_id > 1 && $remaining_time > 0) {
-            $show_remaining = TRUE;
+        if (!empty($request->show_remaining)) {
+            if ($match_type->type_id > 1 && $remaining_time > 0) {
+                $show_remaining = TRUE;
+            }
         }
 
         $params = [
