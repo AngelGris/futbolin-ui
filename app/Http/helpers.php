@@ -1,7 +1,7 @@
 <?php
 function getDomain() {
     $host = parse_url(\Request::server('HTTP_HOST'));
-    return str_replace('admin.', '', $host['host']);
+    return str_replace('admin.', '', (!empty($host['host']) ? $host['host'] : $host['path']));
 }
 
 function lumdiff($color1, $color2) {

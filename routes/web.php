@@ -11,14 +11,14 @@
 |
 */
 
-Auth::routes();
-
-Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']], function($domain) {
+Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']], function() {
     Route::get('/', ['as' => 'admin', 'uses' => 'Admin\HomeController@showIndex']);
 
     Route::get('/contrasena', ['as' => 'admin.password', 'uses' => 'Admin\HomeController@editPassword']);
     Route::patch('/contrasena', 'Admin\HomeController@updatePassword');
 });
+
+Auth::routes();
 
 Route::get('/', 'Auth\LoginController@showLoginForm');
 Route::group(['prefix' => 'contrasena'], function() {

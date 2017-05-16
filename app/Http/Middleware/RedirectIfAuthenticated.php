@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
             if (Auth::user()->isAdmin) {
-                return redirect('http://admin.' . $request->server('HTTP_HOST'));
+                return redirect()->route('admin', ['domain' => getDomain()]);
             } else {
                 return redirect('/vestuario');
             }
