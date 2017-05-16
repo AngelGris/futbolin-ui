@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class RedirectIfAuthenticated
 {
@@ -18,7 +19,12 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/vestuario');
+            if (Auth::user()->isAdmin) {
+                return redirect('http://admin.' . $request->server('HTTP_HOST'));
+            } else {
+                return redirect('/vestuario');
+            }
+            exit;
         }
 
         return $next($request);

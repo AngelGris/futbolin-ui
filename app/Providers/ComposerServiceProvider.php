@@ -17,17 +17,29 @@ class ComposerServiceProvider extends ServiceProvider
         View::composer('*', function($view){
             if (Auth::check())
             {
-                $navigation = [
-                    ['url' => 'vestuario', 'icon' => 'fa fa-home', 'name' => 'Vestuario'],
-                    ['url' => 'equipo', 'icon' => 'fa fa-star', 'name' => 'Equipo'],
-                    ['url' => 'jugadores', 'icon' => 'fa fa-group', 'name' => 'Jugadores'],
-                    ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estratégia'],
-                    ['url' => 'equipos', 'icon' => 'fa fa-futbol-o', 'name' => 'Equipos'],
-                ];
+                if (Auth::user()->isAdmin) {
+                    $navigation = [
+                        ['url' => '', 'icon' => 'fa fa-dashboard', 'name' => 'Panel'],
+                    ];
 
-                $view->with('user', Auth::user())
-                     ->with('team', Auth::user()->team)
-                     ->with('navigation', $navigation);
+                    //$http_host = parse_url(\Request::server('HTTP_HOST'));
+
+                    $view->with('domain', getDomain())
+                        ->with('title', 'Administrador')
+                        ->with('navigation', $navigation);
+                } else {
+                    $navigation = [
+                        ['url' => 'vestuario', 'icon' => 'fa fa-home', 'name' => 'Vestuario'],
+                        ['url' => 'equipo', 'icon' => 'fa fa-star', 'name' => 'Equipo'],
+                        ['url' => 'jugadores', 'icon' => 'fa fa-group', 'name' => 'Jugadores'],
+                        ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estratégia'],
+                        ['url' => 'equipos', 'icon' => 'fa fa-futbol-o', 'name' => 'Equipos'],
+                    ];
+
+                    $view->with('user', Auth::user())
+                         ->with('team', Auth::user()->team)
+                         ->with('navigation', $navigation);
+                }
             }
         });
     }

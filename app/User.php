@@ -28,6 +28,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * Cast attributes
+     *
+     * @var array
+     */
+    /*protected $casts = [
+        'is_admin' => 'boolean',
+    ];*/
+
+    /**
      * Get the team associated with the user
      */
     public function team()
@@ -48,18 +57,26 @@ class User extends Authenticatable
     }
 
     /**
-     * Update user's team
-     */
-    public function updateTeam($request)
-    {
-        return $this->team()->update($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color', 'text_color']));
-    }
-
-    /**
      * Get user's complete name
      */
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * Get user's admin privileges
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->is_administrator == 1;
+    }
+
+    /**
+     * Update user's team
+     */
+    public function updateTeam($request)
+    {
+        return $this->team()->update($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color', 'text_color']));
     }
 }

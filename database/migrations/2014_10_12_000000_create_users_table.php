@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->boolean('is_admin')->default(FALSE);
+            $table->boolean('is_administrator')->default(FALSE);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -28,7 +28,7 @@ class CreateUsersTable extends Migration
             [
                 'first_name' => 'Admin',
                 'last_name' => 'Admin',
-                'email' => 'admin',
+                'email' => 'admin@futbolin.com.ar',
                 'password' => bcrypt('admin'),
                 'is_admin' => TRUE
             ]
