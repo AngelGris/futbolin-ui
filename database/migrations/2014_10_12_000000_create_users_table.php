@@ -30,7 +30,7 @@ class CreateUsersTable extends Migration
                 'last_name' => 'Admin',
                 'email' => 'admin@futbolin.com.ar',
                 'password' => bcrypt('admin'),
-                'is_admin' => TRUE
+                'is_administrator' => TRUE
             ]
         );
     }
