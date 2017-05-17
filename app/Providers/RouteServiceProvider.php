@@ -23,7 +23,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::pattern('domain', '(localhost|futbolin.com.ar)');
 
         parent::boot();
     }

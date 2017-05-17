@@ -22,9 +22,8 @@ class RedirectIfAuthenticated
             if (Auth::user()->isAdmin) {
                 return redirect()->route('admin', ['domain' => getDomain()]);
             } else {
-                return redirect('/vestuario');
+                return redirect()->route('home');
             }
-            exit;
         }
 
         return $next($request);
