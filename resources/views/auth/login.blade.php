@@ -26,13 +26,15 @@
                 <button type="submit" class="btn btn-primary">Entrar</button>
             </div>
             <div class="inputwrapper">
-                <div class="pull-right">¿No es miembro? <a href="{{ route('register') }}">Afiliarse</a></div>
-                <label><input type="checkbox" class="remember" name="remember" {{ old('remember') | true ? 'checked' : '' }} /> Recordarme</label>
+                <label class="pull-left"><input type="checkbox" class="remember" name="remember" {{ old('remember') | true ? 'checked' : '' }} /> Recordarme</label>
             </div>
-            <div class="inputwrapper">
+            <div class="inputwrapper col-xs-12">
+                <div class="pull-right">¿No es miembro? <a href="{{ route('register') }}" class="btn btn-danger">Afiliarse</a></div>
+            </div>
+            <div class="inputwrapper col-xs-12">
                 <div class="pull-right">¿Olvidó su contraseña? <a href="{{ route('password.request') }}">Recuperarla</a></div>
-                <div class="clear"></div>
             </div>
+            <div class="clear"></div>
         </form>
     </div>
 </div>
