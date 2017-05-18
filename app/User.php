@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Notifications\ResetPassword as ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -28,13 +29,15 @@ class User extends Authenticatable
     ];
 
     /**
-     * Cast attributes
+     * Send the password reset notification.
      *
-     * @var array
+     * @param  string  $token
+     * @return void
      */
-    /*protected $casts = [
-        'is_admin' => 'boolean',
-    ];*/
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token, $this));
+    }
 
     /**
      * Get the team associated with the user
