@@ -20,6 +20,9 @@ class ComposerServiceProvider extends ServiceProvider
                 if (Auth::user()->isAdmin) {
                     $navigation = [
                         ['url' => '', 'icon' => 'fa fa-dashboard', 'name' => 'Panel'],
+                        ['url' => 'usuarios', 'icon' => 'fa fa-group', 'name' => 'Usuarios'],
+                        ['url' => 'equipos', 'icon' => 'fa fa-futbol-o', 'name' => 'Equipos'],
+                        ['url' => 'partidos', 'icon' => 'fa fa-star', 'name' => 'Partidos'],
                     ];
 
                     //$http_host = parse_url(\Request::server('HTTP_HOST'));

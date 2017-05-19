@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-<div class="mainwrapper">
+<div id="admin-wrapper" class="mainwrapper">
     <div class="header">
         <nav class="navbar navbar-default">
             <div class="container-fluid">

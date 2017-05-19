@@ -71,7 +71,7 @@ class HomeController extends Controller
             }
 
             $last_matches[] = [
-                'date' => date('d/m/Y', strtotime($match->created_at)),
+                'date' => date('d/m/y', strtotime($match->created_at)),
                 'local' => $teams[$match->local_id]->short_name,
                 'local_goals' => $match->local_goals,
                 'visit' => $teams[$match->visit_id]->short_name,

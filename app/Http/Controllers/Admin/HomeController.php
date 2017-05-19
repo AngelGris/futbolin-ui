@@ -6,12 +6,18 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Team;
+use App\Matches;
 
 class HomeController extends Controller
 {
     public function showIndex()
     {
-        return view('admin.home');
+        $vars = [
+            'last_teams' => Team::where('user_id', '>', 1)->latest()->limit(10)->get(),
+            'last_matches' => Matches::latest()->limit(10)->get(),
+        ];
+        return view('admin.home', $vars);
     }
 
     public function editPassword()

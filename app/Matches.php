@@ -11,7 +11,7 @@ class Matches extends Model
      */
     public function local()
     {
-        return $this->hasOne(Team::class, 'foreign_key', 'local_id');
+        return $this->belongsTo(Team::class);
     }
 
     /**
@@ -19,7 +19,7 @@ class Matches extends Model
      */
     public function visit()
     {
-        return $this->hasOne(Team::class, 'foreign_key', 'visit_id');
+        return $this->belongsTo(Team::class);
     }
 
     /**

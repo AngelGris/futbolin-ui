@@ -16,6 +16,16 @@ Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']],
 
     Route::get('/contrasena', ['as' => 'admin.password', 'uses' => 'Admin\HomeController@editPassword']);
     Route::patch('/contrasena', 'Admin\HomeController@updatePassword');
+
+    Route::get('/equipos', ['as' => 'admin.teams', 'uses' => 'Admin\TeamController@index']);
+    Route::get('/equipo/{team}', ['as' => 'admin.team', 'uses' => 'Admin\TeamController@show']);
+
+    Route::get('/partidos', ['as' => 'admin.matches', 'uses' => 'Admin\MatchController@index']);
+    Route::get('/partido', ['as' => 'admin.match', 'uses' => 'Admin\MatchController@show']);
+    Route::get('/partido/log/{match}', ['as' => 'admin.match.log', 'uses' => 'Admin\MatchController@showLog']);
+
+    Route::get('/usuarios', ['as' => 'admin.users', 'uses' => 'Admin\UserController@index']);
+    Route::get('/usuario/{user}', ['as' => 'admin.user', 'uses' => 'Admin\UserController@show']);
 });
 
 Auth::routes();

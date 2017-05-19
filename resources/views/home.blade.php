@@ -34,7 +34,7 @@ $(function() {
     </div>
 </div>
 @if (!empty($last_matches))
-<div class="col-md-6" id="home-last-matches">
+<div class="col-md-6 zebra" id="home-last-matches">
     <h3 style="margin-bottom:20px;text-align:center;">Últimos partidos</h3>
     @foreach ($last_matches as $match)
     <div class="col-xs-12"{!! $match['won'] ? ' style="font-weight:bold;"' : '' !!}>

@@ -48,6 +48,9 @@ strong { font-weight: normal; }
 label, input, textarea, select, button { font-size: 13px; }
 h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
+.rightpanel a span.fa {
+	color: #000;
+}
 
 /*** LOGIN PAGE ***/
 
@@ -363,8 +366,8 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	width: 100%;
 }
 
-#home-last-matches>div:nth-child(even) {
-	background-color: #bed8ea;
+.zebra>div:nth-child(even) {
+	background-color: #dfdfdf;
 }
 
 /*** STRATEGIES ***/
@@ -2279,7 +2282,13 @@ label.error {
 
 .no-rgba .fc-event { background: #333; }
 
+/*** ADMIN ***/
 
+#admin-wrapper #home-last-matches .btn-primary,
+#admin-wrapper #home-last-teams .btn-primary {
+	float: right;
+	margin-top: 20px;
+}
 
 /*** MEDIA QUERIES ***/
 
@@ -2756,7 +2765,10 @@ body.loginpage,
 .fc-widget-header,
 .fc-widget-header.fc-agenda-gutter.fc-last,
 .chatwin h4
-{ background-color: #3b6c8e; }
+{
+	background-color: #3b6c8e;
+	color: #fff;
+}
 
 
 
