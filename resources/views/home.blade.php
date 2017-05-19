@@ -38,12 +38,10 @@ $(function() {
     <h3 style="margin-bottom:20px;text-align:center;">Últimos partidos</h3>
     @foreach ($last_matches as $match)
     <div class="col-xs-12"{!! $match['won'] ? ' style="font-weight:bold;"' : '' !!}>
-        <div class="col-xs-2">{{ $match['date'] }}</div>
-        <div class="col-xs-3" style="text-align:right;">{{ $match['local'] }}</div>
-        <div class="col-xs-1">{{ $match['local_goals'] }}</div>
-        <div class="col-xs-1">{{ $match['visit_goals'] }}</div>
-        <div class="col-xs-3">{{ $match['visit'] }}</div>
-        <div class="col-xs-2"><a href="#" class="load-match" data-file="{{ $match['log_file'] }}"><span class="fa fa-search"></span></a></div>
+        <div class="col-xs-3">{{ $match['date'] }}</div>
+        <div class="col-xs-3" style="text-align:right;">{{ $match['local'] }} {{ $match['local_goals'] }}</div>
+        <div class="col-xs-3">{{ $match['visit_goals'] }} {{ $match['visit'] }}</div>
+        <div class="col-xs-3" style="text-align:right;"><a href="#" class="load-match" data-file="{{ $match['log_file'] }}"><span class="fa fa-search"></span></a></div>
     </div>
     @endforeach
 </div>
