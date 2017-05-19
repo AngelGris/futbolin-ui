@@ -34,13 +34,21 @@ function randomGauss($min, $max, $std_deviation, $step=1) {
     return $random_number;
 }
 
-function readableTime($seconds) {
+function readableTime($seconds, $short = FALSE) {
+    if ($short) {
+        $hours_label = ['h', 'h'];
+        $minutes_label = ['m', 'm'];
+    } else {
+        $hours_label = ['hora', 'horas'];
+        $minutes_label = ['minute', 'minutes'];
+    }
+
     if ($seconds > 3600) {
         $hours = (int)($seconds / 3600);
-        $output = $hours . ' hora' . ($hours > 1 ? 's' : '');
+        $output = $hours . ' ' . ($hours > 1 ? $hours_label[1] : $hours_label[0]);
     } else {
         $minutes = (int)($seconds / 60);
-        $output = $minutes . ' minuto' . ($minutes > 1 ? 's' : '');
+        $output = $minutes . ' ' . ($minutes > 1 ? $minutes_label[1] : $minutes_label[0]);
     }
     return $output;
 }

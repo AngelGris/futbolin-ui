@@ -71,6 +71,8 @@ $(function(){
             'data' : {rival : $(this).data('id'), match_type : $(this).data('type'), _token : '{{ csrf_token() }}'},
         }).done(function(data){
             $('#modal-playing-message').text('Cargando el resultado...');
+            $('#btn-play-' + data.id).hide();
+            $('#span-play-' + data.id).show();
             loadResult(data.file);
         });
     });
@@ -151,7 +153,8 @@ function loadResult(fileName) {
                 </td>
                 <td align="center">
                     @if ($playable && $t['playable'] && $t['id'] != $team['id'])
-                    <a href="#" class="play" data-id="{{ $t['id'] }}" data-type="2"><span class="fa fa-handshake-o" title="Amistoso"></span></a>
+                    <a href="#" id="btn-play-{{ $t['id'] }}" class="play" data-id="{{ $t['id'] }}" data-type="2"{!! !empty($played[$t['id']]) ? ' style="display:none;"' : '' !!}><span class="fa fa-handshake-o" title="Amistoso"></span></a>
+                    <span id="span-play-{{ $t['id'] }}" data-id="{{ $t['id'] }}" {!! empty($played[$t['id']]) ? ' style="display:none;"' : '' !!}>{{ !empty($played[$t['id']]) ? $played[$t['id']] : '24 h' }}</span>
                     @endif
                 </td>
             </tr>

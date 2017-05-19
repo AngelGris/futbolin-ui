@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Team;
+use App\Matches;
 
 class TeamController extends Controller
 {
@@ -312,15 +313,24 @@ class TeamController extends Controller
     /**
      * Show all teams
      */
-    public function showAll()
+    public function showAll(Request $request)
     {
+        $user = Auth::user();
+        $matches = Matches::where('local_id', '=', $user->team->id)->where('created_at', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'] - 86400))->get();
+
+        $played = [];
+        foreach ($matches as $match) {
+            $played[$match['visit_id']] = readableTime(86400 - ($_SERVER['REQUEST_TIME'] - strtotime($match['created_at'])), TRUE);
+        }
+
         $vars = [
             'icon' => 'fa fa-soccer-ball-o',
             'title' => 'Equipos',
             'subtitle' => 'Estos son, aquí están',
             'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
             'teams' => Team::where('user_id', '>', 1)->get(),
-            'playable' => Auth::user()->team->playable
+            'played' => $played,
+            'playable' => $user->team->playable,
         ];
 
         return view('team.listing', $vars);

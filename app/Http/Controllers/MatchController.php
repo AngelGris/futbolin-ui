@@ -32,7 +32,7 @@ class MatchController extends Controller
             $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' ' . $request->match_type . ' -1 ' . $file_name);
             exec($command, $out, $status);
             if ($status == 0) {
-                return json_encode(['file' => $file_name, 'remaining' => readableTime(86400)]);
+                return json_encode(['id' => $request->rival, 'file' => $file_name, 'remaining' => readableTime(86400)]);
             } else {
                 return json_encode(['err_no' => $status]);
             }
