@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Matches;
 use App\Team;
+use App\Player;
 
 class HomeController extends Controller
 {
@@ -43,15 +44,16 @@ class HomeController extends Controller
             return redirect('/equipo/crear');
         }
 
-        $players = [];
-        foreach ($team->players as $player) {
-            $players[$player['id']] = $player;
-        }
-
         $strategy = [];
         for ($i = 1; $i <= 11; $i++) {
-            $strategy[$i - 1]['left'] = (int)($team->strategy->{sprintf('j%02d_start_y', $i)} * 1.11);
-            $strategy[$i - 1]['top'] = (int)(100 - $team->strategy->{sprintf('j%02d_start_x', $i)} * 1.11);
+            $player = Player::find($team->formation[$i - 1]);
+
+            $strategy[] = [
+                'left' => (int)($team->strategy->{sprintf('j%02d_start_y', $i)} * 1.11),
+                'top' => (int)(100 - $team->strategy->{sprintf('j%02d_start_x', $i)} * 1.11),
+                'position' => $player['position'],
+                'number' => $player['number']
+            ];
         }
 
         $matches = Matches::loadLastMatches($team->id);
@@ -86,7 +88,6 @@ class HomeController extends Controller
             'title' => 'Vestuario',
             'subtitle' => 'Aquí comienza todo',
             'formation' => $team->formation,
-            'players' => $players,
             'strategy' => $strategy,
             'last_matches' => $last_matches
         ];

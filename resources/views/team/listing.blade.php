@@ -143,7 +143,7 @@ function loadResult(fileName) {
         <tbody>
             @foreach ($teams as $t)
             <tr>
-                <td>{{ $t['name'] }}</td>
+                <td><a href="{{ route('team.show', [$t['id']]) }}">{{ $t['name'] }}</a></td>
                 <td>{{ $t['user']['name'] }}</td>
                 <td align="center">{{ $t['average'] }}</td>
                 <td align="center">

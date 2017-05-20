@@ -4,6 +4,15 @@ function getDomain() {
     return str_replace('admin.', '', (!empty($host['host']) ? $host['host'] : $host['path']));
 }
 
+function getMatchLog($file) {
+    $file_name = base_path() . '/python/logs/' . $file;
+
+    $string = file_get_contents($file_name);
+    $data = json_decode($string,true);
+
+    return $data;
+}
+
 function lumdiff($color1, $color2) {
     $L1 = 0.2126 * pow($color1[0]/255, 2.2) +
           0.7152 * pow($color1[1]/255, 2.2) +

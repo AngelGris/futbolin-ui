@@ -19,10 +19,6 @@ class MatchController extends Controller
 
     public function showLog($domain, \App\Matches $match)
     {
-        $file_name = base_path() . '/python/logs/' . $match->logfile;
-
-        $string = file_get_contents($file_name);
-
-        return json_decode($string,true);
+        return getMatchLog($match->logfile);
     }
 }

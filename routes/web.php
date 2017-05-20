@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/', 'TeamController@index');
         Route::post('/', ['as' => 'team.store', 'uses' => 'TeamController@store']);
         Route::patch('/', ['as' => 'team', 'uses' => 'TeamController@update']);
+        Route::get('/{team}', ['as' => 'team.show', 'uses' => 'TeamController@show']);
         Route::get('/crear', 'TeamController@create');
         Route::get('/editar', ['as' => 'team.edit', 'uses' => 'TeamController@edit']);
         Route::get('/estadisticas/{rival}', ['as' => 'team.statsVersus', 'uses' => 'TeamController@showStatsVersus']);

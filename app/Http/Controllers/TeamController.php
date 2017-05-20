@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Team;
 use App\Matches;
+use App\Player;
 
 class TeamController extends Controller
 {
@@ -146,9 +147,130 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(\App\Team $team)
     {
-        //
+        $matches = Matches::where(function($query) use ($team) {
+            $query->where('local_id', '=', $team['id']);
+            $query->orWhere('visit_id', '=', $team['id']);
+        })
+        ->where('type_id', '>', 1)
+        ->latest()
+        ->get();
+
+        $games = [[0, 0, 0], [0, 0, 0]];
+        $goals = [[0, 0], [0, 0]];
+        $last_matches = [];
+        $strategy = [];
+        foreach ($matches as $match) {
+            if (count($last_matches) < 5) {
+                if (empty($last_matches)) {
+                    $data = getMatchLog($match['logfile']);
+                    if ($match['local_id'] == $team['id']) {
+                        foreach ($data['local']['formation'] as $form) {
+                            $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->limit(1)->get();
+                            $strategy[] = [
+                                'left' => $form['top'] * 1.5,
+                                'top' => $form['left'],
+                                'position' => $player[0]['position'],
+                                'number' => $form['number'],
+                            ];
+                        }
+                    } else {
+                        foreach ($data['visit']['formation'] as $form) {
+                            $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->limit(1)->get();
+                            $strategy[] = [
+                                'left' => (100 - $form['top']) * 1.5,
+                                'top' => 100 - $form['left'],
+                                'position' => $player[0]['position'],
+                                'number' => $form['number'],
+                            ];
+                        }
+                    }
+                }
+
+                $won = FALSE;
+                if (($team['id'] == $match->local_id && $match->local_goals > $match->visit_goals) || ($team['id'] == $match->visit_id && $match->local_goals < $match->visit_goals)) {
+                    $won = TRUE;
+                }
+
+                $last_matches[] = [
+                    'date' => date('d/m/y', strtotime($match->created_at)),
+                    'local' => $match->local->short_name,
+                    'local_goals' => $match->local_goals,
+                    'visit' => $match->visit->short_name,
+                    'visit_goals' => $match->visit_goals,
+                    'log_file' => $match->logfile,
+                    'won' => $won,
+                ];
+            }
+
+            $pos = 0;
+            if ($match->local_id != $team['id'])
+            {
+                $pos = 1;
+            }
+
+            $games[$pos][$match->winner]++;
+            $goals[$pos][0] += $match->local_goals;
+            $goals[$pos][1] += $match->visit_goals;
+        }
+
+        $team_id = Auth::user()->team->id;
+
+        $matches = Matches::whereIn('local_id', [$team_id, $team['id']])
+            ->WhereIn('visit_id', [$team_id, $team['id']])
+            ->latest()
+            ->get();
+
+        $games_versus = [[0, 0, 0], [0, 0, 0]];
+        $goals_versus = [[0, 0], [0, 0]];
+        $last_matches_versus = [];
+
+        foreach ($matches as $match)
+        {
+            $pos = 0;
+            if ($match->local_id != $team['id'])
+            {
+                $pos = 1;
+            }
+
+            $games_versus[$pos][$match->winner]++;
+            $goals_versus[$pos][0] += $match->local_goals;
+            $goals_versus[$pos][1] += $match->visit_goals;
+
+            if (count($last_matches_versus) < 5)
+            {
+                $won = FALSE;
+                if (($team['id'] == $match->local_id && $match->local_goals > $match->visit_goals) || ($team['id'] == $match->visit_id && $match->local_goals < $match->visit_goals)) {
+                    $won = TRUE;
+                }
+
+                $last_matches_versus[] = [
+                    'date' => date('d/m/y', strtotime($match->created_at)),
+                    'local' => $match->local->short_name,
+                    'local_goals' => $match->local_goals,
+                    'visit' => $match->visit->short_name,
+                    'visit_goals' => $match->visit_goals,
+                    'log_file' => $match->logfile,
+                    'won' => $won,
+                ];
+            }
+        }
+
+        $vars = [
+            'icon' => 'fa fa-shield',
+            'title' => $team->name,
+            'subtitle' => 'Estudiando al rival',
+            't' => $team,
+            'matches' => $games,
+            'goals' => $goals,
+            'last_matches' => $last_matches,
+            'strategy' => $strategy,
+            'matches_versus' => $games_versus,
+            'goals_versus' => $goals_versus,
+            'last_matches_versus' => $last_matches_versus,
+        ];
+        return view('team.show', $vars);
     }
 
     /**
@@ -206,9 +328,7 @@ class TeamController extends Controller
     {
         $team_id = Auth::user()->team->id;
 
-        $matches = \DB::table('matches')
-            ->select('id', 'stadium', 'type_id', 'local_id', 'local_goals', 'visit_goals', 'winner', 'logfile', 'created_at')
-            ->whereIn('local_id', [$team_id, $rival])
+        $matches = Matches::whereIn('local_id', [$team_id, $rival])
             ->WhereIn('visit_id', [$team_id, $rival])
             ->latest()
             ->get();

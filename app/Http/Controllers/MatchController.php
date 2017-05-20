@@ -44,10 +44,7 @@ class MatchController extends Controller
      */
     public function load(Request $request)
     {
-        $file_name = base_path() . '/python/logs/' . $request->file;
-
-        $string = file_get_contents($file_name);
-        $data = json_decode($string,true);
+        $data = getMatchLog($request->file);
 
         $local = Team::find($data['local']['id']);
         $visit = Team::find($data['visit']['id']);
