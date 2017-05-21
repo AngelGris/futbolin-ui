@@ -91,6 +91,9 @@ function refreshResultModal(data) {
     $('img.svg').each(function(){
         loadSVGintoIMG($(this), $(this).attr('src'));
     });
+    if ($('#modal-playing')) {
+        $('#modal-playing').modal('hide');
+    }
     $('#modal-match-result').modal('show');
 }
 
