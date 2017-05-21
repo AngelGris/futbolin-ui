@@ -4,6 +4,15 @@
 <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ asset('css/lato.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ asset('css/roboto.css') }}" type="text/css" />
+<style type="text/css">
+.shield-primary-color {
+    fill: {{ $team['primary_color'] }};
+}
+
+.shield-secondary-color {
+    fill: {{ $team['secondary_color'] }};
+}
+</style>
 @yield('styles-inner')
 @endsection
 
@@ -73,9 +82,8 @@
     <div class="rightpanel">
         <div class="pageheader">
             <div class="teamname">
-                <h2 style="text-align:center;">{{ $team['name'] }}</h2>
-                <div class="primarycolor" style="background-color:{{ $team['primary_color'] }};border-color:{{ ($team['primary_color'] == '#ffffff') ? $team['secondary_color'] : $team['primary_color'] }}"></div>
-                <div class="secondarycolor" style="background-color:{{ $team['secondary_color'] }};border-color:{{ ($team['secondary_color'] == '#ffffff') ? $team['primary_color'] : $team['secondary_color'] }}"></div>
+                <img class="svg shield" src="{{ asset($team['shield_file']) }}">
+                <h2>{{ $team['name'] }}</h2>
             </div>
             <div class="pageicon"><span class="{{ $icon }}"></span></div>
             <div class="pagetitle">

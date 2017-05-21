@@ -4,15 +4,17 @@
     @endif
     <h4 style="margin-bottom:20px;">{{ $stadium }} ({{ $datetime }})</h4>
     <div class="col-xs-4">
+        <img class="svg" id="shield-local" src="{{ $local['shield_file'] }}" style="height:70px;">
+        <input type="hidden" id="local_primary_color" value="{{ $local['primary_color'] }}">
+        <input type="hidden" id="local_secondary_color" value="{{ $local['secondary_color'] }}">
         <h4>{{ $local['name'] }}</h4>
-        <div class="primarycolor" style="background-color:{{ $local['primary_color'] }};border-color:{{ ($local['primary_color'] == '#ffffff') ? $local['secondary_color'] : $local['primary_color'] }}"></div>
-        <div class="secondarycolor" style="background-color:{{ $local['secondary_color'] }};border-color:{{ ($local['secondary_color'] == '#ffffff') ? $local['primary_color'] : $local['secondary_color'] }}"></div>
     </div>
-    <div class="col-xs-4"><h4>{{ $local['goals'] }} - {{ $visit['goals'] }}</h4></div>
+    <div class="col-xs-4 result"><h4>{{ $local['goals'] }} - {{ $visit['goals'] }}</h4></div>
     <div class="col-xs-4">
+        <img class="svg" id="shield-visit" src="{{ $visit['shield_file'] }}" style="height:70px;">
+        <input type="hidden" id="visit_primary_color" value="{{ $visit['primary_color'] }}">
+        <input type="hidden" id="visit_secondary_color" value="{{ $visit['secondary_color'] }}">
         <h4>{{ $visit['name'] }}</h4>
-        <div class="primarycolor" style="background-color:{{ $visit['primary_color'] }};border-color:{{ ($visit['primary_color'] == '#ffffff') ? $visit['secondary_color'] : $visit['primary_color'] }}"></div>
-        <div class="secondarycolor" style="background-color:{{ $visit['secondary_color'] }};border-color:{{ ($visit['secondary_color'] == '#ffffff') ? $visit['primary_color'] : $visit['secondary_color'] }}"></div>
     </div>
 </div>
 <div class="col-xs-12 modal-match-result-goals">

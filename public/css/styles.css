@@ -255,18 +255,22 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
 .teamname {
 	font-size: 30px;
-	height: 40px;
+	height: 70px;
 	position: absolute;
 	right: 50px;
-	top: 33%;
+	top: 20px;
 }
-.teamname .primarycolor,
-.teamname .secondarycolor {
-	border: solid 1px transparent;
-	bottom: 0;
-	height: 5px;
-	position: absolute;
-	width: 50%;
+.teamname .shield {
+	float: left;
+	height: 70px;
+	margin-right: 20px;
+	width: 70px;
+}
+
+.teamname h2 {
+	line-height: 70px;
+	padding-left: 90px;
+	width: auto;
 }
 
 .teamname .primarycolor {
@@ -481,27 +485,17 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	text-align: center;
 }
 
+.modal-match-result .modal-match-result-teams svg {
+	width:50px;
+}
+
 .modal-match-result .modal-match-result-teams h4 {
 	margin-bottom: 5px;
 }
 
-.modal-match-result .primarycolor,
-.modal-match-result .secondarycolor {
-	border: solid 1px transparent;
-	bottom: 0;
-	height: 5px;
-	position: absolute;
-	width: 50%;
-}
-
-.modal-match-result .primarycolor {
-	border-right: 0;
-	left: 0;
-}
-
-.modal-match-result .secondarycolor {
-	border-left: 0;
-	right: 0;
+.modal-match-result .modal-match-result-teams .result h4 {
+	font-size: 40px;
+	line-height: 70px;
 }
 
 .modal-match-result-goals {

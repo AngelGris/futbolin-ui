@@ -18,14 +18,14 @@ Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']],
     Route::patch('/contrasena', 'Admin\HomeController@updatePassword');
 
     Route::get('/equipos', ['as' => 'admin.teams', 'uses' => 'Admin\TeamController@index']);
-    Route::get('/equipo/{team}', ['as' => 'admin.team', 'uses' => 'Admin\TeamController@show']);
+    Route::get('/equipo/{team}', ['as' => 'admin.team', 'uses' => 'Admin\TeamController@show'])->where('team', '[0-9]+');
 
     Route::get('/partidos', ['as' => 'admin.matches', 'uses' => 'Admin\MatchController@index']);
     Route::get('/partido', ['as' => 'admin.match', 'uses' => 'Admin\MatchController@show']);
-    Route::get('/partido/log/{match}', ['as' => 'admin.match.log', 'uses' => 'Admin\MatchController@showLog']);
+    Route::get('/partido/log/{match}', ['as' => 'admin.match.log', 'uses' => 'Admin\MatchController@showLog'])->where('match', '[0-9]+');
 
     Route::get('/usuarios', ['as' => 'admin.users', 'uses' => 'Admin\UserController@index']);
-    Route::get('/usuario/{user}', ['as' => 'admin.user', 'uses' => 'Admin\UserController@show']);
+    Route::get('/usuario/{user}', ['as' => 'admin.user', 'uses' => 'Admin\UserController@show'])->where('user', '[0-9]+');
 });
 
 Auth::routes();
@@ -50,10 +50,10 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/', 'TeamController@index');
         Route::post('/', ['as' => 'team.store', 'uses' => 'TeamController@store']);
         Route::patch('/', ['as' => 'team', 'uses' => 'TeamController@update']);
-        Route::get('/{team}', ['as' => 'team.show', 'uses' => 'TeamController@show']);
+        Route::get('/{team}', ['as' => 'team.show', 'uses' => 'TeamController@show'])->where('team', '[0-9]+');
         Route::get('/crear', 'TeamController@create');
         Route::get('/editar', ['as' => 'team.edit', 'uses' => 'TeamController@edit']);
-        Route::get('/estadisticas/{rival}', ['as' => 'team.statsVersus', 'uses' => 'TeamController@showStatsVersus']);
+        Route::get('/estadisticas/{rival}', ['as' => 'team.statsVersus', 'uses' => 'TeamController@showStatsVersus'])->where('rival', '[0-9]+');
         Route::post('/estrategia', ['as' => 'team.strategy', 'uses' => 'TeamController@updateStrategy']);
         Route::post('/formacion', ['as' => 'team.formation', 'uses' => 'TeamController@updateFormation']);
     });

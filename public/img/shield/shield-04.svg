@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+   viewBox="0 0 150 181.25"
+   version="1.1">
+  <g transform="translate(-306.61491,-145.50532)">
+    <g transform="matrix(1.25,0,0,-1.25,381.61491,145.50532)"
+       class="shield-secondary-color">
+      <path
+         d="M 49.2,-113.446 60,-28.222 0,0 -60,-28.222 -49.2,-113.446 0,-145 Z"
+         style="stroke:none" />
+    </g>
+    <g transform="matrix(1.25,0,0,-1.25,449.84353,184.50457)"
+       class="shield-secondary-color">
+      <path
+         d="M -10.05,-79.299 0,0 -54.583,25.674148 -109.166,2.96e-4 l 10.05,-79.299 44.533,-28.561646 z"
+         style="stroke:none" />
+    </g>
+    <g transform="matrix(1.25,0,0,-1.25,445.78103,186.73795)"
+       class="shield-primary-color">
+      <path
+         d="M -9.6,-75.744 0,0 -51.333,24.145752 -102.666,-4.96e-4 l 9.6,-75.744 41.733,-26.765254 z"
+         style="stroke:none" />
+    </g>
+    <g transform="matrix(1.25,0,0,-1.25,381.61491,145.50532)"
+       style="fill:#000000;opacity:0.1">
+      <path
+         d="M 0,0 0,-145 49.2,-113.446 60,-28.222 0,0 Z"
+         style="stroke:none" />
+    </g>
+    <g transform="matrix(-1.25,0,0,-1.25,381.61491,145.50532)"
+       style="fill:#ffffff;opacity:0.05">
+      <path
+         d="M 0,0 0,-145 49.2,-113.446 60,-28.222 0,0 Z"
+         style="stroke:none" />
+    </g>
+  </g>
+</svg>

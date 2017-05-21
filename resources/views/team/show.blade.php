@@ -1,5 +1,17 @@
 @extends('layouts.inner')
 
+@section('styles-inner')
+<style>
+#other-shield .shield-primary-color {
+    fill: {{ $t['primary_color'] }};
+}
+
+#other-shield .shield-secondary-color {
+    fill: {{ $t['secondary_color'] }};
+}
+</style>
+@endsection
+
 @section('javascript-inner')
 <script type="text/javascript">
 $(function() {
@@ -11,8 +23,7 @@ $(function() {
             'url' : '{{ route('match.load') }}',
             'data' : {file : $(this).data('file'), _token : '{{ csrf_token() }}'},
         }).done(function(data){
-            $('#modal-match-result-content').html(data);
-            $('#modal-match-result').modal('show');
+            refreshResultModal(data);
         });
     });
 });
@@ -20,10 +31,9 @@ $(function() {
 @endsection
 
 @section('content-inner')
-<div class="col-xs-12" style="margin-bottom:20px;">
-    <h2 style="text-align:center;">{{ $t['name'] }}</h2>
-    <div class="primarycolor" style="background-color:{{ $t['primary_color'] }};border-color:{{ ($t['primary_color'] == '#ffffff') ? $t['secondary_color'] : $t['primary_color'] }}"></div>
-    <div class="secondarycolor" style="background-color:{{ $t['secondary_color'] }};border-color:{{ ($t['secondary_color'] == '#ffffff') ? $t['primary_color'] : $t['secondary_color'] }}"></div>
+<div class="col-xs-12" style="margin-bottom:20px;text-align:center;">
+    <img id="other-shield" class="svg" src="{{ $t['shieldFile'] }}" style="width:70px;" />
+    <h2 style="text-align:center;width:auto;">{{ $t['name'] }}</h2>
 </div>
 <div class="col-md-12" style="height:30px;">
     <label class="col-xs-2 control-label">Nombre corto</label>

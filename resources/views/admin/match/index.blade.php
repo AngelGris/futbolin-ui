@@ -9,8 +9,7 @@ $(function(){
             'url' : '{{ route('match.load') }}',
             'data' : {file : $(this).data('file'), show_remaining : true, _token : '{{ csrf_token() }}'},
         }).done(function(data){
-            $('#modal-match-result-content').html(data);
-            $('#modal-match-result').modal('show');
+            refreshResultModal(data);
         });
     })
 });

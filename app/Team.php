@@ -135,30 +135,6 @@ class Team extends Model
     }
 
     /**
-     * Get if the team meats the requirements to play a match
-     */
-    public function getPlayableAttribute()
-    {
-        $playable = FALSE;
-
-        if (count($this->formation) >= 11) {
-            $lineup = array_slice($this->formation, 0, 11);
-            $count = 0;
-            foreach ($lineup as $player) {
-                if ($player != 0) {
-                    $count++;
-                }
-            }
-
-            if ($count == 11) {
-                $playable = TRUE;
-            }
-        }
-
-        return $playable;
-    }
-
-    /**
      * Get team's average attribute
      */
     public function getAverageAttribute()
@@ -187,5 +163,39 @@ class Team extends Model
             }
             return (int)($total / $count);
         }
+    }
+
+    /**
+     * Get SVG file for the team shield
+     */
+    public function getShieldFileAttribute()
+    {
+        $file = '/img/shield/shield-' . sprintf('%02d', $this->shield) . '.svg';
+
+        return $file;
+    }
+
+    /**
+     * Get if the team meats the requirements to play a match
+     */
+    public function getPlayableAttribute()
+    {
+        $playable = FALSE;
+
+        if (count($this->formation) >= 11) {
+            $lineup = array_slice($this->formation, 0, 11);
+            $count = 0;
+            foreach ($lineup as $player) {
+                if ($player != 0) {
+                    $count++;
+                }
+            }
+
+            if ($count == 11) {
+                $playable = TRUE;
+            }
+        }
+
+        return $playable;
     }
 }

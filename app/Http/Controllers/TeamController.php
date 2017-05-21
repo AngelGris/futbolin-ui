@@ -73,7 +73,8 @@ class TeamController extends Controller
             'short_name' => 'required|max:5',
             'stadium_name' => 'required|min:3|max:255',
             'primary_color' => 'required|size:7',
-            'secondary_color' => 'required|size:7'
+            'secondary_color' => 'required|size:7',
+            'shield' => 'required',
         ]);
 
         $request['text_color'] = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
@@ -304,7 +305,8 @@ class TeamController extends Controller
             'short_name' => 'required|max:5',
             'stadium_name' => 'required|min:3|max:255',
             'primary_color' => 'required|size:7',
-            'secondary_color' => 'required|size:7'
+            'secondary_color' => 'required|size:7',
+            'shield' => 'required',
         ]);
 
         $team = Auth::user()->team;
@@ -314,6 +316,7 @@ class TeamController extends Controller
         $team->primary_color = $request->primary_color;
         $team->secondary_color = $request->secondary_color;
         $team->text_color = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
+        $team->shield = $request->shield;
         $team->save();
 
         \Session::flash('flash_success', 'Equipo actualizado');
@@ -386,7 +389,7 @@ class TeamController extends Controller
         $vars = [
             'icon' => 'fa fa-gears',
             'title' => 'Estratégia',
-            'subtitle' => 'Los engranajes de la máquina',
+            'subtitle' => 'Aceitando las piezas',
             'strategy' => $team->strategy->id,
             'formation' => $team->formation,
         ];

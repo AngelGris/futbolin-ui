@@ -85,9 +85,7 @@ function loadResult(fileName) {
         'url' : '{{ route('match.load') }}',
         'data' : {file : fileName, show_remaining : true, _token : '{{ csrf_token() }}'},
     }).done(function(data){
-        $('#modal-playing').modal('hide');
-        $('#modal-match-result-content').html(data);
-        $('#modal-match-result').modal('show');
+        refreshResultModal(data);
     });
 }
 </script>
