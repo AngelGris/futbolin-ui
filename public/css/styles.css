@@ -1929,6 +1929,7 @@ strong, .headmenu .nav-header,
 
 .btn-danger {
 	background: #d64d49;
+	color:#fff !important;
 }
 
 .btn-info {

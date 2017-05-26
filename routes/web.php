@@ -26,6 +26,15 @@ Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']],
 
     Route::get('/usuarios', ['as' => 'admin.users', 'uses' => 'Admin\UserController@index']);
     Route::get('/usuario/{user}', ['as' => 'admin.user', 'uses' => 'Admin\UserController@show'])->where('user', '[0-9]+');
+
+    Route::get('/torneos', ['as' => 'admin.tournaments', 'uses' => 'Admin\TournamentController@index']);
+    Route::group(['prefix' => 'torneo'], function() {
+        Route::get('/{tournament}', ['as' => 'admin.tournament', 'uses' => 'Admin\TournamentController@show'])->where('tournament', '[0-9]+');
+        Route::get('/crear', ['as' => 'admin.tournament.create', 'uses' => 'Admin\TournamentController@create']);
+        Route::post('/', ['as' => 'admin.tournament.store', 'uses' => 'Admin\TournamentController@store']);
+    });
+
+    Route::get('/categoria/{category}', 'Admin\TournamentCategoryController@index')->where('category', '[0-9]+');
 });
 
 Auth::routes();

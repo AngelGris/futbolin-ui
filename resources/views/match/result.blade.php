@@ -38,10 +38,12 @@
     <div class="col-sm-3 col-xs-6">
         <ul>
             @for ($i = 0; $i < 18; $i++)
-                @if ($i < 11)
-                <li>{{ $local['formation'][$i]['short_name'] }} <span>({{ $local['formation'][$i]['number'] }})</span></li>
-                @else
-                <li><span>{{ $local['formation'][$i]['short_name'] }} ({{ $local['formation'][$i]['number'] }})</span></li>
+                @if (isset($local['formation'][$i]))
+                    @if ($i < 11)
+                    <li>{{ $local['formation'][$i]['short_name'] }} <span>({{ $local['formation'][$i]['number'] }})</span></li>
+                    @else
+                    <li><span>{{ $local['formation'][$i]['short_name'] }} ({{ $local['formation'][$i]['number'] }})</span></li>
+                    @endif
                 @endif
             @endfor
         </ul>
@@ -49,10 +51,12 @@
     <div class="col-sm-3 col-xs-6">
         <ul>
             @for ($i = 0; $i < 18; $i++)
-                @if ($i < 11)
-                <li><span>({{ $visit['formation'][$i]['number'] }})</span> {{ $visit['formation'][$i]['short_name'] }}</li>
-                @else
-                <li><span>({{ $visit['formation'][$i]['number'] }}) {{ $visit['formation'][$i]['short_name'] }}</span></li>
+                @if (isset($visit['formation'][$i]))
+                    @if ($i < 11)
+                    <li><span>({{ $visit['formation'][$i]['number'] }})</span> {{ $visit['formation'][$i]['short_name'] }}</li>
+                    @else
+                    <li><span>({{ $visit['formation'][$i]['number'] }}) {{ $visit['formation'][$i]['short_name'] }}</span></li>
+                    @endif
                 @endif
             @endfor
         </ul>
@@ -60,8 +64,12 @@
     <div class="col-sm-6 col-xs-12">
         <img src="{{ asset('img/field-large.png') }}">
         @for ($i = 0; $i < 11; $i++)
-        <div class="player-container player-container-local" style="left:{{ $local['formation'][$i]['left'] }}%;top:{{ $local['formation'][$i]['top'] }}%;background-color:rgba({{ implode(', ', $local['rgb_primary']) }}, 0.5);border-color:{{ $local['secondary_color'] }};color:{{ $local['text_color'] }};">{{ $local['formation'][$i]['number'] }}</div>
-        <div class="player-container player-container-visit" style="left:{{ $visit['formation'][$i]['left'] }}%;top:{{ $visit['formation'][$i]['top'] }}%;background-color:rgba({{ implode(', ', $visit['rgb_primary']) }}, 0.5);border-color:{{ $visit['secondary_color'] }};color:{{ $visit['text_color'] }};">{{ $visit['formation'][$i]['number'] }}</div>
+            @if (isset($local['formation'][$i]))
+            <div class="player-container player-container-local" style="left:{{ $local['formation'][$i]['left'] }}%;top:{{ $local['formation'][$i]['top'] }}%;background-color:rgba({{ implode(', ', $local['rgb_primary']) }}, 0.5);border-color:{{ $local['secondary_color'] }};color:{{ $local['text_color'] }};">{{ $local['formation'][$i]['number'] }}</div>
+            @endif
+            @if (isset($visit['formation'][$i]))
+            <div class="player-container player-container-visit" style="left:{{ $visit['formation'][$i]['left'] }}%;top:{{ $visit['formation'][$i]['top'] }}%;background-color:rgba({{ implode(', ', $visit['rgb_primary']) }}, 0.5);border-color:{{ $visit['secondary_color'] }};color:{{ $visit['text_color'] }};">{{ $visit['formation'][$i]['number'] }}</div>
+            @endif
         @endfor
     </div>
 </div>
