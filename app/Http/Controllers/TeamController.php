@@ -439,7 +439,7 @@ class TeamController extends Controller
     public function showAll(Request $request)
     {
         $user = Auth::user();
-        $matches = Matches::where('local_id', '=', $user->team->id)->where('created_at', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'] - 86400))->get();
+        $matches = Matches::where('local_id', '=', $user->team->id)->where('type_id', '=', 2)->where('created_at', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'] - 86400))->get();
 
         $played = [];
         foreach ($matches as $match) {

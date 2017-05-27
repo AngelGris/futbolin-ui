@@ -26,7 +26,7 @@ class Tournament extends Model
         /**
          * Create category
          */
-        $category = $this->categories()->create(['category' => $category, 'zone' => $zone]);
+        $category = $this->tournamentCategories()->create(['category' => $category, 'zone' => $zone]);
 
         /**
          * Add teams

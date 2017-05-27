@@ -161,7 +161,11 @@ class Team extends Model
                     }
                 }
             }
-            return (int)($total / $count);
+            if ($count > 0) {
+                return (int)($total / $count);
+            } else {
+                return 0;
+            }
         }
     }
 

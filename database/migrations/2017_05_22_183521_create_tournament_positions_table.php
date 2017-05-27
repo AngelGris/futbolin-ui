@@ -25,7 +25,7 @@ class CreateTournamentPositionsTable extends Migration
             $table->tinyInteger('lost')->unsigned()->default(0);
             $table->tinyInteger('goals_favor')->unsigned()->default(0);
             $table->tinyInteger('goals_against')->unsigned()->default(0);
-            $table->tinyInteger('goals_difference')->unsigned()->default(0);
+            $table->tinyInteger('goals_difference')->default(0);
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('tournament_categories');
