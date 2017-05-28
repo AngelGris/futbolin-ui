@@ -89,6 +89,7 @@ class HomeController extends Controller
             'subtitle' => 'Aquí comienza todo',
             'formation' => $team->formation,
             'strategy' => $strategy,
+            'overlay' => TRUE,
             'last_matches' => $last_matches
         ];
 
