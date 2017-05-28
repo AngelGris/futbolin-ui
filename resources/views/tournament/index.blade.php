@@ -69,6 +69,8 @@ $(function() {
     </div>
     @foreach($category['rounds'] as $round)
     <div class="col-xs-12 rounds" id="round-{{ $round['number'] }}" {!! ($round['number'] != $last_round) ? ' style="display:none;"' : '' !!}>
+        <h3>Fecha {{ $round['number'] }}</h3>
+        <h4>{{ date('d/m/Y H:i', $round['datetime']) }}</h4>
         <table class="table table-bordered responsive">
             <thead>
                 <tr>
