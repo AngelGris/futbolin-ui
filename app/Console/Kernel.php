@@ -13,7 +13,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
     ];
 
     /**
@@ -24,8 +23,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->exec('python3 ' . base_path() . '/python/cron.py')->cron('0 20 * * 1,3,5 *')->sendOutputTo('/var/log/futbolin/cron.log');
     }
 
     /**

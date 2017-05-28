@@ -44,7 +44,7 @@ class MatchesRound extends Model
         if ($this->match_id) {
             return $this->match->local_goals;
         } else {
-            return 0;
+            return '-';
         }
     }
 
@@ -64,7 +64,7 @@ class MatchesRound extends Model
         if ($this->match_id) {
             return $this->match->visit_goals;
         } else {
-            return 0;
+            return '-';
         }
     }
 }

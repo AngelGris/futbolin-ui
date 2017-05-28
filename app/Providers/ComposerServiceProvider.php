@@ -36,6 +36,7 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => 'jugadores', 'icon' => 'fa fa-group', 'name' => 'Jugadores'],
                         ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estratégia'],
                         ['url' => 'equipos', 'icon' => 'fa fa-futbol-o', 'name' => 'Equipos'],
+                        ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
                     ];
 
                     $view->with('user', Auth::user())

@@ -30,6 +30,14 @@ class TournamentCategory extends Model
     }
 
     /**
+     * Category's tournament
+     */
+    public function tournament()
+    {
+        return $this->belongsTo(Tournament::class);
+    }
+
+    /**
      * Category name (A, B, C, ...)
      */
     public function getCategoryNameAttribute()

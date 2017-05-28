@@ -77,4 +77,6 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/jugar', ['as' => 'match.play', 'uses' => 'MatchController@play']);
         Route::get('/cargar', ['as' => 'match.load', 'uses' => 'MatchController@load']);
     });
+
+    Route::get('/torneos', ['as' => 'tournaments', 'uses' => 'TournamentController@index']);
 });

@@ -583,6 +583,23 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	font-weight: bold;
 }
 
+/*** TOURNAMENT ***/
+.pagination-slider-container {
+	float:left;
+	height: 31px;
+	overflow: hidden;
+	position: relative;
+	width: calc(100% - 66px);
+}
+
+.pagination-slider {
+	left: 0;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	width: 1420px;
+}
+
 /*** HEADERS AND BOXES ***/
 
 .title-danger { background-color: #dd0000 !important; }
