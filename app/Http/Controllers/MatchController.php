@@ -15,20 +15,21 @@ class MatchController extends Controller
      */
     public function play(Request $request)
     {
-        $last_match = Matches::loadLastFriendlyMatch(Auth::user()->team->id, $request->rival);
-
         $remaining_time = 0;
-        if (!empty($last_match)) {
-            $last_match_time = strtotime($last_match->created_at);
+        if ($request->match_type == 2) {
+            $last_match = Matches::loadLastFriendlyMatch(Auth::user()->team->id, $request->rival);
 
-            $remaining_time = 86400 - ($_SERVER['REQUEST_TIME'] - $last_match_time);
+            if (!empty($last_match)) {
+                $last_match_time = strtotime($last_match->created_at);
+
+                $remaining_time = 86400 - ($_SERVER['REQUEST_TIME'] - $last_match_time);
+            }
         }
 
         if ($remaining_time > 0) {
             return json_encode(['file' => $last_match->logfile, 'remaining' => readableTime($remaining_time)]);
         } else {
             $file_name = $_SERVER['REQUEST_TIME'] . '-' . Auth::user()->team->id . '-' . $request->rival . '.log';
-            $last_match =
             $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' ' . $request->match_type . ' -1 ' . $file_name);
             exec($command, $out, $status);
             if ($status == 0) {
