@@ -2539,6 +2539,22 @@ label.error {
 
 
 @media screen and (max-width: 480px) {
+	.teamname {
+		height: auto;
+		text-align: center;
+	}
+	.teamname .shield {
+		float: none;
+	}
+	.teamname h2 {
+		padding: 0;
+		line-height: 35px;
+	}
+
+	.modal-match-result .modal-match-result-teams .result h4 {
+		font-size: 24px;
+	}
+
 	.headmenu > li > a { padding: 25px 20px 9px; }
 	.headmenu > li.right { padding-bottom: 13px; }
 	.userloggedinfo { width: auto; }

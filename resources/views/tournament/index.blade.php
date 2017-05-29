@@ -51,7 +51,7 @@ $(function() {
 <h3>No hay torneos para mostrar (todavía!!!)</h3>
 @else
 <h3 style="margin-bottom:30px;">{{ $tournament['name'] }} ({{ 'Zona ' . $category['zone_name'] . ' Cat. ' . $category['category_name'] }})</h3>
-<div class="col-md-6" style="float:right">
+<div class="col-xs-12 col-md-6" style="float:right">
     <div class="col-md-12">
         <ul class="pagination" style="float:left;margin:0;">
             <li><a href="#" class="pagination-slider-left">«</a></li>
@@ -102,9 +102,9 @@ $(function() {
     </div>
     @endforeach
 </div>
-<div class="col-md-6" style="float:left">
+<div class="col-xs-12 col-md-6" style="float:left">
     <h3>Posiciones</h3>
-    <table class="table table-bordered responsive">
+    <table id="dyntable" class="table table-bordered responsive">
         <thead>
             <tr>
                 <th>Pos</th>

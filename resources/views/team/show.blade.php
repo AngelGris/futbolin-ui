@@ -36,17 +36,18 @@ $(function() {
     <h2 style="text-align:center;width:auto;">{{ $t['name'] }}</h2>
 </div>
 <div class="col-md-12" style="height:30px;">
-    <label class="col-xs-2 control-label">Nombre corto</label>
-    <div class="col-xs-10">{{ $t['short_name'] }}</div>
+    <label class="col-xs-4 control-label">Nombre corto</label>
+    <div class="col-xs-8">{{ $t['short_name'] }}</div>
 </div>
 <div class="col-md-12" style="height:30px;">
-    <label class="col-xs-2 control-label">Entrenador</label>
-    <div class="col-xs-10">{{ $t['user']['name'] }}</div>
+    <label class="col-xs-4 control-label">Entrenador</label>
+    <div class="col-xs-8">{{ $t['user']['name'] }}</div>
 </div>
 <div class="col-md-12" style="height:30px;">
-    <label class="col-xs-2 control-label">Nombre del estadio</label>
-    <div class="col-xs-10">{{ $t['stadium_name'] }}</div>
+    <label class="col-xs-4 control-label">Estadio</label>
+    <div class="col-xs-8">{{ $t['stadium_name'] }}</div>
 </div>
+<div class="clear"></div>
 <div class="col-md-12">
 @include('modules.formation')
 </div>

@@ -14,7 +14,7 @@ $(function(){
 @endsection
 
 @section('content-inner')
-<table id="dyntable" class="table table-bordered table-players responsive">
+<table class="table table-bordered table-players responsive">
     <thead>
         <tr>
             <th>#</th>
