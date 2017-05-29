@@ -14,7 +14,7 @@ class TournamentController extends Controller
         $vars = [
             'icon' => 'fa fa-trophy',
             'title' => 'Torneos',
-            'subtitle' => 'Hora de mostrar quién manda',
+            'subtitle' => 'A demostrar quién manda',
         ];
 
         $category_id =  \DB::table('tournament_categories')

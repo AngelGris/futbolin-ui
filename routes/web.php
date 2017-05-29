@@ -71,7 +71,11 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/estrategia', ['as' => 'strategy', 'uses' => 'TeamController@showStrategy']);
 
-    Route::get('/equipos', ['as' => 'teams', 'uses' => 'TeamController@showAll']);
+    Route::get('/amistosos', ['as' => 'teams', 'uses' => 'TeamController@showAll']);
+
+    Route::get('/equipos', function(){
+        return Redirect::to('/amistosos', 301);
+    });
 
     Route::group(['prefix' => 'partido'], function() {
         Route::post('/jugar', ['as' => 'match.play', 'uses' => 'MatchController@play']);

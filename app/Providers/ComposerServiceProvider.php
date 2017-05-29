@@ -35,7 +35,7 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => 'equipo', 'icon' => 'fa fa-star', 'name' => 'Equipo'],
                         ['url' => 'jugadores', 'icon' => 'fa fa-group', 'name' => 'Jugadores'],
                         ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estratégia'],
-                        ['url' => 'equipos', 'icon' => 'fa fa-futbol-o', 'name' => 'Equipos'],
+                        ['url' => 'amistosos', 'icon' => 'fa fa-handshake-o', 'name' => 'Amistosos'],
                         ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
                     ];
 

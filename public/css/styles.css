@@ -238,8 +238,18 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
 .pageheader { padding: 20px; border-bottom: 1px solid #ddd; position: relative; min-height: 105px; background: #fff; }
 .pageicon {
-	width: 70px; font-size: 42px; padding: 10px; color: #0866c6; border: 3px solid #0866c6; display: inline-block;
-	-moz-border-radius: 50px; -webkit-border-radius: 50px; border-radius: 50px; float: left; text-align: center;
+	height: 70px;
+	width: 70px;
+	line-height: 65px;
+	font-size: 42px;
+	color: #0866c6;
+	border: 3px solid #0866c6;
+	display: inline-block;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+	float: left;
+	text-align: center;
 }
 .pagetitle { margin-left: 90px; padding-top: 5px; }
 .pagetitle h1 { font-size: 32px; margin-left: -2px; color: #0866c6; }

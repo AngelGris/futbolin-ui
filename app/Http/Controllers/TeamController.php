@@ -447,9 +447,9 @@ class TeamController extends Controller
         }
 
         $vars = [
-            'icon' => 'fa fa-soccer-ball-o',
-            'title' => 'Equipos',
-            'subtitle' => 'Estos son, aquí están',
+            'icon' => 'fa fa-handshake-o',
+            'title' => 'Amistosos',
+            'subtitle' => 'Hora de ponernos a prueba',
             'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
             'teams' => Team::where('user_id', '>', 1)->get(),
             'played' => $played,
