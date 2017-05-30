@@ -1,6 +1,6 @@
 .colorpicker {
-	width: 356px;
-	height: 176px;
+	width: 210px;
+	height: 224px;
 	overflow: hidden;
 	position: absolute;
 	background: url(../img/colorpicker/colorpicker_background.png);
@@ -54,18 +54,18 @@
 }
 .colorpicker_new_color {
 	position: absolute;
-	width: 60px;
+	width: 86px;
 	height: 30px;
-	left: 213px;
-	top: 13px;
+	left: 14px;
+	top: 176px;
 	background: #f00;
 }
 .colorpicker_current_color {
 	position: absolute;
-	width: 60px;
+	width: 86px;
 	height: 30px;
-	left: 283px;
-	top: 13px;
+	left: 111px;
+	top: 176px;
 	background: #f00;
 }
 .colorpicker input {

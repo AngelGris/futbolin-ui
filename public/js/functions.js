@@ -1,6 +1,7 @@
 function loadTeamColorsPickers(primary_color, secondary_color) {
     $('#primary_color_selector').ColorPicker({
         color: primary_color,
+        place: 'right',
         onShow: function (colpkr) {
             $(colpkr).fadeIn(500);
             return false;
