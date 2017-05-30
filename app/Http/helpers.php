@@ -64,7 +64,7 @@ function readableTime($seconds, $short = FALSE) {
 
 function textColor($bgColor, $optColor) {
     if (lumdiff($bgColor, $optColor) >= 5) {
-        return '#' . dechex($optColor[0]) . dechex($optColor[1]) . dechex($optColor[2]);
+        return '#' . sprintf('%02d', dechex($optColor[0])) . sprintf('%02d', dechex($optColor[1])) . sprintf('%02d', dechex($optColor[2]));
     } else if (lumdiff($bgColor, [0, 0, 0]) >= 5) {
         return '#000000';
     } else {
