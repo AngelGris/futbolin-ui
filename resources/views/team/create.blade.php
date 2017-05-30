@@ -1,16 +1,11 @@
 @extends('layouts.app')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/colorpicker.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ asset('css/spectrum.css') }}" type="text/css" />
 @endsection
 
 @section('javascript')
-<script src="{{ asset('js/colorpicker.js') }}"></script>
-<script>
-    $(function() {
-        loadTeamColorsPickers('{{ old('primary_color', '#ffffff') }}', '{{ old('secondary_color', '#000000') }}');
-    });
-</script>
+<script src="{{ asset('js/spectrum.js') }}"></script>
 @endsection
 
 @section('content')
@@ -48,10 +43,8 @@
             </div>
             <div class="inputwrapper">
                 <p style="color:#fff;">Colores del equipo</p>
-                <input type="hidden" name="primary_color" id="primary_color_picker" value="{{ old('primary_color', '#ffffff') }}" class="form-control input-sm">
-                <span id="primary_color_selector" class="colorselector"><span style="background-color:{{ old('primary_color', '#ffffff') }}"></span></span>
-                <input type="hidden" name="secondary_color" id="secondary_color_picker" value="{{ old('secondary_color', '#000000') }}" class="form-control input-sm">
-                <span id="secondary_color_selector" class="colorselector"><span style="background-color:{{ old('secondary_color', '#000000')}}"></span></span>
+                <input type="text" class="colorpicker" name="primary_color" id="primary_color_picker" value="#ffffff" />
+                <input type="text" class="colorpicker" name="secondary_color" id="secondary_color_picker" value="#000000" />
                 @if ($errors->has('primary_color'))
                 <label class="error">
                     <strong>{{ $errors->first('primary_color') }}</strong>

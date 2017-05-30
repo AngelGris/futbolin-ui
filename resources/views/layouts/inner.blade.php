@@ -21,6 +21,7 @@
 <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/jquery.ui.touch-punch.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/spectrum.js') }}"></script>
 @yield('javascript-inner')
 @endsection
 

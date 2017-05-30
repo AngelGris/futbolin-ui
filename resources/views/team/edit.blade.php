@@ -1,16 +1,7 @@
 @extends('layouts.inner')
 
 @section('styles-inner')
-<link rel="stylesheet" href="{{ asset('css/colorpicker.css') }}" type="text/css" />
-@endsection
-
-@section('javascript-inner')
-<script src="{{ asset('js/colorpicker.js') }}"></script>
-<script>
-    $(function() {
-        loadTeamColorsPickers('{{ old('primary_color', $team['primary_color']) }}', '{{ old('secondary_color', $team['secondary_color']) }}');
-    });
-</script>
+<link rel="stylesheet" href="{{ asset('css/spectrum.css') }}" type="text/css" />
 @endsection
 
 @section('content-inner')
@@ -53,10 +44,8 @@
     <div class="form-group">
         <label class="col-md-2 control-label">Colores</label>
         <div class="col-md-10">
-            <input type="hidden" name="primary_color" id="primary_color_picker" value="{{ old('primary_color', $team['primary_color']) }}" class="form-control input-sm" />
-            <span id="primary_color_selector" class="colorselector"><span style="background-color:{{ old('primary_color', $team['primary_color']) }}"></span></span>
-            <input type="hidden" name="secondary_color" id="secondary_color_picker" value="{{ old('secondary_color', $team['secondary_color']) }}" class="form-control input-sm" />
-            <span id="secondary_color_selector" class="colorselector"><span style="background-color:{{ old('secondary_color', $team['secondary_color'])}}"></span></span>
+            <input type="text" class="colorpicker" name="primary_color" id="primary_color_picker" value="{{ old('primary_color', $team['primary_color']) }}" />
+            <input type="text" class="colorpicker" name="secondary_color" id="secondary_color_picker" value="{{ old('secondary_color', $team['secondary_color']) }}" />
         </div>
     </div>
     <div class="form-group">
