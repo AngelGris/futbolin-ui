@@ -27,17 +27,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $ages = [];
-        for ($i = 0; $i < 10000; $i++) {
-            $age = randomGauss(0, 20, 2);
-            if (isset($ages[$age])) {
-                $ages[$age]++;
-            } else {
-                $ages[$age] = 1;
-            }
-        }
-        ksort($ages);
-
         $team = Auth::user()->team;
 
         if (is_null($team)) {
