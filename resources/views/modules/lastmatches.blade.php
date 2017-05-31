@@ -4,8 +4,8 @@
     @foreach ($last_matches as $match)
     <div class="col-xs-12"{!! $match['won'] ? ' style="font-weight:bold;"' : '' !!}>
         <div class="col-xs-3">{{ $match['date'] }}</div>
-        <div class="col-xs-3" style="text-align:right;">{{ $match['local'] }} {{ $match['local_goals'] }}</div>
-        <div class="col-xs-3">{{ $match['visit'] }} {{ $match['visit_goals'] }}</div>
+        <div class="col-xs-3" style="text-align:right;"><a href="{{ route('team.show', $match['local_id']) }}">{{ $match['local'] }}</a> {{ $match['local_goals'] }}</div>
+        <div class="col-xs-3"><a href="{{ route('team.show', $match['visit_id']) }}">{{ $match['visit'] }}</a> {{ $match['visit_goals'] }}</div>
         <div class="col-xs-3" style="text-align:right;"><a href="#" class="load-match" data-file="{{ $match['log_file'] }}"><span class="fa fa-search"></span></a></div>
     </div>
     @endforeach

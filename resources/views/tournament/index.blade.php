@@ -84,10 +84,10 @@ $(function() {
             <tbody>
                 @foreach ($round['matches'] as $match)
                 <tr>
-                    <td style="padding-right:5px;text-align:right;">{{ $match['local']['name'] }}</td>
+                    <td style="padding-right:5px;text-align:right;"><a href="{{ route('team.show', $match['local']['id']) }}">{{ $match['local']['name'] }}</a></td>
                     <td style="text-align:center;">{{ $match['local_goals'] }}</td>
                     <td style="text-align:center;">{{ $match['visit_goals'] }}</td>
-                    <td style="padding-left:5px;">{{ $match['visit']['name'] }}</td>
+                    <td style="padding-left:5px;"><a href="{{ route('team.show', $match['visit']['id']) }}">{{ $match['visit']['name'] }}</a></td>
                     @if ($round['datetime'] < $_SERVER['REQUEST_TIME'])
                     <td style="text-align:center;">
                         @if ($match['match_id'])
@@ -123,7 +123,7 @@ $(function() {
             @foreach ($category['positions'] as $position)
             <tr>
                 <td style="padding-right:5px;text-align:right;">{{ $position['position'] }}</td>
-                <td>{{ $position['team']['name'] }}</td>
+                <td><a href="{{ route('team.show', $position['team']['id']) }}">{{ $position['team']['name'] }}</a></td>
                 <td style="text-align:right;">{{ $position['points'] }}</td>
                 <td style="text-align:right;">{{ $position['played'] }}</td>
                 <td style="text-align:right;">{{ $position['won'] }}</td>

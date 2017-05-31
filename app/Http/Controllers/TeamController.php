@@ -172,7 +172,7 @@ class TeamController extends Controller
                             $strategy[] = [
                                 'left' => $form['top'] * 1.5,
                                 'top' => $form['left'],
-                                'position' => $player[0]['position'],
+                                'position' => (isset($player[0]) ? $player[0]['position'] : ''),
                                 'number' => $form['number'],
                             ];
                         }
@@ -196,8 +196,10 @@ class TeamController extends Controller
 
                 $last_matches[] = [
                     'date' => date('d/m/y', strtotime($match->created_at)),
+                    'local_id' => $match->local_id,
                     'local' => $match->local->short_name,
                     'local_goals' => $match->local_goals,
+                    'visit_id' => $match->visit_id,
                     'visit' => $match->visit->short_name,
                     'visit_goals' => $match->visit_goals,
                     'log_file' => $match->logfile,
@@ -248,8 +250,10 @@ class TeamController extends Controller
 
                 $last_matches_versus[] = [
                     'date' => date('d/m/y', strtotime($match->created_at)),
+                    'local_id' => $match->local_id,
                     'local' => $match->local->short_name,
                     'local_goals' => $match->local_goals,
+                    'visit_id' => $match->visit_id,
                     'visit' => $match->visit->short_name,
                     'visit_goals' => $match->visit_goals,
                     'log_file' => $match->logfile,
