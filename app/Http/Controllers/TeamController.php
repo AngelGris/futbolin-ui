@@ -133,8 +133,10 @@ class TeamController extends Controller
             $players[21] = 'MED';
         }
 
-        foreach ($players as $num => $pos) {
-            $player = $team->createPlayer($num, $pos);
+        if (!is_integer($team)) {
+            foreach ($players as $num => $pos) {
+                $player = $team->createPlayer($num, $pos);
+            }
         }
 
         $team->save();
