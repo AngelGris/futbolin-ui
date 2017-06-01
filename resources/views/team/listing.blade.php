@@ -93,7 +93,7 @@ function loadResult(fileName) {
 
 @section('content-inner')
 @if (!$playable)
-<div class="alert alert-danger" role="alert">Para poder jugar partidos necesita completar su formación en la página de <a href="{{ route('strategy') }}">Estratégia</a></div>
+<div class="alert alert-danger" role="alert">Para poder jugar partidos necesita completar su formación en la página de <a href="{{ route('strategy') }}">Estrategia</a></div>
 @endif
 <h3>Sparrings <a href="#" class="sparring-toggle"><span class="fa fa-plus-circle"></span></a></h3>
 <p style="margin-bottom:10px;">Con los sparrings pueden jugar todos los partidos de entrenamiento que quieras, para probar las diferentes estrategias de tu equipo</p>

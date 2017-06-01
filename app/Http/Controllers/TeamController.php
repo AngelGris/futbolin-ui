@@ -392,7 +392,7 @@ class TeamController extends Controller
 
         $vars = [
             'icon' => 'fa fa-gears',
-            'title' => 'Estratégia',
+            'title' => 'Estrategia',
             'subtitle' => 'Aceitando las piezas',
             'strategy' => $team->strategy->id,
             'formation' => $team->formation,
