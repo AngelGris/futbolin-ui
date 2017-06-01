@@ -182,7 +182,7 @@ class TeamController extends Controller
                             $strategy[] = [
                                 'left' => (100 - $form['top']) * 1.5,
                                 'top' => 100 - $form['left'],
-                                'position' => $player[0]['position'],
+                                'position' => (isset($player[0]) ? $player[0]['position'] : ''),
                                 'number' => $form['number'],
                             ];
                         }

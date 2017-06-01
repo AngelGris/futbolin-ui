@@ -46,6 +46,14 @@ class TournamentCategory extends Model
     }
 
     /**
+     * Category name
+     */
+    public function getNameAttribute()
+    {
+        return $this->tournament->name . ' (Zona ' . $this->zone_name . ' Cat. ' . $this->category_name . ')';
+    }
+
+    /**
      * Zone name (I, II, III, ...)
      */
     public function getZoneNameAttribute()

@@ -50,7 +50,7 @@ $(function() {
 @if (empty($tournament))
 <h3>No hay torneos para mostrar (todavía!!!)</h3>
 @else
-<h3 style="margin-bottom:30px;">{{ $tournament['name'] }} ({{ 'Zona ' . $category['zone_name'] . ' Cat. ' . $category['category_name'] }})</h3>
+<h3 style="margin-bottom:30px;">{{ $category['name'] }}</h3>
 <div class="col-xs-12 col-md-6" style="float:right">
     <div class="col-md-12">
         <ul class="pagination" style="float:left;margin:0;">

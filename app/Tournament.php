@@ -39,6 +39,7 @@ class Tournament extends Model
          * Create fixture
          */
         $round_time = strtotime('next monday') + 72000;
+        $round_time_back = $round_time + 3801600;
         for ($i = 0; $i < 19; $i++) {
             $round_number = $i + 1;
             $round1 = \DB::table('tournament_rounds')->insertGetId([
@@ -51,7 +52,7 @@ class Tournament extends Model
             $round2 = \DB::table('tournament_rounds')->insertGetId([
                 'category_id' => $category->id,
                 'number' => $round_number + 19,
-                'datetime' =>  $round_time,
+                'datetime' =>  $round_time_back,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
@@ -96,6 +97,12 @@ class Tournament extends Model
                 $round_time += 172800;
             } else {
                 $round_time += 259200;
+            }
+
+            if ($round_number % 3 == 2) {
+                $round_time_back += 259200;
+            } else {
+                $round_time_back += 172800;
             }
         }
     }

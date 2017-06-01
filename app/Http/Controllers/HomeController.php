@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Matches;
 use App\Team;
 use App\Player;
+use App\TournamentCategory;
 
 class HomeController extends Controller
 {
@@ -83,6 +84,59 @@ class HomeController extends Controller
             'overlay' => TRUE,
             'last_matches' => $last_matches
         ];
+
+        $category_id =  \DB::table('tournament_categories')
+                        ->join('tournament_positions', 'tournament_positions.category_id', '=', 'tournament_categories.id')
+                        ->where('tournament_positions.team_id', '=', Auth::user()->team->id)
+                        ->max('tournament_categories.id');
+
+        if ($category_id) {
+            $category = TournamentCategory::find($category_id);
+            $tournament = $category->tournament;
+
+            $next_match =   \DB::table('matches_rounds')
+                            ->select('local_id', 'visit_id', 'datetime')
+                            ->leftJoin('tournament_rounds', 'tournament_rounds.id', '=', 'matches_rounds.round_id')
+                            ->where(function($query) use ($team) {
+                                $query->where('local_id', '=', $team->id)
+                                      ->orWhere('visit_id', '=', $team->id);
+                            })->whereNull('match_id')
+                            ->orderBy('number', 'ASC')
+                            ->first();
+
+            $last_matches =   \DB::table('matches_rounds')
+                            ->select('match_id')
+                            ->where(function($query) use ($team) {
+                                $query->where('local_id', '=', $team->id)
+                                      ->orWhere('visit_id', '=', $team->id);
+                            })->whereNotNull('match_id')
+                            ->orderBy('match_id', 'DESC')
+                            ->limit(3)
+                            ->get();
+            $lm = [];
+            foreach ($last_matches as $match) {
+                $match = Matches::find($match->match_id);
+                $lm[] = [
+                    'date' => date('d/m/y', strtotime($match['created_at'])),
+                    'local' => $match['local'],
+                    'local_goals' => $match['local_goals'],
+                    'visit' => $match['visit'],
+                    'visit_goals' => $match['visit_goals'],
+                    'logfile' => $match['logfile'],
+                ];
+            }
+
+            $vars['tournament'] = [
+                'category' => $category,
+                'last_matches' => $lm,
+                'next_match' => [
+                    'date' => date('d/m/y H:i', $next_match->datetime),
+                    'local' => Team::find($next_match->local_id),
+                    'visit' => Team::find($next_match->visit_id),
+                ]
+            ];
+
+        }
 
         return view('home', $vars);
     }

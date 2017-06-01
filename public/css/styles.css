@@ -388,6 +388,19 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	width: 100%;
 }
 
+#home-next-match #home-next-match-date {
+	text-align: center;
+}
+
+#home-next-match #home-next-match-stadium {
+	text-align: center;
+}
+
+#home-next-match .teams {
+	font-size: 18px;
+	text-align: center;
+}
+
 .zebra>div:nth-child(even) {
 	background-color: #dfdfdf;
 }
