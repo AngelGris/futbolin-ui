@@ -83,7 +83,7 @@ $(function() {
             </thead>
             <tbody>
                 @foreach ($round['matches'] as $match)
-                <tr>
+                <tr{!! ($match['local']['id'] == $team['id'] || $match['visit']['id'] == $team['id']) ? ' style="background-color:#ddd;"' : '' !!}>
                     <td style="padding-right:5px;text-align:right;"><a href="{{ route('team.show', $match['local']['id']) }}">{{ $match['local']['name'] }}</a></td>
                     <td style="text-align:center;">{{ $match['local_goals'] }}</td>
                     <td style="text-align:center;">{{ $match['visit_goals'] }}</td>
@@ -121,7 +121,7 @@ $(function() {
         </thead>
         <tbody>
             @foreach ($category['positions'] as $position)
-            <tr>
+            <tr{!! ($position['team']['id'] == $team['id']) ? ' style="background-color:#ddd;"' : '' !!}>
                 <td style="padding-right:5px;text-align:right;">{{ $position['position'] }}</td>
                 <td><a href="{{ route('team.show', $position['team']['id']) }}">{{ $position['team']['name'] }}</a></td>
                 <td style="text-align:right;">{{ $position['points'] }}</td>

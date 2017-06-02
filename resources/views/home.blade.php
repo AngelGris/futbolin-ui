@@ -54,7 +54,7 @@ $(function() {
     <div class="col-md-6 zebra">
         <div class="clear"></div>
         @for ($i = 0; $i < 10; $i++)
-        <div class="col-xs-12" style="padding:0;">
+        <div class="col-xs-12" style="padding:0;{{ ($team['id'] == $tournament['category']['positions'][$i]['team_id']) ? 'background-color:#f99;' : ''}}">
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['position'] }}</div>
             <div class="col-xs-6"><a href="{{ route('team.show', $tournament['category']['positions'][$i]['team_id']) }}">{{ $tournament['category']['positions'][$i]['team']['short_name'] }}</a></div>
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['points'] }}</div>
@@ -64,7 +64,7 @@ $(function() {
     <div class="col-md-6 zebra">
         <div class="clear"></div>
         @for ($i = 10; $i < 20; $i++)
-        <div class="col-xs-12" style="padding:0;">
+        <div class="col-xs-12" style="padding:0;{{ ($team['id'] == $tournament['category']['positions'][$i]['team_id']) ? 'background-color:#f99;' : ''}}">
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['position'] }}</div>
             <div class="col-xs-6"><a href="{{ route('team.show', $tournament['category']['positions'][$i]['team_id']) }}">{{ $tournament['category']['positions'][$i]['team']['short_name'] }}</a></div>
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['points'] }}</div>
