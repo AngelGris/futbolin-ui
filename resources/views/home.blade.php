@@ -20,7 +20,7 @@ $(function() {
 
 @section('content-inner')
 @if(isset($tournament))
-<h3>{{ $tournament['category']['name'] }}</h3>
+<h3>{{ $tournament['category']['name'] }} <a href="{{ route('tournaments') }}" class="btn btn-primary" style="margin-left:20px;padding: 2px 10px;">Ver todo</a></h3>
 <div class="col-md-6 zebra" style="float:right;margin-bottom:40px;">
     <div class="col-xs-12" id="home-next-match">
         <div class="col-xs-12" id="home-next-match-date"><h3>{{ $tournament['next_match']['date'] }}</h3></div>

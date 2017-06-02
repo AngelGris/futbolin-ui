@@ -103,7 +103,6 @@ $(function() {
     @endforeach
 </div>
 <div class="col-xs-12 col-md-6" style="float:left">
-    <h3>Posiciones</h3>
     <table id="dyntable" class="table table-bordered responsive">
         <thead>
             <tr>
