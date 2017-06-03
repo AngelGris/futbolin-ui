@@ -70,6 +70,7 @@ class ResetPasswordController extends Controller
 
         $num = rand(1, 9);
         $vars['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+        $vars['token'] = $token;
 
         /*$vars['token'] = $token;
         $vars['email'] = $request->email;*/

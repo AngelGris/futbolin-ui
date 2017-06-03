@@ -11,6 +11,7 @@
         @endif
         <form action="{{ route('password.request') }}" method="POST" role="form">
             {{ csrf_field() }}
+            <input type="hidden" name="token" value="{{ $token }}">
             <div class="inputwrapper">
                 <input type="email" name="email" value="{{ old('email') }}" placeholder="Dirección de e-mail" class="form-control" required autofocus>
                 @if ($errors->has('email'))
@@ -28,10 +29,10 @@
                 @endif
             </div>
             <div class="inputwrapper">
-                <input type="password" class="form-control" name="password_confirm" placeholder="Confirmar contraseña" required>
-                @if ($errors->has('password_confirm'))
+                <input type="password" class="form-control" name="password_confirmation" placeholder="Confirmar contraseña" required>
+                @if ($errors->has('password_confirmation'))
                 <label class="error">
-                    <strong>{{ $errors->first('password_confirm') }}</strong>
+                    <strong>{{ $errors->first('password_confirmation') }}</strong>
                 </label>
                 @endif
             </div>
