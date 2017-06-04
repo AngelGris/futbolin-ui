@@ -137,6 +137,11 @@ class TournamentController extends Controller
                 }
             }
 
+            $new_teams = Team::where('user_id', '>', 1)->where('id', '>', $last_team)->get();
+            foreach ($new_teams as $team) {
+                $teams[$request->categories][] = $team->id;
+            }
+
             for ($i = 1; $i < $request->categories; $i++) {
                 if (count($teams[$i]) < 20 * $zones) {
                     $diff = (20 * $zones) - count($teams[$i]);
@@ -158,23 +163,18 @@ class TournamentController extends Controller
             }
 
             if (($teams_count - $teams_added) > 0) {
-                $teams = Team::where('user_id', '>', 1)->where('id', '>', $last_team)->get();
-                $groups_remaining = (int)(count($teams) / 20);
+                $groups_remaining = (int)(count($teams[$request->categories]) / 20);
                 if (count($teams) % 20) {
                     $groups_remaining++;
                 }
 
-                $sparrings = Team::where('user_id', '=', 1)->limit((20 * $groups_remaining) - count($teams))->inRandomOrder()->get();
-                $aux = [];
-                foreach ($teams as $team){
-                    $aux[] = $team->id;
-                }
+                $sparrings = Team::where('user_id', '=', 1)->limit((20 * $groups_remaining) - count($teams[$request->categories]))->inRandomOrder()->get();
                 foreach ($sparrings as $team) {
-                    $aux[] = $team->id;
+                    $teams[$request->categories][] = $team->id;
                 }
-                shuffle($aux);
+                shuffle($teams[$request->categories]);
                 for ($j = 0; $j < $zones; $j++) {
-                    $tournament->createCategory($i, $j + 1, array_slice($aux, $j * 20, 20));
+                    $tournament->createCategory($i, $j + 1, array_slice($teams[$request->categories], $j * 20, 20));
                 }
             }
         }
