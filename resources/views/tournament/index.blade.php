@@ -77,7 +77,7 @@ function movePager(id) {
         <div class="pagination-slider-container">
             <ul class="pagination pagination-slider">
                 @for ($i = 1; $i <= 38; $i++)
-                <li class="pagination-round{{ $i == $last_round ? ' active' : '' }}" style="width:" data-id="{{ $i }}"><a href="#" style="text-align:center;width:45px;">{{ $i }}</a></li>
+                <li class="pagination-round{{ $i == $last_round ? ' active' : '' }}" data-id="{{ $i }}"><a href="#" style="text-align:center;width:45px;">{{ $i }}</a></li>
                 @endfor
             </ul>
         </div>
