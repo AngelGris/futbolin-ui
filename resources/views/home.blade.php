@@ -22,6 +22,7 @@ $(function() {
 @if(isset($tournament))
 <h3>{{ $tournament['category']['name'] }} <a href="{{ route('tournaments') }}" class="btn btn-primary" style="margin-left:20px;padding: 2px 10px;">Ver todo</a></h3>
 <div class="col-md-6 zebra" style="float:right;margin-bottom:40px;">
+    @if (isset($tournament['next_match']))
     <div class="col-xs-12" id="home-next-match">
         <div class="col-xs-12" id="home-next-match-date"><h3>{{ $tournament['next_match']['date'] }}</h3></div>
         <div class="col-xs-12" id="home-next-match-stadium"><h4>{{ $tournament['next_match']['local']['stadium_name'] }}</h4></div>
@@ -37,6 +38,7 @@ $(function() {
         </div>
     </div>
     <div class="clear"></div>
+    @endif
     @if (!empty($tournament['last_matches']))
     <h4 style="margin-top:20px;">Últimos partidos</h4>
     @foreach ($tournament['last_matches'] as $match)
