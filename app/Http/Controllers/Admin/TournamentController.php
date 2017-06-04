@@ -179,6 +179,13 @@ class TournamentController extends Controller
             }
         }
 
+        /**
+         * Players aging
+         */
+        \DB::table('players')
+           ->where('team_id', '>', 1)
+           ->increment('age');
+
         return redirect(route('admin.tournaments', getDomain()));
     }
 }
