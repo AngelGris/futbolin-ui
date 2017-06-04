@@ -65,6 +65,11 @@ function updateShieldColor() {
     $('#shield-local .shield-secondary-color').css({ 'fill' : $('#local_secondary_color').val() });
     $('#shield-visit .shield-primary-color').css({ 'fill' : $('#visit_primary_color').val() });
     $('#shield-visit .shield-secondary-color').css({ 'fill' : $('#visit_secondary_color').val() });
+
+    $('#shield-local-res .shield-primary-color').css({ 'fill' : $('#local_primary_color_res').val() });
+    $('#shield-local-res .shield-secondary-color').css({ 'fill' : $('#local_secondary_color_res').val() });
+    $('#shield-visit-res .shield-primary-color').css({ 'fill' : $('#visit_primary_color_res').val() });
+    $('#shield-visit-res .shield-secondary-color').css({ 'fill' : $('#visit_secondary_color_res').val() });
 }
 
 function refreshResultModal(data) {

@@ -129,12 +129,15 @@ class HomeController extends Controller
             $vars['tournament'] = [
                 'category' => $category,
                 'last_matches' => $lm,
-                'next_match' => [
+            ];
+
+            if ($next_match) {
+                $vars['next_match'] = [
                     'date' => date('d/m/y H:i', $next_match->datetime),
                     'local' => Team::find($next_match->local_id),
                     'visit' => Team::find($next_match->visit_id),
-                ]
-            ];
+                ];
+            }
 
         }
 

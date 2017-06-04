@@ -20,8 +20,9 @@ $(function() {
 
 @section('content-inner')
 @if(isset($tournament))
-<h3>{{ $tournament['category']['name'] }}</h3>
+<h3>{{ $tournament['category']['name'] }} <a href="{{ route('tournaments') }}" class="btn btn-primary" style="margin-left:20px;padding: 2px 10px;">Ver todo</a></h3>
 <div class="col-md-6 zebra" style="float:right;margin-bottom:40px;">
+    @if (isset($tournament['next_match']))
     <div class="col-xs-12" id="home-next-match">
         <div class="col-xs-12" id="home-next-match-date"><h3>{{ $tournament['next_match']['date'] }}</h3></div>
         <div class="col-xs-12" id="home-next-match-stadium"><h4>{{ $tournament['next_match']['local']['stadium_name'] }}</h4></div>
@@ -37,6 +38,7 @@ $(function() {
         </div>
     </div>
     <div class="clear"></div>
+    @endif
     @if (!empty($tournament['last_matches']))
     <h4 style="margin-top:20px;">Últimos partidos</h4>
     @foreach ($tournament['last_matches'] as $match)
@@ -54,7 +56,7 @@ $(function() {
     <div class="col-md-6 zebra">
         <div class="clear"></div>
         @for ($i = 0; $i < 10; $i++)
-        <div class="col-xs-12" style="padding:0;">
+        <div class="col-xs-12" style="padding:0;{{ ($team['id'] == $tournament['category']['positions'][$i]['team_id']) ? 'background-color:#f99;' : ''}}">
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['position'] }}</div>
             <div class="col-xs-6"><a href="{{ route('team.show', $tournament['category']['positions'][$i]['team_id']) }}">{{ $tournament['category']['positions'][$i]['team']['short_name'] }}</a></div>
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['points'] }}</div>
@@ -64,7 +66,7 @@ $(function() {
     <div class="col-md-6 zebra">
         <div class="clear"></div>
         @for ($i = 10; $i < 20; $i++)
-        <div class="col-xs-12" style="padding:0;">
+        <div class="col-xs-12" style="padding:0;{{ ($team['id'] == $tournament['category']['positions'][$i]['team_id']) ? 'background-color:#f99;' : ''}}">
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['position'] }}</div>
             <div class="col-xs-6"><a href="{{ route('team.show', $tournament['category']['positions'][$i]['team_id']) }}">{{ $tournament['category']['positions'][$i]['team']['short_name'] }}</a></div>
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['points'] }}</div>

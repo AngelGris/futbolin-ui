@@ -42,6 +42,7 @@ Auth::routes();
 Route::get('/', 'Auth\LoginController@showLoginForm');
 Route::group(['prefix' => 'contrasena'], function() {
     Route::get('recuperar', ['as' => 'password.request', 'uses' => 'Auth\ResetPasswordController@showLinkRequestForm']);
+    Route::post('recuperar', 'Auth\ResetPasswordController@reset');
     Route::get('recuperar/{token}', ['as' => 'password.reset', 'uses' => 'Auth\ResetPasswordController@showResetForm']);
 });
 

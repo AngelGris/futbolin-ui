@@ -3,13 +3,17 @@
 @section('javascript-inner')
 <script type="text/javascript">
 $(function() {
+    @if (!empty($last_round))
+    movePager({{ $last_round }});
+
+    @endif
     $('.pagination-slider-left').click(function(event) {
         event.preventDefault();
 
         var pos = $('.pagination-slider').position();
         $('.pagination-slider').animate({
             left : Math.min(0, pos.left + $('.pagination-slider-container').width()),
-        })
+        });
     });
 
     $('.pagination-slider-right').click(function(event) {
@@ -18,7 +22,7 @@ $(function() {
         var pos = $('.pagination-slider').position();
         $('.pagination-slider').animate({
             left : Math.max($('.pagination-slider-container').width() - $('.pagination-slider').width(), pos.left - $('.pagination-slider-container').width()),
-        })
+        });
     });
 
     $('.pagination-round').click(function(event) {
@@ -26,6 +30,8 @@ $(function() {
 
         $('.pagination-round').removeClass('active');
         $(this).addClass('active');
+
+        movePager($(this).data('id'));
 
         $('.rounds').hide();
         $('#round-' + $(this).data('id')).show();
@@ -43,6 +49,18 @@ $(function() {
         });
     });
 });
+
+function movePager(id) {
+    var btn = $('#pag-' + id).position();
+    var pos = $('.pagination-slider').position();
+
+    console.log($('.pagination-slider-container').width() - $('.pagination-slider').width());
+    console.log(($('.pagination-slider-container').width() / 2) - (id * 45) + 25);
+    console.log(Math.min(0, Math.max($('.pagination-slider-container').width() - $('.pagination-slider').width(), ($('.pagination-slider-container').width() / 2) - (id * 45) + 25)));
+    $('.pagination-slider').animate({
+        left : Math.min(0, Math.max($('.pagination-slider-container').width() - $('.pagination-slider').width(), ($('.pagination-slider-container').width() / 2) - (id * 45) + 25)),
+    })
+}
 </script>
 @endsection
 
@@ -59,7 +77,7 @@ $(function() {
         <div class="pagination-slider-container">
             <ul class="pagination pagination-slider">
                 @for ($i = 1; $i <= 38; $i++)
-                <li class="pagination-round{{ $i == $last_round ? ' active' : '' }}" data-id="{{ $i }}"><a href="#">{{ $i }}</a></li>
+                <li class="pagination-round{{ $i == $last_round ? ' active' : '' }}" style="width:" data-id="{{ $i }}"><a href="#" style="text-align:center;width:45px;">{{ $i }}</a></li>
                 @endfor
             </ul>
         </div>
@@ -83,7 +101,7 @@ $(function() {
             </thead>
             <tbody>
                 @foreach ($round['matches'] as $match)
-                <tr>
+                <tr{!! ($match['local']['id'] == $team['id'] || $match['visit']['id'] == $team['id']) ? ' style="background-color:#ddd;"' : '' !!}>
                     <td style="padding-right:5px;text-align:right;"><a href="{{ route('team.show', $match['local']['id']) }}">{{ $match['local']['name'] }}</a></td>
                     <td style="text-align:center;">{{ $match['local_goals'] }}</td>
                     <td style="text-align:center;">{{ $match['visit_goals'] }}</td>
@@ -103,7 +121,6 @@ $(function() {
     @endforeach
 </div>
 <div class="col-xs-12 col-md-6" style="float:left">
-    <h3>Posiciones</h3>
     <table id="dyntable" class="table table-bordered responsive">
         <thead>
             <tr>
@@ -121,7 +138,7 @@ $(function() {
         </thead>
         <tbody>
             @foreach ($category['positions'] as $position)
-            <tr>
+            <tr{!! ($position['team']['id'] == $team['id']) ? ' style="background-color:#ddd;"' : '' !!}>
                 <td style="padding-right:5px;text-align:right;">{{ $position['position'] }}</td>
                 <td><a href="{{ route('team.show', $position['team']['id']) }}">{{ $position['team']['name'] }}</a></td>
                 <td style="text-align:right;">{{ $position['points'] }}</td>

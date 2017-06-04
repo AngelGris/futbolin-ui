@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
 {
@@ -69,6 +70,7 @@ class ResetPasswordController extends Controller
 
         $num = rand(1, 9);
         $vars['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+        $vars['token'] = $token;
 
         /*$vars['token'] = $token;
         $vars['email'] = $request->email;*/
