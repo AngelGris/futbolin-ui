@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+@section('headmeta')
+<meta http-equiv="cache-control" content="max-age=0" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="expires" content="{{ date('D, d M Y H:i:s e') }}" />
+<meta http-equiv="pragma" content="no-cache" />
+@endsection
+
 @section('content')
 <div class="loginpanel">
     <div class="loginpanelinner">
