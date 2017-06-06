@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        @yield('headmeta')
 
         <title>{{ config('app.name') . ' - ' . $title }}</title>
 
@@ -24,6 +25,7 @@
         <script src="{{ asset('js/app.js') }}"></script>
         <script src="{{ asset('js/functions.js') }}"></script>
         @yield('javascript')
+        @if (!App::isLocal())
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -33,5 +35,6 @@
             ga('create', 'UA-98862897-1', 'auto');
             ga('send', 'pageview');
         </script>
+        @endif
     </body>
 </html>

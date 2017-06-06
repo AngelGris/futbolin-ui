@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('headmeta')
+@yield('headmeta-inner')
+@endsection
+
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ asset('css/lato.css') }}" type="text/css" />
