@@ -106,13 +106,17 @@ class Team extends Model
     /**
      * Create new player in the team
      */
-    public function createPlayer($number, $position)
+    public function createPlayer($number, $position, $max_age = FALSE)
     {
         $faker = Faker\Factory::create('es_AR');
 
         $position = strtoupper($position);
 
-        $age = randomGauss(17, 32, 5);
+        if ($max_age) {
+            $age = randomGauss(17, 20, 1);
+        } else {
+            $age = randomGauss(17, 32, 5);
+        }
         $age_diff = 32 - $age;
 
         return $this->players()->create([
@@ -132,6 +136,78 @@ class Team extends Model
             'tackling' => randomGauss(max(0, $this->limits[$position]['tackling'][0] - $age_diff), max(0, $this->limits[$position]['tackling'][1] - $age_diff), $this->limits[$position]['tackling'][2]),
             'number' => $number,
         ]);
+    }
+
+    /**
+     * Replace player with a new one
+     */
+    public function replacePlayer($player_id)
+    {
+        $player = $this->players->find($player_id);
+        $arqs = $this->players->where('position', '=', 'ARQ')->count();
+        $defs = $this->players->where('position', '=', 'DEF')->count();
+        $meds = $this->players->where('position', '=', 'MED')->count();
+        $atas = $this->players->where('position', '=', 'ATA')->count();
+        $numbers = [];
+        for ($i = 1; $i <= 99; $i++) {
+            $numbers[$i] = 1;
+        }
+        foreach ($this->players as $p) {
+            unset($numbers[$p['number']]);
+        }
+        $number = array_rand($numbers);
+        unset($numbers);
+        $position = FALSE;
+        switch ($player->position) {
+            case 'ARQ':
+                if ($arqs <= 2) {
+                    $position = 'ARQ';
+                }
+                break;
+            case 'DEF':
+                if ($defs <= 5) {
+                    $position = 'DEF';
+                }
+                break;
+            case 'MED':
+                if ($meds <= 5) {
+                    $position = 'MED';
+                }
+                break;
+            case 'ATA':
+                if ($atas <= 3) {
+                    $position = 'ATA';
+                }
+                break;
+        }
+
+        if (!$position) {
+            $probs = [];
+            if ($arqs < 3) {
+                $probs[] = 'ARQ';
+            }
+            if ($defs < 10) {
+                $probs[] = 'DEF';
+            }
+            if ($meds < 10) {
+                $probs[] = 'MED';
+            }
+            if ($atas < 6) {
+                $probs[] = 'ATA';
+            }
+            $position = $probs[array_rand($probs)];
+        }
+
+        $this->createPlayer($number, $position, TRUE);
+
+        if (!empty($this->formation) && $pos = array_search($player->id, $this->formation)) {
+            $formation = $this->formation;
+            $formation[$pos] = 0;
+            $this->formation = $formation;
+            $this->save();
+        }
+
+        $player->delete();
     }
 
     /**

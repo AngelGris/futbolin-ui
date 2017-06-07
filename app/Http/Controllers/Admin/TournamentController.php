@@ -182,9 +182,75 @@ class TournamentController extends Controller
         /**
          * Players aging
          */
-        \DB::table('players')
+        $sql = \DB::table('players')
            ->where('team_id', '>', 1)
+           ->whereNull('deleted_at')
            ->increment('age');
+
+        /**
+         * Retire players and create young players
+         */
+        $players = \DB::table('players')
+                      ->select(['id', 'team_id'])
+                      ->where('retiring', '=', TRUE)
+                      ->whereNull('deleted_at')
+                      ->get();
+        $teams = [];
+        foreach ($players as $player) {
+            Team::find($player->team_id)->replacePlayer($player->id);
+        }
+
+        /**
+         * Players retiring next tournament
+         */
+        $players = \DB::table('players')
+                      ->select(['id', 'age'])
+                      ->where('team_id', '>', 1)
+                      ->where('age', '>=', 33)
+                      ->where('retiring', '=', FALSE)
+                      ->whereNull('deleted_at')
+                      ->get();
+        $players_retiring = [];
+        foreach ($players as $player) {
+            switch ($player->age) {
+                case '33':
+                    $limit = 10;
+                    break;
+                case '34':
+                    $limit = 25;
+                    break;
+                case '35':
+                    $limit = 60;
+                    break;
+                case '36':
+                    $limit = 75;
+                    break;
+                case '37':
+                    $limit = 85;
+                    break;
+                case '38':
+                    $limit = 95;
+                    break;
+                default:
+                    $limit = 100;
+                    break;
+            }
+
+            $retiring = TRUE;
+            if ($limit < 100) {
+                $num = mt_rand(1, 100);
+                if ($num > $limit) {
+                    $retiring = FALSE;
+                }
+            }
+
+            if ($retiring) {
+                $players_retiring[] = $player->id;
+            }
+        }
+        \DB::table('players')
+           ->whereIn('id', $players_retiring)
+           ->update(['retiring' => true]);
 
         return redirect(route('admin.tournaments', getDomain()));
     }
