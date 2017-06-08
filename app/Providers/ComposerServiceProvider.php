@@ -39,8 +39,13 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
                     ];
 
+                    $team = Auth::user()->team;
+                    $retiring = $team->players->where('retiring', '=', 1);
+
                     $view->with('_user', Auth::user())
-                         ->with('_team', Auth::user()->team)
+                         ->with('_team', $team)
+                         ->with('_playersAlertsCount', count($retiring))
+                         ->with('_retiring', $retiring)
                          ->with('_navigation', $navigation);
                 }
             }

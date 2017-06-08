@@ -133,7 +133,13 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	position: absolute; top: -6px; left: 45px; display: inline-block; border-right: 6px solid transparent;
 	border-bottom: 6px solid white; border-left: 6px solid transparent; content: ''; }
 .headmenu > li {
-	display: inline-block; float: left; font-size: 14px; position: relative; border-right: 1px solid rgba(255,255,255,0.15); }
+	border-right: 1px solid rgba(255,255,255,0.15);
+	display: inline-block;
+	float: left;
+	font-size: 14px;
+	height: 108px;
+	position: relative;
+}
 .headmenu > li:first-child { border-left: 1px solid rgba(255,255,255,0.15); }
 .headmenu > li.odd { background: rgba(255,255,255,0.1); }
 .headmenu > li.right { float: right; border-right: 0; }
@@ -215,6 +221,10 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
 
 /*** MAIN PANEL ***/
+
+.container-fluid {
+	padding: 0;
+}
 
 .rightpanel { margin-left: 260px; background: #fff; }
 .rightpanel:after { clear: both; content: ''; display: block; }
@@ -2196,6 +2206,10 @@ label.error {
 	color: #fff;
 }
 
+.headmenu-toggle {
+	display: none;
+}
+
 .label {
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
@@ -2405,9 +2419,57 @@ label.error {
 		width: 100%;
 	}
 
+	.navbar-header .headmenu {
+		float: left;
+		height: 50px;
+	}
+
+	.navbar-header .headmenu li {
+		height: 50px;
+		width: 50px;
+	}
+
+	.navbar-header .headmenu li a {
+		height: 50px;
+		min-width: 50px;
+		padding: 10px 0 0 0;
+		width: 50px;
+	}
+
+	.navbar-header .headmenu li a .count {
+		position: absolute;
+		right:3px;
+		top:0;
+	}
+
+	.navbar-header .headmenu li a .head-icon {
+		background-size: 35px;
+		height: 35px;
+		margin: 0px 0 0 0;
+		width: 35px;
+	}
+
+	.navbar-header .headmenu li .dropdown-menu {
+		top: 48px;
+		width: 100%;
+	}
+
+	.navbar-header .headmenu li .dropdown-menu li {
+		width: 100%;
+	}
+
+	.navbar-header .headmenu li .dropdown-menu li a {
+		padding-left: 5px;
+		width: 100%;
+	}
+
 	.navbar-toggle {
        	display: block;
        	float: right;
+    }
+
+    .headmenu-toggle {
+    	display: inline;
     }
 
     .headerinner {
@@ -2456,6 +2518,10 @@ label.error {
 
 
 @media screen and (max-width: 767px) {
+	.container-fluid > .navbar-header {
+	    margin-left: 0px;
+	}
+
 	.leftmenu {
 		left: 0;
 		position: absolute;

@@ -35,6 +35,29 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
+                    <ul class="headmenu headmenu-toggle">
+                        <li class="odd">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                            <span class="count">{{ $_playersAlertsCount }}</span>
+                            <span class="head-icon head-users"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-header">Por retirarse</li>
+                                @if (empty($_retiring))
+                                <li>No hay jugadores por retirarse</li>
+                                @else
+                                @foreach ($_retiring as $player)
+                                <li>
+                                    <a href="#">
+                                        <strong>{{ $player['number'] }} {{ $player['name'] }}</strong>
+                                        <small>{{ $player['position'] }}</small>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
+                        </li>
+                    </ul>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
@@ -49,6 +72,28 @@
 
                 <div class="headerinner">
                     <ul class="headmenu">
+                        <li class="odd">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                            <span class="count">{{ $_playersAlertsCount }}</span>
+                            <span class="head-icon head-users"></span>
+                            <span class="headmenu-label">Jugadores</span>
+                            </a>
+                            <ul class="dropdown-menu newusers">
+                                <li class="nav-header">Jugadores por retirarse</li>
+                                @if (empty($_retiring))
+                                <li>No hay jugadores por retirarse</li>
+                                @else
+                                @foreach ($_retiring as $player)
+                                <li>
+                                    <a href="#">
+                                        <strong>{{ $player['number'] }} {{ $player['name'] }}</strong>
+                                        <small>{{ $player['position'] }}</small>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
+                        </li>
                         <li class="right">
                             <div class="userloggedinfo">
                                 <img src="{{ asset('img/thumb1.png') }}" alt="" />
