@@ -10,11 +10,11 @@
 <link rel="stylesheet" href="{{ asset('css/roboto.css') }}" type="text/css" />
 <style type="text/css">
 .shield-primary-color {
-    fill: {{ $team['primary_color'] }};
+    fill: {{ $_team['primary_color'] }};
 }
 
 .shield-secondary-color {
-    fill: {{ $team['secondary_color'] }};
+    fill: {{ $_team['secondary_color'] }};
 }
 </style>
 @yield('styles-inner')
@@ -54,8 +54,8 @@
                                 <img src="{{ asset('img/thumb1.png') }}" alt="" />
                                 <div class="userinfo">
                                     <h5>
-                                        {{ $user['first_name'] }} {{ $user['last_name'] }} <br>
-                                        <small>{{ $user['email'] }}</small>
+                                        {{ $_user['first_name'] }} {{ $_user['last_name'] }} <br>
+                                        <small>{{ $_user['email'] }}</small>
                                     </h5>
                                     <ul>
                                         <li><a href="{{ route('profile.edit') }}">Editar Perfil</a></li>
@@ -77,7 +77,7 @@
             <ul class="nav nav-tabs nav-stacked">
                 <li class="nav-header">Navegación</li>
                 <li class="nav-extras{{ (Request::path() == 'perfil/editar') ? ' active' : '' }}"><a href="{{ route('profile.edit') }}"><span class="fa fa-user"></span> Editar perfil</a></li>
-                @foreach ($navigation as $link)
+                @foreach ($_navigation as $link)
                 <li{!! (Request::path() == $link['url']) ? ' class="active"' : '' !!}><a href="{{ url('/' . $link['url']) }}"><span class="{{ $link['icon'] }}"></span> {{ $link['name'] }}</a></li>
                 @endforeach
                 <li class="nav-extras"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="fa fa-sign-out"></span> Salir</a></li>
@@ -87,8 +87,8 @@
     <div class="rightpanel">
         <div class="pageheader">
             <div class="teamname">
-                <img class="svg shield" src="{{ asset($team['shield_file']) }}">
-                <h2>{{ $team['name'] }}</h2>
+                <img class="svg shield" src="{{ asset($_team['shield_file']) }}">
+                <h2>{{ $_team['name'] }}</h2>
             </div>
             <div class="pageicon"><span class="{{ $icon }}"></span></div>
             <div class="pagetitle">

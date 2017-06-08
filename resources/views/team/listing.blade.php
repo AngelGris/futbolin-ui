@@ -109,15 +109,15 @@ function loadResult(fileName) {
             </tr>
         </thead>
         <tbody>
-            @foreach ($sparrings as $t)
+            @foreach ($sparrings as $team)
             <tr>
-                <td>{{ $t['name'] }}</td>
-                <td align="center">{{ $t['strategy']['name'] }}</td>
-                <td align="center">{{ $t['average'] }}</td>
-                <td align="center"><a href="#" class="stats" data-id="{{ $t['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></span></a></td>
+                <td>{{ $team['name'] }}</td>
+                <td align="center">{{ $team['strategy']['name'] }}</td>
+                <td align="center">{{ $team['average'] }}</td>
+                <td align="center"><a href="#" class="stats" data-id="{{ $team['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></span></a></td>
                 <td align="center">
                     @if ($playable)
-                    <a href="#" class="play" data-id="{{ $t['id'] }}" data-type="1"><span class="fa fa-futbol-o" title="Entrenamiento"></span></a>
+                    <a href="#" class="play" data-id="{{ $team['id'] }}" data-type="1"><span class="fa fa-futbol-o" title="Entrenamiento"></span></a>
                     @endif
                 </td>
             </tr>
@@ -139,20 +139,20 @@ function loadResult(fileName) {
             </tr>
         </thead>
         <tbody>
-            @foreach ($teams as $t)
+            @foreach ($teams as $team)
             <tr>
-                <td><a href="{{ route('team.show', [$t['id']]) }}">{{ $t['name'] }}</a></td>
-                <td>{{ $t['user']['name'] }}</td>
-                <td align="center">{{ $t['average'] }}</td>
+                <td><a href="{{ route('team.show', [$team['id']]) }}">{{ $team['name'] }}</a></td>
+                <td>{{ $team['user']['name'] }}</td>
+                <td align="center">{{ $team['average'] }}</td>
                 <td align="center">
-                    @if ($t['id'] != $team['id'])
-                    <a href="#" class="stats" data-id="{{ $t['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></a>
+                    @if ($team['id'] != $_team['id'])
+                    <a href="#" class="stats" data-id="{{ $team['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></a>
                     @endif
                 </td>
                 <td align="center">
-                    @if ($playable && $t['playable'] && $t['id'] != $team['id'])
-                    <a href="#" id="btn-play-{{ $t['id'] }}" class="play" data-id="{{ $t['id'] }}" data-type="2"{!! !empty($played[$t['id']]) ? ' style="display:none;"' : '' !!}><span class="fa fa-handshake-o" title="Amistoso"></span></a>
-                    <span id="span-play-{{ $t['id'] }}" data-id="{{ $t['id'] }}" {!! empty($played[$t['id']]) ? ' style="display:none;"' : '' !!}>{{ !empty($played[$t['id']]) ? $played[$t['id']] : '24 h' }}</span>
+                    @if ($playable && $team['playable'] && $team['id'] != $_team['id'])
+                    <a href="#" id="btn-play-{{ $team['id'] }}" class="play" data-id="{{ $team['id'] }}" data-type="2"{!! !empty($played[$team['id']]) ? ' style="display:none;"' : '' !!}><span class="fa fa-handshake-o" title="Amistoso"></span></a>
+                    <span id="span-play-{{ $team['id'] }}" data-id="{{ $team['id'] }}" {!! empty($played[$team['id']]) ? ' style="display:none;"' : '' !!}>{{ !empty($played[$team['id']]) ? $played[$team['id']] : '24 h' }}</span>
                     @endif
                 </td>
             </tr>

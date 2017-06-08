@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content-inner')
-<form method="POST" action="{{ route('admin.password', ['domain' => $domain]) }}" class="form-horizontal" role="form">
+<form method="POST" action="{{ route('admin.password', ['domain' => $_domain]) }}" class="form-horizontal" role="form">
     <input type="hidden" name="_method" value="PATCH">
     {{ csrf_field() }}
     <div class="form-group{{ $errors->has('old_password') ? ' has-error' : '' }}">

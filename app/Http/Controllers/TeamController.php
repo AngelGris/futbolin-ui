@@ -268,7 +268,7 @@ class TeamController extends Controller
             'icon' => 'fa fa-shield',
             'title' => $team->name,
             'subtitle' => 'Estudiando al rival',
-            't' => $team,
+            'team' => $team,
             'matches' => $games,
             'goals' => $goals,
             'last_matches' => $last_matches,

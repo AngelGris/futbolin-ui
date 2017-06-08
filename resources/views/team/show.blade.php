@@ -3,11 +3,11 @@
 @section('styles-inner')
 <style>
 #other-shield .shield-primary-color {
-    fill: {{ $t['primary_color'] }};
+    fill: {{ $team['primary_color'] }};
 }
 
 #other-shield .shield-secondary-color {
-    fill: {{ $t['secondary_color'] }};
+    fill: {{ $team['secondary_color'] }};
 }
 </style>
 @endsection
@@ -32,20 +32,20 @@ $(function() {
 
 @section('content-inner')
 <div class="col-xs-12" style="margin-bottom:20px;text-align:center;">
-    <img id="other-shield" class="svg" src="{{ $t['shieldFile'] }}" style="width:70px;" />
-    <h2 style="text-align:center;width:auto;">{{ $t['name'] }}</h2>
+    <img id="other-shield" class="svg" src="{{ $team['shieldFile'] }}" style="width:70px;" />
+    <h2 style="text-align:center;width:auto;">{{ $team['name'] }}</h2>
 </div>
 <div class="col-md-12" style="height:30px;">
     <label class="col-xs-4 control-label">Nombre corto</label>
-    <div class="col-xs-8">{{ $t['short_name'] }}</div>
+    <div class="col-xs-8">{{ $team['short_name'] }}</div>
 </div>
 <div class="col-md-12" style="height:30px;">
     <label class="col-xs-4 control-label">Entrenador</label>
-    <div class="col-xs-8">{{ $t['user']['name'] }}</div>
+    <div class="col-xs-8">{{ $team['user']['name'] }}</div>
 </div>
 <div class="col-md-12" style="height:30px;">
     <label class="col-xs-4 control-label">Estadio</label>
-    <div class="col-xs-8">{{ $t['stadium_name'] }}</div>
+    <div class="col-xs-8">{{ $team['stadium_name'] }}</div>
 </div>
 <div class="clear"></div>
 <div class="col-md-12">
@@ -58,7 +58,7 @@ $(function() {
 @include('modules.lastmatches')
 <div class="clear"></div>
 <div class="col-md-6">
-    <h2>Contra {{ $team['name'] }}</h2>
+    <h2>Contra {{ $_team['name'] }}</h2>
     @include('modules.statsmatches', ['matches' => $matches_versus, 'goals' => $goals_versus])
 </div>
 @include('modules.lastmatches', ['last_matches' => $last_matches_versus])

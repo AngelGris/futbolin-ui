@@ -19,7 +19,7 @@ $(function() {
 <div class="col-xs-12 zebra">
     <h3>Crear Torneo</h3>
     <p>Equipos: {{ $tournament['teams'] }} - Sparrings: {{ $tournament['sparrings'] }} - Grupos: {{ $tournament['groups'] }}</p>
-    <form method="POST" action="{{ route('admin.tournament.store', $domain) }}" class="form-horizontal" role="form">
+    <form method="POST" action="{{ route('admin.tournament.store', $_domain) }}" class="form-horizontal" role="form">
         {{ csrf_field() }}
         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
             <label for="name" class="col-md-2 control-label">Nombre del torneo</label>

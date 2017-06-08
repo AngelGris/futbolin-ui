@@ -35,7 +35,7 @@
                                 <img src="{{ asset('img/thumb1.png') }}" alt="" />
                                 <div class="userinfo">
                                     <ul>
-                                        <li><a href="{{ route('admin.password', ['domain' => $domain]) }}">Cambiar Contraseña</a></li>
+                                        <li><a href="{{ route('admin.password', ['domain' => $_domain]) }}">Cambiar Contraseña</a></li>
                                         <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Salir</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
@@ -54,7 +54,7 @@
             <ul class="nav nav-tabs nav-stacked">
                 <li class="nav-header">Navegación</li>
                 <li class="nav-extras{{ (Request::path() == 'perfil/editar') ? ' active' : '' }}"><a href="{{ route('profile.edit') }}"><span class="fa fa-user"></span> Editar perfil</a></li>
-                @foreach ($navigation as $link)
+                @foreach ($_navigation as $link)
                 <li{!! (Request::path() == $link['url']) ? ' class="active"' : '' !!}><a href="{{ url('/' . $link['url']) }}"><span class="{{ $link['icon'] }}"></span> {{ $link['name'] }}</a></li>
                 @endforeach
                 <li class="nav-extras"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="fa fa-sign-out"></span> Salir</a></li>

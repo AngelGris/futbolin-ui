@@ -26,9 +26,9 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => 'partidos', 'icon' => 'fa fa-star', 'name' => 'Partidos'],
                     ];
 
-                    $view->with('domain', getDomain())
+                    $view->with('_domain', getDomain())
                         ->with('title', 'Administrador')
-                        ->with('navigation', $navigation);
+                        ->with('_navigation', $navigation);
                 } else {
                     $navigation = [
                         ['url' => 'vestuario', 'icon' => 'fa fa-home', 'name' => 'Vestuario'],
@@ -39,9 +39,9 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
                     ];
 
-                    $view->with('user', Auth::user())
-                         ->with('team', Auth::user()->team)
-                         ->with('navigation', $navigation);
+                    $view->with('_user', Auth::user())
+                         ->with('_team', Auth::user()->team)
+                         ->with('_navigation', $navigation);
                 }
             }
         });
