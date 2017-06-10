@@ -70,6 +70,8 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showListing']);
 
+    Route::get('/jugador/{player}', ['as' => 'player', 'uses' => 'PlayerController@index'])->where('player', '[0-9]+');
+
     Route::get('/estrategia', ['as' => 'strategy', 'uses' => 'TeamController@showStrategy']);
 
     Route::get('/amistosos', ['as' => 'teams', 'uses' => 'TeamController@showAll']);

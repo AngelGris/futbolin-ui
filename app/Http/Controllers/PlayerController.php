@@ -7,6 +7,18 @@ use Illuminate\Support\Facades\Auth;
 
 class PlayerController extends Controller
 {
+    public function index(\App\Player $player)
+    {
+        $vars = [
+            'icon' => 'fa fa-user',
+            'title' => $player['first_name'] . ' ' . $player['last_name'],
+            'subtitle' => 'Una parte del todo',
+            'player' => $player
+        ];
+
+        return view('player.index', $vars);
+    }
+
     public function showListing()
     {
         $vars = [
