@@ -16,7 +16,7 @@ class Player extends Model
      */
     protected $guarded = ['id', 'team_id'];
 
-    protected $appends = ['short_name', 'average'];
+    protected $appends = ['name', 'short_name', 'average'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -88,7 +88,11 @@ class Player extends Model
      */
     public function getNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        $output = $this->first_name . ' ' . $this->last_name;
+        if ($this->retiring) {
+            $output .= ' <span class="fa fa-user-times" style="color:#f00;"></span>';
+        }
+        return $output;
     }
 
     /**

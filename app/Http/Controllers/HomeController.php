@@ -42,7 +42,8 @@ class HomeController extends Controller
                 'left' => (int)($team->strategy->{sprintf('j%02d_start_y', $i)} * 1.11),
                 'top' => (int)(100 - $team->strategy->{sprintf('j%02d_start_x', $i)} * 1.11),
                 'position' => $player['position'],
-                'number' => $player['number']
+                'number' => $player['number'],
+                'retiring' => $player['retiring'],
             ];
         }
 

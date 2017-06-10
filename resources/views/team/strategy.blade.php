@@ -42,7 +42,7 @@ $(function() {
 
     $('.rollover-player').mouseover(function() {
         var id = parseInt($(this).data('player-id'));
-        $('#player-header').text(players[id]['number'] + '. ' + players[id]['first_name'] + ' ' + players[id]['last_name']);
+        $('#player-header').html(players[id]['number'] + '. ' + players[id]['name']);
         $('#player-info .widgetcontent').html('<div class="col-md-6"><strong>EDAD: ' + players[id]['age'] + '</strong><br>ARQ: ' + players[id]['goalkeeping'] + '<br>GAM: ' + players[id]['dribbling'] + '<br>SAL: ' + players[id]['jumping'] + '<br>PRE: ' + players[id]['precision'] + '<br>FUE: ' + players[id]['strength'] + '</div><div class="col-md-6"><strong>MED: ' + players[id]['average'] + '</strong><br>DEF: ' + players[id]['defending'] + '<br>CAB: ' + players[id]['heading'] + '<br>PAS: ' + players[id]['passing'] + '<br>VEL: ' + players[id]['speed'] + '<br>QUI: ' + players[id]['tackling'] + '</div>');
         $('#player-info').stop().fadeTo(0, 1);
     }).mouseleave(function() {
@@ -86,7 +86,12 @@ $(function() {
             var old_id = parseInt($(this).data('player-id'));
 
             $(this).data('player-id', id);
-            $(this).text(players[id]['number']);
+            var content = players[id]['number'] + '<div class="status">';
+            if (players[id]['retiring']) {
+                content += '<span class="fa fa-user-times" style="color:#f00;"></span>';
+            }
+            content += '<div>';
+            $(this).html(content);
             $(this).removeClass('arq');
             $(this).removeClass('def');
             $(this).removeClass('med');
@@ -99,7 +104,12 @@ $(function() {
                 ui.draggable.removeClass('med');
                 ui.draggable.removeClass('ata');
                 if (old_id > 0) {
-                    ui.draggable.text(players[old_id]['number']);
+                    var content = players[old_id]['number'] + '<div class="status">';
+                    if (players[old_id]['retiring']) {
+                        content += '<span class="fa fa-user-times" style="color:#f00;"></span>'
+                    }
+                    content += '</div>';
+                    ui.draggable.html(content);
                     ui.draggable.addClass(players[old_id]['position'].toLowerCase());
                 } else {
                     ui.draggable.text('');
@@ -149,7 +159,14 @@ $(function() {
                         @if (empty($formation[$i - 1]))
                         <div id="player-{{ sprintf('%02d', $i) }}" data-player-id="0" class="player-container player-draggable player-droppable rollover-player" style="left:{{ $strategies[$strategy][$i]['left'] }}%;top:{{ $strategies[$strategy][$i]['top'] }}%;"></div>
                         @else
-                        <div id="player-{{ sprintf('%02d', $i) }}" data-player-id="{{ isset($formation[$i - 1]) ? $formation[$i - 1] : 0 }}" class="player-container player-draggable player-droppable rollover-player {{ strtolower($players[$formation[$i - 1]]['position']) }}" style="left:{{ $strategies[$strategy][$i]['left'] }}%;top:{{ $strategies[$strategy][$i]['top'] }}%;">{{ $players[$formation[$i - 1]]['number'] }}</div>
+                        <div id="player-{{ sprintf('%02d', $i) }}" data-player-id="{{ isset($formation[$i - 1]) ? $formation[$i - 1] : 0 }}" class="player-container player-draggable player-droppable rollover-player {{ strtolower($players[$formation[$i - 1]]['position']) }}" style="left:{{ $strategies[$strategy][$i]['left'] }}%;top:{{ $strategies[$strategy][$i]['top'] }}%;">
+                            {{ $players[$formation[$i - 1]]['number'] }}
+                            <div class="status">
+                                @if ($players[$formation[$i - 1]]['retiring'])
+                                <span class="fa fa-user-times" style="color:#f00;"></span>
+                                @endif
+                            </div>
+                        </div>
                         @endif
                     @endfor
                 </div>
@@ -159,7 +176,14 @@ $(function() {
                 @if (empty($formation[$i - 1]))
                 <div id="player-{{ $i }}" data-player-id="0" class="player-container player-draggable player-droppable rollover-player"></div>
                 @else
-                <div id="player-{{ $i }}" data-player-id="{{ $formation[$i - 1] }}" class="player-container player-draggable player-droppable rollover-player {{ strtolower($players[$formation[$i - 1]]['position']) }}">{{ $players[$formation[$i - 1]]['number'] }}</div>
+                <div id="player-{{ $i }}" data-player-id="{{ $formation[$i - 1] }}" class="player-container player-draggable player-droppable rollover-player {{ strtolower($players[$formation[$i - 1]]['position']) }}">
+                    {{ $players[$formation[$i - 1]]['number'] }}
+                    <div class="status">
+                        @if ($players[$formation[$i - 1]]['retiring'])
+                        <span class="fa fa-user-times" style="color:#f00;"></span>
+                        @endif
+                    </div>
+                </div>
                 @endif
             @endfor
         </div>
@@ -179,7 +203,12 @@ $(function() {
             @foreach ($players as $player)
             <tr id="subs-{{ sprintf('%02d', $player['id']) }}" data-player-id="{{ $player['id'] }}" class="rollover-player player-draggable {{ strtolower($player['position']) }}" {!! !empty($formation) ? (in_array($player['id'], $formation) ? 'style="display:none;"' : '') : '' !!}>
                 <td align="right" class="player-number">{{ $player['number'] }}</td>
-                <td class="player-name">{{ $player['short_name'] }}</td>
+                <td class="player-name">
+                    {{ $player['short_name'] }}
+                    @if ($player->retiring)
+                    <span class="fa fa-user-times" style="color:#f00;"></span>
+                    @endif
+                </td>
                 <td align="center" class="player-position"><span data-placement="top" data-toggle="tooltip" data-original-title="{{ $player['position_long'] }}">{{ $player['position'] }}</span></td>
                 <td align="right" class="player-average"><strong>{{ $player['average'] }}</strong></td>
             </tr>
