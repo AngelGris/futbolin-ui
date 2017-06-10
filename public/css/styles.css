@@ -476,6 +476,14 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	border-color: #ee9e9e;
 }
 
+.player-container .status {
+	bottom: -10px;
+	font-size: 10px;
+	position: absolute;
+	text-align: center;
+	width: 100%;
+}
+
 #strategy-container .player-container {
 	font-size: 20px;
 	height: 36px;

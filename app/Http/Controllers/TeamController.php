@@ -170,22 +170,24 @@ class TeamController extends Controller
                     $data = getMatchLog($match['logfile']);
                     if ($match['local_id'] == $team['id']) {
                         foreach ($data['local']['formation'] as $form) {
-                            $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->limit(1)->get();
+                            $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->first();
                             $strategy[] = [
                                 'left' => $form['top'] * 1.5,
                                 'top' => $form['left'],
-                                'position' => (isset($player[0]) ? $player[0]['position'] : ''),
+                                'position' => (!empty($player) ? $player['position'] : ''),
                                 'number' => $form['number'],
+                                'retiring' => (!empty($player) ? $player['retiring'] : FALSE),
                             ];
                         }
                     } else {
                         foreach ($data['visit']['formation'] as $form) {
-                            $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->limit(1)->get();
+                            $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->first();
                             $strategy[] = [
                                 'left' => (100 - $form['top']) * 1.5,
                                 'top' => 100 - $form['left'],
-                                'position' => (isset($player[0]) ? $player[0]['position'] : ''),
+                                'position' => (!empty($player) ? $player['position'] : ''),
                                 'number' => $form['number'],
+                                'retiring' => (!empty($player) ? $player['retiring'] : FALSE),
                             ];
                         }
                     }

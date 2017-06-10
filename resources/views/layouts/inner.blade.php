@@ -49,7 +49,7 @@
                                 @foreach ($_retiring as $player)
                                 <li>
                                     <a href="#">
-                                        <strong>{{ $player['number'] }} {{ $player['name'] }}</strong>
+                                        <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small>
                                     </a>
                                 </li>
@@ -86,7 +86,7 @@
                                 @foreach ($_retiring as $player)
                                 <li>
                                     <a href="#">
-                                        <strong>{{ $player['number'] }} {{ $player['name'] }}</strong>
+                                        <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small>
                                     </a>
                                 </li>

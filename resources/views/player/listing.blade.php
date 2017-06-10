@@ -38,7 +38,7 @@ $(function(){
         @foreach ($players as $player)
         <tr class="{{ strtolower($player['position']) }}">
             <td align="right">{{ $player['number'] }}</td>
-            <td>{{ $player['first_name'] . ' ' . $player['last_name'] }}</td>
+            <td>{!! $player['name']  !!}</td>
             <td align="center">{{ $player['age'] }}</td>
             <td align="center"><span data-placement="top" data-toggle="tooltip" data-original-title="{{ $player['position_long'] }}">{{ $player['position'] }}</span></td>
             <td align="right"><strong>{{ $player['average'] }}</strong></td>
@@ -55,4 +55,5 @@ $(function(){
         @endforeach
     </tbody>
 </table>
+<span class="fa fa-user-times" style="color:#f00;"></span> = jugadores que se retiran al final de la temporada
 @endsection
