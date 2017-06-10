@@ -36,6 +36,23 @@ class TournamentController extends Controller
             $vars['tournament'] = $tournament;
             $vars['category'] = $category;
             $vars['last_round'] = $last_round ? $last_round->number : 1;
+        } else {
+            $tournament = Tournament::latest()->first();
+
+            if ($tournament) {
+                $category = $tournament->tournamentCategories()->oldest()->first();
+
+                $last_round =   \DB::table('tournament_rounds')
+                                ->select('number')
+                                ->where('category_id', '=', $category_id)
+                                ->where('datetime', '<', $_SERVER['REQUEST_TIME'])
+                                ->orderBy('datetime', 'DESC')
+                                ->first();
+
+                $vars['tournament'] = $tournament;
+                $vars['category'] = $category;
+                $vars['last_round'] = $last_round ? $last_round->number : 1;
+            }
         }
 
         return view('tournament.index', $vars);
