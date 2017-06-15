@@ -428,6 +428,13 @@ class TeamController extends Controller
     {
         $team = Auth::user()->team;
         $team->formation = $request->formation;
+        foreach ($request->formation as $value) {
+            if (in_array($value, $formation)) {
+                $formation[] = '0';
+            } else {
+                $formation[] = $value;
+            }
+        }
         $team->save();
     }
 
