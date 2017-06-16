@@ -36,5 +36,7 @@ class CreateTournamentsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('tournaments');
+
+        DB::table('match_types')->where('name', '=', 'Tournament')->delete();
     }
 }
