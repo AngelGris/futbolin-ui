@@ -427,7 +427,7 @@ class TeamController extends Controller
     public function updateFormation(Request $request)
     {
         $team = Auth::user()->team;
-        $team->formation = $request->formation;
+        $formation = [];
         foreach ($request->formation as $value) {
             if (in_array($value, $formation)) {
                 $formation[] = '0';
@@ -435,6 +435,7 @@ class TeamController extends Controller
                 $formation[] = $value;
             }
         }
+        $team->formation = $formation;
         $team->save();
     }
 
