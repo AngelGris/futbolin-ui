@@ -110,4 +110,82 @@ class Player extends Model
 
         return $initials . $this->last_name;
     }
+
+    /**
+     * Upgrade player
+     */
+    public function upgrade()
+    {
+        if ($this->experience >= 100) {
+            $attributes = [
+                'goalkeeping',
+                'defending',
+                'dribbling',
+                'heading',
+                'jumping',
+                'passing',
+                'precision',
+                'speed',
+                'strength',
+                'tackling'
+            ];
+            $points = 0;
+            $age_limit = 7;
+            $age_diff = $this->age - 17;
+            if ($age_diff <= $age_limit) {
+                $prob = 23 - (pow($age_diff, 2) / $age_limit);
+            } else {
+                $prob = pow(23 - $age_diff, 2) / (23 - $age_limit);
+            }
+
+            $points = (int)($prob / 10);
+            $prob = ($prob % 10) * 100;
+            if ($prob > 0) {
+                if (mt_rand(0,99) <= $prob) {
+                    $points++;
+                }
+            }
+
+            for ($i = 0; $i < $points; $i++) {
+                switch (mt_rand(0, 9)) {
+                    case 0:
+                        $this->goalkeeping++;
+                        break;
+                    case 1:
+                        $this->defending++;
+                        break;
+                    case 2:
+                        $this->dribbling++;
+                        break;
+                    case 3:
+                        $this->heading++;
+                        break;
+                    case 4:
+                        $this->jumping++;
+                        break;
+                    case 5:
+                        $this->passing++;
+                        break;
+                    case 6:
+                        $this->precision++;
+                        break;
+                    case 7:
+                        $this->speed++;
+                        break;
+                    case 8:
+                        $this->strength++;
+                        break;
+                    case 9:
+                        $this->tackling++;
+                        break;
+
+                }
+                $key = array_rand($attributes);
+                $attributes[$key]++;
+            }
+
+            $this->experience -= 100;
+            $this->save();
+        }
+    }
 }

@@ -32,6 +32,7 @@ $(function(){
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Velocidad">VEL</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Fuerza">FUE</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Quite">QUI</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Experiencia">EXP</span></th>
         </tr>
     </thead>
     <tbody>
@@ -52,6 +53,7 @@ $(function(){
             <td align="right">{{ $player['speed'] }}</td>
             <td align="right">{{ $player['strength'] }}</td>
             <td align="right">{{ $player['tackling'] }}</td>
+            <td align="right">{{ $player['experience'] }}</td>
         @endforeach
     </tbody>
 </table>
