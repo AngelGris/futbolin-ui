@@ -36,18 +36,29 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <ul class="headmenu headmenu-toggle">
-                        @if (count($_retiring) > 0)
+                        @if ($_playersAlertsCount > 0)
                         <li class="odd">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                             <span class="count">{{ $_playersAlertsCount }}</span>
                             <span class="head-icon head-users"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                @if (count($_upgraded) > 0)
+                                <li class="nav-header">Mejorados</li>
+                                @foreach ($_upgraded as $player)
+                                <li>
+                                    <a href="{{ route('player', $player['id']) }}">
+                                        <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
+                                        <small>{{ $player['position'] }}</small>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
                                 @if (count($_retiring) > 0)
                                 <li class="nav-header">Por retirarse</li>
                                 @foreach ($_retiring as $player)
                                 <li>
-                                    <a href="#">
+                                    <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small>
                                     </a>
@@ -72,7 +83,7 @@
 
                 <div class="headerinner">
                     <ul class="headmenu">
-                        @if (count($_retiring) > 0)
+                        @if ($_playersAlertsCount > 0)
                         <li class="odd">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                             <span class="count">{{ $_playersAlertsCount }}</span>
@@ -80,11 +91,22 @@
                             <span class="headmenu-label">Jugadores</span>
                             </a>
                             <ul class="dropdown-menu newusers">
+                                @if (count($_upgraded) > 0)
+                                <li class="nav-header">Jugadores mejorados</li>
+                                @foreach ($_upgraded as $player)
+                                <li>
+                                    <a href="{{ route('player', $player['id']) }}">
+                                        <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
+                                        <small>{{ $player['position'] }}</small>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
                                 @if (count($_retiring) > 0)
                                 <li class="nav-header">Jugadores por retirarse</li>
                                 @foreach ($_retiring as $player)
                                 <li>
-                                    <a href="#">
+                                    <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small>
                                     </a>

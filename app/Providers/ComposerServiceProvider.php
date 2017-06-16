@@ -4,6 +4,7 @@ namespace App\Providers;
 use View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use App\TournamentRound;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -41,12 +42,18 @@ class ComposerServiceProvider extends ServiceProvider
 
                     $team = Auth::user()->team;
                     $retiring = $team->players->where('retiring', '=', 1);
+                    $last_match = TournamentRound::where('datetime', '<', time())->orderBy('datetime', 'DESC')->first();
+                    $upgraded = [];
+                    if ($last_match) {
+                        $upgraded = $team->players->where('updated_at', '>', date('Y-m-d H:i:s', $last_match['datetime']));
+                    }
 
                     $view->with('_user', Auth::user())
                          ->with('_team', $team)
-                         ->with('_playersAlertsCount', count($retiring))
+                         ->with('_playersAlertsCount', count($retiring) + count($upgraded))
                          ->with('_retiring', $retiring)
-                         ->with('_navigation', $navigation);
+                         ->with('_navigation', $navigation)
+                         ->with('_upgraded', $upgraded);
                 }
             }
         });

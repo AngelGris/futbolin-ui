@@ -80,11 +80,11 @@ class Team extends Model
     ];
 
     /**
-     * Get the user associated with the team
+     * Get the players associated with the team
      */
-    public function user()
+    public function players()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Player::class);
     }
 
     /**
@@ -96,11 +96,11 @@ class Team extends Model
     }
 
     /**
-     * Get the players associated with the team
+     * Get the user associated with the team
      */
-    public function players()
+    public function user()
     {
-        return $this->hasMany(Player::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
