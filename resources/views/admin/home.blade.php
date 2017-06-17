@@ -36,23 +36,23 @@ $(function(){
     </div>
     <div class="col-xs-12">
         <div class="col-xs-10">Últimos 7 días</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['week'] }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-10">Últimos 30 días</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['month'] }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-10">Últimos 6 meses</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['semester'] }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-10">Último año</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['year'] }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-10">Total de usuarios</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['total'] }}</div>
     </div>
     <a href="{{ route('admin.users', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
