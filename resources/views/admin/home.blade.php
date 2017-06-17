@@ -17,6 +17,45 @@ $(function(){
 @endsection
 
 @section('content-inner')
+<div id="home-last-active-users" class="col-md-6 zebra">
+    <h3>Últimos usuarios activos</h3>
+    @foreach($last_users as $user)
+    <div class="col-xs-12">
+        <div class="col-xs-7">{{ $user['name'] }}</div>
+        <div class="col-xs-4">{{ date('d/m/Y H:i:s', strtotime($user['last_activity'])) }}</div>
+        <div class="col-xs-1"><a href="{{ route('admin.user', ['domain' => getDomain(), 'id' => $user['id']]) }}"><span class="fa fa-search"></span></a></div>
+    </div>
+    @endforeach
+    <a href="{{ route('admin.users', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
+<div id="home-last-active-users" class="col-md-6 zebra">
+    <h3>Usuarios activos</h3>
+    <div class="col-xs-12">
+        <div class="col-xs-10">Últimas 24 horas</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-10">Últimos 7 días</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-10">Últimos 30 días</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-10">Últimos 6 meses</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-10">Último año</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-10">Total de usuarios</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+    </div>
+    <a href="{{ route('admin.users', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
 <div id="home-last-teams" class="col-md-6 zebra">
     <h3>Últimos equipos</h3>
     @foreach($last_teams as $team)
