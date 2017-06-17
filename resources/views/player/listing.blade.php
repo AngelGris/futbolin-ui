@@ -9,12 +9,29 @@ $(function(){
         "searching": false,
         "info": false
     });
+
+    $('#players-filtering').change(function() {
+        if ($(this).val() != '') {
+            $('tbody tr').hide();
+            $('tbody tr.' + $(this).val()).show();
+        } else {
+            $('tbody tr').show();
+        }
+    });
 });
 </script>
 @endsection
 
 @section('content-inner')
-<table class="table table-bordered table-players responsive">
+Mostrar:
+<select id="players-filtering">
+    <option value="">Todos</option>
+    <option value="arq">Arqueros</option>
+    <option value="def">Defensores</option>
+    <option value="med">Mediocampistas</option>
+    <option value="ata">Atacantes</option>
+</select>
+<table id="dyntable" class="table table-bordered table-players responsive">
     <thead>
         <tr>
             <th>#</th>
