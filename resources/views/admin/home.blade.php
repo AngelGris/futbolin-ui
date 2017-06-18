@@ -56,6 +56,7 @@ $(function(){
     </div>
     <a href="{{ route('admin.users', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
+<div class="clear"></div>
 <div id="home-last-teams" class="col-md-6 zebra">
     <h3>Últimos equipos</h3>
     @foreach($last_teams as $team)
