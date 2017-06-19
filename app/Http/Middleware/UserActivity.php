@@ -17,8 +17,7 @@ class UserActivity
     {
         if (\Auth::check()) {
             $user = \Auth::user();
-            $user->last_activity = date('Y-m-d H:i:s');
-            $user->save();
+            \DB::table('users')->where('id', '=', $user->id)->update(['last_activity' => date('Y-m-d H:i:s')]);
         }
 
         return $next($request);
