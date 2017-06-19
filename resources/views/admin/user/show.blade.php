@@ -12,12 +12,16 @@
         <div class="col-xs-6">{{ $user['email'] }}</div>
     </div>
     <div class="col-xs-12">
+        <div class="col-xs-6">Última actividad</div>
+        <div class="col-xs-6">{{ date('d/m/Y H:i:s', strtotime($user['last_activity'])) }}</div>
+    </div>
+    <div class="col-xs-12">
         <div class="col-xs-6">Creado</div>
-        <div class="col-xs-6">{{ $user['created_at'] }}</div>
+        <div class="col-xs-6">{{ date('d/m/Y H:i:s', strtotime($user['created_at'])) }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-6">Actualizado</div>
-        <div class="col-xs-6">{{ $user['updated_at'] }}</div>
+        <div class="col-xs-6">{{ date('d/m/Y H:i:s', strtotime($user['updated_at'])) }}</div>
     </div>
 </div>
 @endsection

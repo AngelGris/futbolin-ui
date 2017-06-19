@@ -11,7 +11,7 @@ class UserController extends Controller
     public function index()
     {
         $vars = [
-            'users' => User::where('id', '>', 1)->orderBy('first_name')->orderBy('last_name')->get()
+            'users' => User::where('id', '>', 1)->orderBy('last_activity', 'DESC')->get(),
         ];
 
         return view('admin.user.index', $vars);
