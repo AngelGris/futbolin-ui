@@ -1,20 +1,3 @@
-    /*$('#secondary_color_selector').ColorPicker({
-        color: secondary_color,
-        onShow: function (colpkr) {
-            $(colpkr).fadeIn(500);
-            return false;
-        },
-        onHide: function (colpkr) {
-            $(colpkr).fadeOut(500);
-            return false;
-        },
-        onChange: function (hsb, hex, rgb) {
-            $('#secondary_color_selector span').css('backgroundColor', '#' + hex);
-            $('#secondary_color_picker').val('#' + hex);
-            updateShieldColor();
-        }
-    });*/
-
 function changeShield(id) {
     $('#shield-value').val(id);
 
@@ -24,6 +7,18 @@ function changeShield(id) {
 
     return false;
 };
+
+function loadAdminMessage(id) {
+    $.ajax({
+        'method' : 'GET',
+        'url' : '/mensaje-admin/' + id,
+        'dataType': 'json'
+    }).done(function(data){
+        $('#modal-admin-message-title').html(data.title);
+        $('#modal-admin-message-body').html(data.message);
+        $('#modal-admin-message').modal();
+    });
+}
 
 function loadSVGintoIMG(img, url) {
     var imgID = img.attr('id');
@@ -93,28 +88,31 @@ $(function(){
     /**
      * Initiate color pickers
      */
-    $('.colorpicker').spectrum({
-        preferredFormat: "hex",
-        showPalette: true,
-        palette: [
-            ["#000","#666","#ccc","#fff"],
-            ["#f00","#ff0","#0f0","#00f"],
-            ["#ea9999","#ffe599","#b6d7a8","#9fc5e8"],
-            ["#e06666","#ffd966","#93c47d","#6fa8dc"],
-            ["#c00","#f1c232","#6aa84f","#3d85c6"],
-            ["#900","#bf9000","#38761d","#0b5394"],
-            ["#600","#7f6000","#274e13","#073763"]
-        ],
-        showButtons: false,
-        showInitial: true,
-        move: function(color) {
-            $(this).val(color);
-            updateShieldColor();
-        },
-        change: function(color) {
-            updateShieldColor();
-        }
-    });
+    if ($('.colorpicker').length) {
+        console.log($('.colorpicker'));
+        $('.colorpicker').spectrum({
+            preferredFormat: "hex",
+            showPalette: true,
+            palette: [
+                ["#000","#666","#ccc","#fff"],
+                ["#f00","#ff0","#0f0","#00f"],
+                ["#ea9999","#ffe599","#b6d7a8","#9fc5e8"],
+                ["#e06666","#ffd966","#93c47d","#6fa8dc"],
+                ["#c00","#f1c232","#6aa84f","#3d85c6"],
+                ["#900","#bf9000","#38761d","#0b5394"],
+                ["#600","#7f6000","#274e13","#073763"]
+            ],
+            showButtons: false,
+            showInitial: true,
+            move: function(color) {
+                $(this).val(color);
+                updateShieldColor();
+            },
+            change: function(color) {
+                updateShieldColor();
+            }
+        });
+    }
 
     /*
      * Replace all SVG images with inline SVG

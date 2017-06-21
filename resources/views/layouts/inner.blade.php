@@ -27,6 +27,11 @@
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/spectrum.js') }}"></script>
 @yield('javascript-inner')
+@if (Session::has('admin_message'))
+<script type="text/javascript">
+    loadAdminMessage({{ session('admin_message') }});
+</script>
+@endif
 @endsection
 
 @section('content')
@@ -37,7 +42,7 @@
                 <div class="navbar-header">
                     <ul class="headmenu headmenu-toggle">
                         @if ($_playersAlertsCount > 0)
-                        <li class="odd">
+                        <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                             <span class="count">{{ $_playersAlertsCount }}</span>
                             <span class="head-icon head-users"></span>
@@ -83,13 +88,29 @@
 
                 <div class="headerinner">
                     <ul class="headmenu">
+                        @if ($_messagesCount)
+                        <li>
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                                <span class="count">{{ $_messagesCount }}</span>
+                                <span class="head-icon head-message"></span>
+                                <span class="headmenu-label">Mensajes</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-header">Mensajes</li>
+                                @foreach ($_messages as $message)
+                                <li><a href="#" class="admin-messages" onclick="loadAdminMessage({{ $message['id'] }});">{{ $message['title'] }}<small class="muted"> - {{ $message['published'] }}</small></a></li>
+                                @endforeach
+                            </ul>
+                        </li>
+                        @endif
                         @if ($_playersAlertsCount > 0)
-                        <li class="odd">
+                        <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                             <span class="count">{{ $_playersAlertsCount }}</span>
                             <span class="head-icon head-users"></span>
                             <span class="headmenu-label">Jugadores</span>
                             </a>
+
                             <ul class="dropdown-menu newusers">
                                 @if (count($_upgraded) > 0)
                                 <li class="nav-header">Jugadores mejorados</li>
@@ -188,6 +209,21 @@
                         <span>Developed by: <a href="https://github.com/AngelGris" target="_blank">Angel Gris</a></span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-admin-message">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="modal-admin-message-title" class="modal-title"></h4>
+            </div>
+            <div id="modal-admin-message-body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>

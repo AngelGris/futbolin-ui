@@ -35,6 +35,16 @@ Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']],
     });
 
     Route::get('/categoria/{category}', 'Admin\TournamentCategoryController@index')->where('category', '[0-9]+');
+
+    Route::get('/mensajes', ['as' => 'admin.messages', 'uses' => 'Admin\MessageController@index']);
+    Route::group(['prefix' => 'mensaje'], function() {
+        Route::get('/crear', ['as' => 'admin.message.create', 'uses' => 'Admin\MessageController@create']);
+        Route::post('/', ['as' => 'admin.message.store', 'uses' => 'Admin\MessageController@store']);
+        Route::get('/editar/{message}', ['as' => 'admin.message.edit', 'uses' => 'Admin\MessageController@edit'])->where('message', '[0-9]+');
+        Route::get('/{message}', ['as' => 'admin.message', 'uses' => 'Admin\MessageController@show'])->where('message', '[0-9]+');
+        Route::patch('/{message}', ['as' => 'admin.message.save', 'uses' => 'Admin\MessageController@save'])->where('message', '[0-9]+');
+        Route::delete('/{message}', ['as' => 'admin.message.delete', 'uses' => 'Admin\MessageController@delete'])->where('message', '[0-9]+');
+    });
 });
 
 Auth::routes();
@@ -86,4 +96,6 @@ Route::group(['middleware' => 'auth'], function() {
     });
 
     Route::get('/torneos', ['as' => 'tournaments', 'uses' => 'TournamentController@index']);
+
+    Route::get('/mensaje-admin/{message}', 'Admin\MessageController@showPublic')->where('message', '[0-9]+');
 });

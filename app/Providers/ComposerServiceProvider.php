@@ -5,6 +5,7 @@ use View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use App\TournamentRound;
+use App\AdminMessage;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,7 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => '', 'icon' => 'fa fa-dashboard', 'name' => 'Panel'],
                         ['url' => 'usuarios', 'icon' => 'fa fa-group', 'name' => 'Usuarios'],
                         ['url' => 'equipos', 'icon' => 'fa fa-futbol-o', 'name' => 'Equipos'],
+                        ['url' => 'mensajes', 'icon' => 'fa fa-envelope', 'name' => 'Mensajes'],
                         ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
                         ['url' => 'partidos', 'icon' => 'fa fa-star', 'name' => 'Partidos'],
                     ];
@@ -48,8 +50,12 @@ class ComposerServiceProvider extends ServiceProvider
                         $upgraded = $team->players->where('updated_at', '>', date('Y-m-d H:i:s', $last_match['datetime']));
                     }
 
+                    $messages = AdminMessage::where('valid_to', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']))->orderBy('valid_from')->get();
+
                     $view->with('_user', Auth::user())
                          ->with('_team', $team)
+                         ->with('_messagesCount', count($messages))
+                         ->with('_messages', $messages)
                          ->with('_playersAlertsCount', count($retiring) + count($upgraded))
                          ->with('_retiring', $retiring)
                          ->with('_navigation', $navigation)

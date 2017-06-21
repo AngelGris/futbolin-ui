@@ -3,7 +3,7 @@
 @section('content-inner')
 <div class="col-xs-12 zebra">
     <h3 style="float:left;">Torneos</h3>
-    <a href="{{ route('admin.tournament.create', getDomain()) }}" class="btn btn-danger" style="float:right;">Crear Torneo</a>
+    <a href="{{ route('admin.tournament.create', $_domain) }}" class="btn btn-danger" style="float:right;">Crear Torneo</a>
     <div class="clear"></div>
     @if(count($tournaments) == 0)
     <h4>No hay torneos para mostrar</h4>
