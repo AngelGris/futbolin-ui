@@ -41,6 +41,21 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <ul class="headmenu headmenu-toggle">
+                        @if ($_messagesCount)
+                        <li>
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                                <span class="count">{{ $_messagesCount }}</span>
+                                <span class="head-icon head-message"></span>
+                                <span class="headmenu-label">Mensajes</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-header">Mensajes</li>
+                                @foreach ($_messages as $message)
+                                <li><a href="#" class="admin-messages" onclick="loadAdminMessage({{ $message['id'] }});">{{ $message['title'] }}<small class="muted"> - {{ $message['published'] }}</small></a></li>
+                                @endforeach
+                            </ul>
+                        </li>
+                        @endif
                         @if ($_playersAlertsCount > 0)
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
