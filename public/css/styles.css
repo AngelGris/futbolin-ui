@@ -141,7 +141,7 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	position: relative;
 }
 .headmenu > li:first-child { border-left: 1px solid rgba(255,255,255,0.15); }
-.headmenu li:nth-child(odd) { background: rgba(255,255,255,0.1); }
+.headmenu > li:nth-child(odd) { background: rgba(255,255,255,0.1); }
 .headmenu > li.right { float: right; border-right: 0; }
 .headmenu > li > a {
 	min-width: 70px; position: relative; display: block; color: #fff;
