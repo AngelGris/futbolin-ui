@@ -25,8 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->exec('python3 ' . base_path() . '/python/cron.py')
-                 ->cron('* * * * * *')
-                 //->cron('0 20 * * 1,3,5 *')
+                 ->cron('0 20 * * 1,3,5 *')
                  ->sendOutputTo('/var/log/futbolin/cron-' . date('Ymdhis') . '.log')
                  ->after(function() {
                     $players = Player::where('experience', '>=', 100)->get();
