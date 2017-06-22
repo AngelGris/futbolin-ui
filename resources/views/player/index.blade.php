@@ -4,46 +4,18 @@
 <h3>{{ $player['number'] }} - {!! $player['name'] !!}</h3>
 <h4>{{ $player['position'] }} - {{ $player['age'] }} años</h4>
 <div class="col-xs-12 col-sm-6 col-md-3 zebra">
+    @foreach (['Arquero' => 'goalkeeping', 'Defensa' => 'defending', 'Gambeta' => 'dribbling', 'Cabeceo' => 'heading', 'Salto' => 'jumping', 'Pase' => 'passing', 'Precisión' => 'precision', 'Velocidad' => 'speed', 'Fuerza' => 'strength', 'Quite' => 'tackling'] as $k => $v)
     <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Arquero</label>
-        <div class="col-xs-3">{{ $player['goalkeeping'] }}</div>
+        <label class="col-xs-9 control-label">{{ $k }}</label>
+        <div class="col-xs-3">
+            @if ($player['upgraded'] && !empty($player['last_upgrade'][$v]))
+            <span style="color:#009900;">{{ $player[$v] }}<sub>+{{ $player['last_upgrade'][$v] }}</sub></span>
+            @else
+            {{ $player[$v] }}
+            @endif
+        </div>
     </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Defensa</label>
-        <div class="col-xs-3">{{ $player['defending'] }}</div>
-    </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Gambeta</label>
-        <div class="col-xs-3">{{ $player['dribbling'] }}</div>
-    </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Cabeceo</label>
-        <div class="col-xs-3">{{ $player['heading'] }}</div>
-    </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Salto</label>
-        <div class="col-xs-3">{{ $player['jumping'] }}</div>
-    </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Pase</label>
-        <div class="col-xs-3">{{ $player['passing'] }}</div>
-    </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Precisión</label>
-        <div class="col-xs-3">{{ $player['precision'] }}</div>
-    </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Velocidad</label>
-        <div class="col-xs-3">{{ $player['speed'] }}</div>
-    </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Fuerza</label>
-        <div class="col-xs-3">{{ $player['strength'] }}</div>
-    </div>
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Quite</label>
-        <div class="col-xs-3">{{ $player['tackling'] }}</div>
-    </div>
+    @endforeach
     <div class="col-xs-12">
         <label class="col-xs-9 control-label">Experiencia</label>
         <div class="col-xs-3">{{ $player['experience'] }}</div>

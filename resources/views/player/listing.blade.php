@@ -60,19 +60,19 @@ Mostrar:
             <td align="center">{{ $player['age'] }}</td>
             <td align="center"><span data-placement="top" data-toggle="tooltip" data-original-title="{{ $player['position_long'] }}">{{ $player['position'] }}</span></td>
             <td align="right"><strong>{{ $player['average'] }}</strong></td>
-            <td align="right">{{ $player['goalkeeping'] }}</td>
-            <td align="right">{{ $player['defending'] }}</td>
-            <td align="right">{{ $player['dribbling'] }}</td>
-            <td align="right">{{ $player['heading'] }}</td>
-            <td align="right">{{ $player['jumping'] }}</td>
-            <td align="right">{{ $player['passing'] }}</td>
-            <td align="right">{{ $player['precision'] }}</td>
-            <td align="right">{{ $player['speed'] }}</td>
-            <td align="right">{{ $player['strength'] }}</td>
-            <td align="right">{{ $player['tackling'] }}</td>
+            @foreach (['goalkeeping', 'defending', 'dribbling', 'heading', 'jumping', 'passing', 'precision', 'speed', 'strength', 'tackling'] as $attr)
+            <td align="right">
+                @if ($player['upgraded'] && !empty($player['last_upgrade'][$attr]))
+                <span style="color:#009900;">{{ $player[$attr] }}<sub>+{{ $player['last_upgrade'][$attr] }}</sub></span>
+                @else
+                {{ $player[$attr] }}
+                @endif
+            </td>
+            @endforeach
             <td align="right">{{ $player['experience'] }}</td>
         @endforeach
     </tbody>
 </table>
-<span class="fa fa-user-times" style="color:#f00;"></span> = jugadores que se retiran al final de la temporada
+<span class="fa fa-user-times" style="color:#f00;"></span> = jugadores que se retiran al final de la temporada<br>
+<span class="fa fa-arrow-circle-up" style="color:#080;"></span> = jugadores mejorados después del último partido<br>
 @endsection

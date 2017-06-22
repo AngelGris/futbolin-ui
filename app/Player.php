@@ -16,6 +16,15 @@ class Player extends Model
      */
     protected $guarded = ['id', 'team_id'];
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'last_upgrade' => 'array',
+    ];
+
     protected $appends = ['name', 'short_name', 'average'];
 
     /**
@@ -92,6 +101,9 @@ class Player extends Model
         if ($this->retiring) {
             $output .= ' <span class="fa fa-user-times" style="color:#f00;"></span>';
         }
+        if ($this->upgraded) {
+            $output .= ' <span class="fa fa-arrow-circle-up" style="color:#080;"></span>';
+        }
         return $output;
     }
 
@@ -112,23 +124,24 @@ class Player extends Model
     }
 
     /**
+     * Player was upgraded after last match
+     */
+    public function getUpgradedAttribute()
+    {
+        $last_match = TournamentRound::where('datetime', '<', time())->orderBy('datetime', 'DESC')->first();
+        if ($last_match && $this->updated_at > date('Y-m-d H:i:s', $last_match['datetime'])) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
      * Upgrade player
      */
     public function upgrade()
     {
         if ($this->experience >= 100) {
-            $attributes = [
-                'goalkeeping',
-                'defending',
-                'dribbling',
-                'heading',
-                'jumping',
-                'passing',
-                'precision',
-                'speed',
-                'strength',
-                'tackling'
-            ];
             $points = 0;
             $age_limit = 7;
             $age_diff = $this->age - 17;
@@ -146,45 +159,62 @@ class Player extends Model
                 }
             }
 
+            $last_upgrade = [];
+            $upgraded = '';
             for ($i = 0; $i < $points; $i++) {
                 switch (mt_rand(0, 9)) {
                     case 0:
                         $this->goalkeeping = min($this->goalkeeping + 1, 99);
+                        $upgraded = 'goalkeeping';
                         break;
                     case 1:
                         $this->defending = min($this->defending + 1, 99);
+                        $upgraded = 'defending';
                         break;
                     case 2:
                         $this->dribbling = min($this->dribbling + 1, 99);
+                        $upgraded = 'dribbling';
                         break;
                     case 3:
                         $this->heading = min($this->heading + 1, 99);
+                        $upgraded = 'heading';
                         break;
                     case 4:
                         $this->jumping = min($this->jumping + 1, 99);
+                        $upgraded = 'jumping';
                         break;
                     case 5:
                         $this->passing = min($this->passing + 1, 99);
+                        $upgraded = 'passing';
                         break;
                     case 6:
                         $this->precision = min($this->precision + 1, 99);
+                        $upgraded = 'precision';
                         break;
                     case 7:
                         $this->speed = min($this->speed + 1, 99);
+                        $upgraded = 'speed';
                         break;
                     case 8:
                         $this->strength = min($this->strength + 1, 99);
+                        $upgraded = 'strength';
                         break;
                     case 9:
                         $this->tackling = min($this->tackling + 1, 99);
+                        $upgraded = 'tackling';
                         break;
 
                 }
-                $key = array_rand($attributes);
-                $attributes[$key]++;
+
+                if (empty($last_upgrade[$upgraded])) {
+                    $last_upgrade[$upgraded] = 1;
+                } else {
+                    $last_upgrade[$upgraded]++;
+                }
             }
 
             $this->experience -= 100;
+            $this->last_upgrade = $last_upgrade;
             $this->save();
         }
     }
