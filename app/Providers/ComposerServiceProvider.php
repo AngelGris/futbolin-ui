@@ -50,7 +50,8 @@ class ComposerServiceProvider extends ServiceProvider
                         $upgraded = $team->players->where('last_upgraded', '>', date('Y-m-d H:i:s', $last_match['datetime']));
                     }
 
-                    $messages = AdminMessage::where('valid_to', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']))->orderBy('valid_from')->get();
+                    $request_time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
+                    $messages = AdminMessage::where('valid_from', '<', $request_time)->where('valid_to', '>', $request_time)->orderBy('valid_from')->get();
 
                     $view->with('_user', Auth::user())
                          ->with('_team', $team)
