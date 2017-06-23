@@ -32,7 +32,7 @@ class Player extends Model
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = ['last_upgraded', 'deleted_at'];
 
     /**
      * Get the player's team
@@ -129,7 +129,7 @@ class Player extends Model
     public function getUpgradedAttribute()
     {
         $last_match = TournamentRound::where('datetime', '<', time())->orderBy('datetime', 'DESC')->first();
-        if ($last_match && $this->updated_at > date('Y-m-d H:i:s', $last_match['datetime'])) {
+        if ($last_match && $this->last_upgraded > date('Y-m-d H:i:s', $last_match['datetime'])) {
             return TRUE;
         } else {
             return FALSE;
@@ -215,6 +215,7 @@ class Player extends Model
 
             $this->experience -= 100;
             $this->last_upgrade = $last_upgrade;
+            $this->last_upgraded = $_SERVER['REQUEST_TIME'];
             $this->save();
         }
     }

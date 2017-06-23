@@ -76,6 +76,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/estadisticas/{rival}', ['as' => 'team.statsVersus', 'uses' => 'TeamController@showStatsVersus'])->where('rival', '[0-9]+');
         Route::post('/estrategia', ['as' => 'team.strategy', 'uses' => 'TeamController@updateStrategy']);
         Route::post('/formacion', ['as' => 'team.formation', 'uses' => 'TeamController@updateFormation']);
+        Route::post('/entrenar', 'TeamController@train');
     });
 
     Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showListing']);

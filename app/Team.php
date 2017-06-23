@@ -24,6 +24,11 @@ class Team extends Model
     ];
 
     /**
+     * Carbon instance fields
+     */
+    protected $dates = ['last_trainning', 'created_at', 'updated_at'];
+
+    /**
      * Attribute limits for newly created players
      *
      * @var arrau
@@ -246,16 +251,6 @@ class Team extends Model
     }
 
     /**
-     * Get SVG file for the team shield
-     */
-    public function getShieldFileAttribute()
-    {
-        $file = '/img/shield/shield-' . sprintf('%02d', $this->shield) . '.svg';
-
-        return $file;
-    }
-
-    /**
      * Get if the team meats the requirements to play a match
      */
     public function getPlayableAttribute()
@@ -277,5 +272,41 @@ class Team extends Model
         }
 
         return $playable;
+    }
+
+    /**
+     * Check if team can train
+     */
+    public function getTrainableAttribute()
+    {
+        if ($this->last_trainning && $_SERVER['REQUEST_TIME'] - $this->last_trainning->timestamp < \Config::get('constants.TIME_TO_TRAIN')) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+
+    /**
+     * Remaining time to become trainable
+     */
+    public function getTrainableRemainingAttribute()
+    {
+        if ($this->trainable) {
+            return 0;
+        } else if ($this->last_trainning) {
+            return \Config::get('constants.TIME_TO_TRAIN') - ($_SERVER['REQUEST_TIME'] - $this->last_trainning->timestamp);
+        } else {
+            return \Config::get('constants.TIME_TO_TRAIN');
+        }
+    }
+
+    /**
+     * Get SVG file for the team shield
+     */
+    public function getShieldFileAttribute()
+    {
+        $file = '/img/shield/shield-' . sprintf('%02d', $this->shield) . '.svg';
+
+        return $file;
     }
 }

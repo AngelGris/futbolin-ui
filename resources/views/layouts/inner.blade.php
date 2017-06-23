@@ -27,6 +27,9 @@
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/spectrum.js') }}"></script>
 @yield('javascript-inner')
+<script type="text/javascript">
+    var trainable_remaining = {{ $_team['trainable_remaining'] }}
+</script>
 @if (Session::has('admin_message'))
 <script type="text/javascript">
     loadAdminMessage({{ session('admin_message') }});
@@ -57,7 +60,6 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                                 <span class="count">{{ $_messagesCount }}</span>
                                 <span class="head-icon head-message"></span>
-                                <span class="headmenu-label">Mensajes</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="nav-header">Mensajes</li>
@@ -70,8 +72,8 @@
                         @if ($_playersAlertsCount > 0)
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                            <span class="count">{{ $_playersAlertsCount }}</span>
-                            <span class="head-icon head-users"></span>
+                                <span class="count">{{ $_playersAlertsCount }}</span>
+                                <span class="head-icon head-users"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 @if (count($_upgraded) > 0)
@@ -99,6 +101,15 @@
                             </ul>
                         </li>
                         @endif
+                        <li class="trainning"{!! ($_team['trainable'] ? '' : ' style="display:none;"') !!}>
+                            <a href="#" class="trainning-button" data-token="{{ csrf_token() }}">
+                                <span class="fa fa-star"></span>
+                            </a>
+                        </li>
+                        <li class="trainning-disabled"{!! ($_team['trainable'] ? ' style="display:none;"' : '') !!}>
+                            <span class="fa fa-star-o"></span>
+                            <div class="remaining-timer">00:00:00</div>
+                        </li>
                     </ul>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
@@ -165,7 +176,14 @@
                         @endif
                         <li class="right">
                             <div class="userloggedinfo">
-                                <img src="{{ asset('img/thumb1.png') }}" alt="" />
+                                <button class="trainning-button"{!! ($_team['trainable'] ? '' : ' style="display:none;"') !!} data-token="{{ csrf_token() }}">
+                                    <span class="fa fa-star"></span>
+                                    <p>Entrenar</p>
+                                </button>
+                                <div class="trainning-button-disabled"{!! ($_team['trainable'] ? ' style="display:none;"' : '') !!}>
+                                    <span class="fa fa-star-o"></span>
+                                    <p class="remaining-timer">00:00:00</p>
+                                </div>
                                 <div class="userinfo">
                                     <h5>
                                         {{ $_user['first_name'] }} {{ $_user['last_name'] }} <br>

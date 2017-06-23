@@ -1,3 +1,5 @@
+var remaining_timer;
+
 function changeShield(id) {
     $('#shield-value').val(id);
 
@@ -14,10 +16,14 @@ function loadAdminMessage(id) {
         'url' : '/mensaje-admin/' + id,
         'dataType': 'json'
     }).done(function(data){
-        $('#modal-admin-message-title').html(data.title);
-        $('#modal-admin-message-body').html(data.message);
-        $('#modal-admin-message').modal();
+        showAdminMessage(data.title, data.message);
     });
+}
+
+function showAdminMessage(title, message) {
+    $('#modal-admin-message-title').html(title);
+    $('#modal-admin-message-body').html(message);
+    $('#modal-admin-message').modal();
 }
 
 function loadSVGintoIMG(img, url) {
@@ -125,4 +131,62 @@ $(function(){
         event.preventDefault();
         $('#modal-shield-select').modal('show');
     });
+
+    $('.trainning-button').click(function(event) {
+        event.preventDefault();
+
+        $.ajax({
+            'method' : 'POST',
+            'url' : '/equipo/entrenar/',
+            'data' : {_token : $(this).data('token')},
+            'dataType': 'json'
+        }).done(function(data){
+            showAdminMessage(data.title, data.message);
+            $('button.trainning-button').hide();
+            $('li.trainning').hide();
+            $('div.trainning-button-disabled').show();
+            $('li.trainning-disabled').show();
+            startRemainingTimer(data.remaining);
+        });
+    });
+
+    function startRemainingTimer(remaining = 0) {
+        if (remaining > 0) {
+            trainable_remaining = remaining;
+        }
+
+        if (trainable_remaining > 0) {
+            updateTrainableTimer()
+            remaining_timer = setInterval(updateTrainableTimer, 1000);
+        }
+    }
+
+    function updateTrainableTimer() {
+        trainable_remaining--;
+        if (trainable_remaining > 0) {
+            remaining = trainable_remaining;
+            hours = parseInt(remaining / 3600);
+            remaining -= hours * 3600;
+            minutes = parseInt(remaining / 60);
+            seconds = remaining - (minutes * 60);
+            if (hours < 10) {
+                hours = '0' + hours;
+            }
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+            if (seconds < 10) {
+                seconds = '0' + seconds;
+            }
+            $('.remaining-timer').text(hours + ':' + minutes + ':' + seconds);
+        } else {
+            clearInterval(remaining_timer);
+            $('div.trainning-button-disabled').hide();
+            $('li.trainning-disabled').hide();
+            $('button.trainning-button').show();
+            $('li.trainning').show();
+        }
+    }
+
+    startRemainingTimer();
 });

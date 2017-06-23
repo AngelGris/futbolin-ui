@@ -176,6 +176,29 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .userloggedinfo ul li { display: block; font-size: 11px; line-height: normal; margin-bottom: 1px; }
 .userloggedinfo ul li a { padding: 4px 5px 3px 5px; color: #fff; line-height: normal; background: rgba(255,255,255,0.1); display: block; }
 .userloggedinfo ul li a:hover { text-decoration: none; background: rgba(255,255,255,0.2); }
+.userloggedinfo .trainning-button,
+.userloggedinfo .trainning-button-disabled {
+	background-color: #4F7B9A;
+	border: none;
+	float: left;
+	height: 85px;
+	width: 85px;
+}
+.userloggedinfo .trainning-button:hover {
+	background-color: #7295AE;
+}
+.userloggedinfo .trainning-button-disabled {
+	padding-top: 12px;
+	text-align: center;
+}
+.userloggedinfo .trainning-button-disabled p {
+	font-size: 12px;
+	font-weight: bold;
+}
+.userloggedinfo .trainning-button-disabled span,
+.userloggedinfo .trainning-button span {
+	font-size: 40px;
+}
 
 .no-borderradius .userloggedinfo .userinfo { float: none; margin-left: 92px; }
 
@@ -2367,6 +2390,10 @@ label.error {
 /*** MEDIA QUERIES ***/
 
 @media screen and (max-width: 1024px) {
+	.logo {
+		display: none;
+	}
+
     .leftpanel {
     	width: 180px;
     }
@@ -2464,6 +2491,33 @@ label.error {
 		height: 35px;
 		margin: 0px 0 0 0;
 		width: 35px;
+	}
+
+	.navbar-header .headmenu li.trainning a,
+	.navbar-header .headmenu li.trainning-disabled {
+		line-height: 60px;
+		padding: 0;
+		text-align: center;
+	}
+
+	.navbar-header .headmenu li.trainning-disabled {
+		color: #7592a5;
+	}
+
+	.navbar-header .headmenu li.trainning a span,
+	.navbar-header .headmenu li.trainning-disabled span {
+		font-size: 35px;
+	}
+
+	.navbar-header .headmenu li.trainning-disabled div {
+		color: #fff;
+		font-size: 11px;
+		font-weight: bold;
+		left: 0;
+		position: absolute;
+		text-align: center;
+		top: 12px;
+		width: 50px;
 	}
 
 	.navbar-header .headmenu li .dropdown-menu {

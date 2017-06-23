@@ -421,6 +421,42 @@ class TeamController extends Controller
         return view('team.strategy', $vars);
     }
 
+    public function train(Request $request)
+    {
+        $team = Auth::user()->team;
+        if ($team->trainable) {
+            if (is_null($team->last_trainning) || $team->last_trainning->timestamp < $_SERVER['REQUEST_TIME'] - \Config::get('constants.TIME_TO_TRAIN') - \Config::get('constants.TRAIN_TIME_SPAM')) {
+                $team->trainning_count = 1;
+            } else {
+                $team->trainning_count++;
+            }
+            $trainning_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $team->trainning_count);
+
+            foreach ($team->players as $player) {
+                $player->experience += $trainning_points;
+                if ($player->experience >= 100) {
+                    $player->upgrade();
+                } else {
+                    $player->save();
+                }
+            }
+
+            $team->last_trainning = $_SERVER['REQUEST_TIME'];
+            $team->save();
+
+            if ($team->trainning_count < 5) {
+                $message = '<p>Es tu primer entrenamiento y tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia.</p>';
+                $message .= '<p>Vuelve a entrenar mañana para ganar ' . ($trainning_points + \Config::get('constants.TRAINNING_POINTS')) . ' puntos mas</p>';
+            } else {
+                $message = '<p>Entrenaste a tu equipo ' . $team->trainning_count . ' días seguidos y tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia.</p>';
+                $message .= '<p>Vuelve a entrenar mañana para ganar ' . $trainning_points . ' puntos mas</p>';
+            }
+            return json_encode(['title' => 'Entrenamiento', 'message' => $message, 'remaining' => $team->trainable_remaining]);
+        } else {
+            return json_encode(['title' => 'Entrenamiento', 'message' => '<p>Debes esperar ' . readableTime($team->trainable_remaining) . ' para poder entrenar nuevamente.</p>', 'remaining' => $team->trainable_remaining]);
+        }
+    }
+
     /**
      * Save team formation
      */
