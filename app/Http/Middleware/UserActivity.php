@@ -18,7 +18,7 @@ class UserActivity
     {
         if (\Auth::check()) {
             $user = \Auth::user();
-            $message = AdminMessage::where('valid_from', '>', $user->last_activity)->latest()->first();
+            $message = AdminMessage::where('valid_from', '>', ($user->last_activity ? $user->last_activity : 0))->latest()->first();
 
             if ($message) {
                 \Session::flash('admin_message', $message['id']);
