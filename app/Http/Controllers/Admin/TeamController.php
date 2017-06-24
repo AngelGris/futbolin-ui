@@ -11,7 +11,7 @@ class TeamController extends Controller
     public function index()
     {
         $vars = [
-            'teams' => Team::where('user_id', '>', 1)->orderBy('name')->get(),
+            'teams' => Team::where('user_id', '>', 1)->orderBy('last_trainning', 'DESC')->get(),
         ];
 
         return view('admin.team.index', $vars);

@@ -22,9 +22,19 @@ class HomeController extends Controller
             'year' => User::where('id', '>', 1)->where('last_activity', '>', date('Y-m-d H:i:s', time() - 31536000))->count(),
             'total' => User::where('id', '>', 1)->count(),
         ];
+        $last_trainnings_stats = [
+            'day' => Team::where('user_id', '>', 1)->where('last_trainning', '>', date('Y-m-d H:i:s', time() - 86400))->count(),
+            'week' => Team::where('user_id', '>', 1)->where('last_trainning', '>', date('Y-m-d H:i:s', time() - 604800))->count(),
+            'month' => Team::where('user_id', '>', 1)->where('last_trainning', '>', date('Y-m-d H:i:s', time() - 2592000))->count(),
+            'semester' => Team::where('user_id', '>', 1)->where('last_trainning', '>', date('Y-m-d H:i:s', time() - 15552000))->count(),
+            'year' => Team::where('user_id', '>', 1)->where('last_trainning', '>', date('Y-m-d H:i:s', time() - 31536000))->count(),
+            'total' => Team::where('user_id', '>', 1)->count(),
+        ];
         $vars = [
             'last_users' => User::where('id', '>', 1)->whereNotNull('last_activity')->orderBy('last_activity', 'DESC')->limit(10)->get(),
             'last_users_stats' => $last_users_stats,
+            'last_trainnings' => Team::where('user_id', '>', 1)->whereNotNull('last_trainning')->orderBy('last_trainning', 'DESC')->limit(10)->get(),
+            'last_trainnings_stats' => $last_trainnings_stats,
             'last_teams' => Team::where('user_id', '>', 1)->latest()->limit(10)->get(),
             'last_matches' => Matches::latest()->limit(10)->get(),
         ];
