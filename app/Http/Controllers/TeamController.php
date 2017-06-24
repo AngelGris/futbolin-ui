@@ -445,7 +445,21 @@ class TeamController extends Controller
             $team->save();
 
             if ($team->trainning_count < 5) {
-                $message = '<p>Es tu primer entrenamiento y tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia.</p>';
+                switch ($team->trainning_count) {
+                    case 1:
+                        $ordinal = 'primer';
+                        break;
+                    case 2:
+                        $ordinal = 'segundo';
+                        break;
+                    case 3:
+                        $ordinal = 'tercer';
+                        break;
+                    default:
+                        $ordinal = 'cuarto';
+                        break;
+                }
+                $message = '<p>Es tu ' . $ordinal . ' entrenamiento y tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia.</p>';
                 $message .= '<p>Vuelve a entrenar mañana para ganar ' . ($trainning_points + \Config::get('constants.TRAINNING_POINTS')) . ' puntos mas</p>';
             } else {
                 $message = '<p>Entrenaste a tu equipo ' . $team->trainning_count . ' días seguidos y tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia.</p>';
