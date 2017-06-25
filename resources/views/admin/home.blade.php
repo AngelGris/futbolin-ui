@@ -95,7 +95,7 @@ $(function(){
         <div class="col-xs-10">Total de usuarios</div>
         <div class="col-xs-2" style="text-align:right;">{{ $last_trainnings_stats['total'] }}</div>
     </div>
-    <a href="{{ route('admin.users', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+    <a href="{{ route('admin.teams', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
 <div class="clear"></div>
 <div id="home-last-teams" class="col-md-6 zebra">
