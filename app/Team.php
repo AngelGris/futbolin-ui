@@ -287,6 +287,18 @@ class Team extends Model
     }
 
     /**
+     * Check if team is in train spam
+     */
+    public function getInTrainningSpamAttribute()
+    {
+        if (is_null($this->last_trainning) || $this->last_trainning->timestamp < $_SERVER['REQUEST_TIME'] - \Config::get('constants.TIME_TO_TRAIN') - \Config::get('constants.TRAIN_TIME_SPAM')) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+
+    /**
      * Remaining time to become trainable
      */
     public function getTrainableRemainingAttribute()

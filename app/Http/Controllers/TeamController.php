@@ -425,7 +425,7 @@ class TeamController extends Controller
     {
         $team = Auth::user()->team;
         if ($team->trainable) {
-            if (is_null($team->last_trainning) || $team->last_trainning->timestamp < $_SERVER['REQUEST_TIME'] - \Config::get('constants.TIME_TO_TRAIN') - \Config::get('constants.TRAIN_TIME_SPAM')) {
+            if (!$team->inTrainningSpam) {
                 $team->trainning_count = 1;
             } else {
                 $team->trainning_count++;
