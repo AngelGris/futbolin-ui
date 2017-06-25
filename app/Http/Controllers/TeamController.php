@@ -141,6 +141,8 @@ class TeamController extends Controller
 
         $team->save();
 
+        $request->session()->flash('show_walkthrough', TRUE);
+
         return redirect()->route('strategy');
     }
 

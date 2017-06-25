@@ -1,12 +1,110 @@
 @extends('layouts.inner')
 
+@section('styles-inner')
+@if (Session::has('show_walkthrough'))
+<link rel="stylesheet" href="{{ asset('css/jquery.walkthrough.min.css') }}" type="text/css" />
+@endif
+@endsection
+
 @section('javascript-inner')
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+@if (Session::has('show_walkthrough'))
+<script src="{{ asset('js/jquery.walkthrough.min.js') }}"></script>
+@endif
 <script type="text/javascript">
 $(function() {
     var fieldTimeout;
     var strategies = {!! json_encode($strategies) !!};
     var players = {!! json_encode($players) !!};
+
+    @if (Session::has('show_walkthrough'))
+    // Set up tour
+    $('body').pagewalkthrough({
+        name: 'welcome',
+        steps: [{
+           popup: {
+                content: '<p>¡Bienvenido/a {{ $_user['first_name'] }}!</p><br /><p>Voy a enseñarte rápidamente cómo funciona el juego para que puedas llevar a tu equipo a lo más alto.</p><p>¿Estamos listos?</p>',
+                type: 'modal',
+           },
+        }, {
+            popup: {
+                content: '<p>Esta es la página de estrategias y aquí puedes decidir cómo parar a tu equipo en la cancha y cuáles jugadores serán titulares, y cuáles suplentes.',
+                type: 'modal'
+            }
+        }, {
+            wrapper: '#btn-formation',
+            popup: {
+                content: '<p>Presionando en la formación puedes ver las diferentes opciones de formación que tienes y elegir la que creas mejor para tu equipo.</p>',
+                type: 'tooltip',
+                position: 'bottom',
+                offsetHorizontal: -100,
+                offsetArrowHorizontal: 50,
+            }
+        }, {
+            wrapper: '#dyntable',
+            popup: {
+                content: '<p>Elige los jugadores que quieres que jueguen y arrástralos hasta la posición que quieres que ocupen, o hasta el banco de suplentes.</p>',
+                type: 'tooltip',
+                position: 'top',
+                onEnter: $.noop,
+            },
+            onEnter: function() {
+                $('html, body').animate({
+                    scrollTop: $("#dyntable").offset().top - 500,
+                }, 2000);
+            },
+        }, {
+            wrapper: $('a[href="{{ route('teams') }}"]').is(':visible') ? 'a[href="{{ route('teams') }}"]' : 'button.navbar-toggle',
+            popup: {
+                content: '<p>Cuando tu equipo esté listo puedes ir a la página de amistosos para jugar contra sparrings y otros equipos para ver si tu estrategia es buena.</p>',
+                type: 'tooltip',
+                position: $('a[href="{{ route('teams') }}"]').is(':visible') ? 'right' : 'bottom',
+                offsetHorizontal: $('a[href="{{ route('teams') }}"]').is(':visible') ? 0 : -150,
+                offsetArrowHorizontal: $('a[href="{{ route('teams') }}"]').is(':visible') ? 0 : 100,
+            },
+            onEnter: function() {
+                $('html, body').animate({
+                    scrollTop: 0,
+                }, 2000);
+            }
+        }, {
+            popup: {
+                content: '<p>En cada partido de campeonato que juegues tus jugadores ganaran experiencia, y al llegar a 100 puntos de experiencia mejoraran sus atributos. (partidos con sparring y amistosos no suman experiencia)</p>',
+                type: 'modal'
+            }
+        }, {
+            wrapper: $('button.trainning-button').is(':visible') ? 'button.trainning-button' : 'li.trainning',
+            popup: {
+                content: '<p>También puedes ayudar a tus jugadores a mejorar haciéndolos entrenar todos los días presionando en el botón "Entrenar"</p>',
+                type: 'tooltip',
+                position: 'bottom',
+                offsetHorizontal: $('button.trainning-button').is(':visible') ? -50 : 100,
+                offsetArrowHorizontal: $('button.trainning-button').is(':visible') ? 0 : -150,
+            }
+        }, {
+            popup: {
+                content: '<p>Ahora sí puedes ponerte a trabajar en tu equipo.</p><p>¡Buena suerte!</p>',
+                type: 'modal'
+            }
+        }],
+        buttons: {
+            jpwNext: {
+                i18n: 'Próximo &rarr;',
+            },
+            jpwPrevious: {
+                i18n: '&larr; Anterior',
+            },
+            jpwFinish: {
+                i18n: 'Finalizar &#10004;',
+            },
+            jpwClose: {
+                i18n: 'Cerrar',
+            }
+        }
+    });
+
+    $('body').pagewalkthrough('show');
+    @endif
 
     $('#dyntable').dataTable({
         "paging": false,
@@ -140,7 +238,7 @@ $(function() {
     <div class="widgetbox">
         <div class="headtitle">
             <div class="btn-group">
-                <button data-toggle="dropdown" class="btn dropdown-toggle" data-target="#">
+                <button id="btn-formation" data-toggle="dropdown" class="btn dropdown-toggle" data-target="#">
                     <span id="strategy-name">{{ $strategies[$strategy]['name'] }}</span> <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">

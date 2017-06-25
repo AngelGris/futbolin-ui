@@ -43,24 +43,26 @@ class ComposerServiceProvider extends ServiceProvider
                     ];
 
                     $team = Auth::user()->team;
-                    $retiring = $team->players->where('retiring', '=', 1);
-                    $last_match = TournamentRound::where('datetime', '<', time())->orderBy('datetime', 'DESC')->first();
-                    $upgraded = [];
-                    if ($last_match) {
-                        $upgraded = $team->players->where('last_upgraded', '>', date('Y-m-d H:i:s', $last_match['datetime']));
+                    if ($team) {
+                        $retiring = $team->players->where('retiring', '=', 1);
+                        $last_match = TournamentRound::where('datetime', '<', time())->orderBy('datetime', 'DESC')->first();
+                        $upgraded = [];
+                        if ($last_match) {
+                            $upgraded = $team->players->where('last_upgraded', '>', date('Y-m-d H:i:s', $last_match['datetime']));
+                        }
+
+                        $request_time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
+                        $messages = AdminMessage::where('valid_from', '<', $request_time)->where('valid_to', '>', $request_time)->orderBy('valid_from')->get();
+
+                        $view->with('_user', Auth::user())
+                            ->with('_team', $team)
+                            ->with('_messagesCount', count($messages))
+                            ->with('_messages', $messages)
+                            ->with('_playersAlertsCount', count($retiring) + count($upgraded))
+                            ->with('_retiring', $retiring)
+                            ->with('_navigation', $navigation)
+                            ->with('_upgraded', $upgraded);
                     }
-
-                    $request_time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
-                    $messages = AdminMessage::where('valid_from', '<', $request_time)->where('valid_to', '>', $request_time)->orderBy('valid_from')->get();
-
-                    $view->with('_user', Auth::user())
-                         ->with('_team', $team)
-                         ->with('_messagesCount', count($messages))
-                         ->with('_messages', $messages)
-                         ->with('_playersAlertsCount', count($retiring) + count($upgraded))
-                         ->with('_retiring', $retiring)
-                         ->with('_navigation', $navigation)
-                         ->with('_upgraded', $upgraded);
                 }
             }
         });

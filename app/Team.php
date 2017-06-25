@@ -139,6 +139,7 @@ class Team extends Model
             'speed' => randomGauss(max(0, $this->limits[$position]['speed'][0] - $age_diff), max(0, $this->limits[$position]['speed'][1] - $age_diff), $this->limits[$position]['speed'][2]),
             'strength' => randomGauss(max(0, $this->limits[$position]['strength'][0] - $age_diff), max(0, $this->limits[$position]['strength'][1] - $age_diff), $this->limits[$position]['strength'][2]),
             'tackling' => randomGauss(max(0, $this->limits[$position]['tackling'][0] - $age_diff), max(0, $this->limits[$position]['tackling'][1] - $age_diff), $this->limits[$position]['tackling'][2]),
+            'last_upgrade' => '',
             'number' => $number,
         ]);
     }
