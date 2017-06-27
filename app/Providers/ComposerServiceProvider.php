@@ -48,7 +48,7 @@ class ComposerServiceProvider extends ServiceProvider
                         $last_match = TournamentRound::where('datetime', '<', time())->orderBy('datetime', 'DESC')->first();
                         $upgraded = [];
                         if ($last_match) {
-                            $upgraded = $team->players->where('last_upgraded', '>', date('Y-m-d H:i:s', $last_match['datetime']));
+                            $upgraded = $team->players->where('last_upgraded', '>', date('Y-m-d H:i:s', $last_match['datetime']))->sortByDesc('last_upgraded');
                         }
 
                         $request_time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
