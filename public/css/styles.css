@@ -1189,7 +1189,9 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
 /*** MESSAGES STYLES ***/
 
-.messagepanel { }
+.messagepanel {
+	border-top: solid 1px #3b6c8e;
+}
 .messagemenu { background: #0866c6; margin-top: 15px; }
 .messagemenu ul { list-style: none; overflow: hidden; clear: both; }
 .messagemenu ul li {
@@ -1204,8 +1206,8 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .messagemenu ul li.back a { cursor: pointer; }
 
 .messagecontent { overflow: hidden; clear: both; }
-.messageleft { width: 325px; border: 1px solid #0866c6; border-top: 0; height: 600px; float: left; background: #f7f7f7; }
-.messageright { background: #fff; margin-left: 325px; border: 1px solid #0866c6; border-top: 0; border-left: 0; height: 600px; }
+.messageleft { width: 325px; border: 1px solid #0866c6; border-top: 0; height: 400px; float: left; background: #e7e7e7; }
+.messageright { background: #fff; margin-left: 325px; border: 1px solid #0866c6; border-top: 0; border-left: 0; height: 400px; }
 .messagesearch { padding: 10px; background: #fff; border-bottom: 1px solid #0866c6; }
 .messagesearch input {
 	margin: 0; padding: 8px 10px; height: auto; background: #fff url(/img/icons/search.png) no-repeat 275px 8px; }
@@ -1216,7 +1218,7 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .msglist li.selected { background: #0866c6; }
 .msglist li .thumb { width: 40px; height: 40px; float: left; }
 .msglist li .thumb img { width: 100%; }
-.msglist li .summary { margin-left: 50px; color: #666; font-size: 12px; line-height: normal; }
+.msglist li .summary { color: #666; font-size: 12px; line-height: normal; }
 .msglist li.selected .summary { color: #fff; }
 .msglist li h4 { font-size: 13px; color: #0866c6; line-height: 14px; }
 .msglist li.selected h4 { color: #fff; }
@@ -1238,7 +1240,11 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .msgauthor .authorinfo .to { font-size: 11px; color: #999; display: block; margin-top: -3px; }
 .msgauthor .authorinfo .date { font-size: 12px; color: #999; }
 
-.msgbody { padding: 20px; color: #666; }
+.msgbody {
+	border-top: solid 1px #ddd;
+	color: #666;
+	padding: 20px;
+}
 .msgbody p { margin: 20px 0; }
 .msgbody p:first-child { margin-top: 0; }
 .msgbody p:last-child { margin-bottom: 0; }
@@ -2522,7 +2528,6 @@ label.error {
 
 	.navbar-header .headmenu li .dropdown-menu {
 		top: 48px;
-		width: 100%;
 	}
 
 	.navbar-header .headmenu li .dropdown-menu li {
@@ -2530,7 +2535,7 @@ label.error {
 	}
 
 	.navbar-header .headmenu li .dropdown-menu li a {
-		padding-left: 5px;
+		padding: 0 5px;
 		width: 100%;
 	}
 
@@ -2542,6 +2547,10 @@ label.error {
     .headmenu-toggle {
     	display: inline;
     }
+
+    .headmenu .dropdown-menu::after {
+		left: 15px;
+	}
 
     .headerinner {
     	display: none;

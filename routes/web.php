@@ -99,4 +99,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/torneos', ['as' => 'tournaments', 'uses' => 'TournamentController@index']);
 
     Route::get('/mensaje-admin/{message}', 'Admin\MessageController@showPublic')->where('message', '[0-9]+');
+
+    Route::get('/notificaciones', ['as' => 'notifications', 'uses' => 'NotificationController@index']);
+    Route::get('/notificacion/{notification}', 'NotificationController@show')->where('notification', '[0-9]+');
 });

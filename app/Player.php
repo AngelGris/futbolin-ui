@@ -68,6 +68,21 @@ class Player extends Model
     }
 
     /**
+     * Get player's name
+     */
+    public function getNameAttribute()
+    {
+        $output = $this->first_name . ' ' . $this->last_name;
+        if ($this->retiring) {
+            $output .= ' <span class="fa fa-user-times" style="color:#f00;"></span>';
+        }
+        if ($this->upgraded) {
+            $output .= ' <span class="fa fa-arrow-circle-up" style="color:#080;"></span>';
+        }
+        return $output;
+    }
+
+    /**
      * Get position complete name
      */
     public function getPositionLongAttribute()
@@ -90,21 +105,6 @@ class Player extends Model
                 return 'Sparring';
                 break;
         }
-    }
-
-    /**
-     * Get player's name
-     */
-    public function getNameAttribute()
-    {
-        $output = $this->first_name . ' ' . $this->last_name;
-        if ($this->retiring) {
-            $output .= ' <span class="fa fa-user-times" style="color:#f00;"></span>';
-        }
-        if ($this->upgraded) {
-            $output .= ' <span class="fa fa-arrow-circle-up" style="color:#080;"></span>';
-        }
-        return $output;
     }
 
     /**

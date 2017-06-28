@@ -10,12 +10,23 @@ function changeShield(id) {
     return false;
 };
 
+function loadNotification(id) {
+    $.ajax({
+        'method': 'GET',
+        'url': '/notificacion/' + id,
+        'dataType': 'json'
+    }).done(function(data) {
+        $('.unread-count').text(data.unread);
+        showAdminMessage(data.title, data.message);
+    });
+}
+
 function loadAdminMessage(id) {
     $.ajax({
-        'method' : 'GET',
-        'url' : '/mensaje-admin/' + id,
+        'method': 'GET',
+        'url': '/mensaje-admin/' + id,
         'dataType': 'json'
-    }).done(function(data){
+    }).done(function(data) {
         showAdminMessage(data.title, data.message);
     });
 }

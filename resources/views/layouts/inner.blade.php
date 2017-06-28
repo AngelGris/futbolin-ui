@@ -55,24 +55,35 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <ul class="headmenu headmenu-toggle">
-                        @if ($_messagesCount)
+                        @if (!empty($_notifications) or !empty($_messages))
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                                 <span class="count">{{ $_messagesCount }}</span>
                                 <span class="head-icon head-message"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                @if (!empty($_notifications))
+                                <li class="nav-header">Notificaciones</li>
+                                @foreach ($_notifications as $notification)
+                                <li><a href="#" class="admin-messages" onclick="loadNotification({{ $notification['id'] }});">{{ $notification['title'] }}<small class="muted"> - {{ $notification['published'] }}</small></a></li>
+                                @endforeach
+                                <li class="viewmore">
+                                    <a href="{{ route('notifications') }}">Ver todas las notificaciones</a>
+                                </li>
+                                @endif
+                                @if (!empty($_messages))
                                 <li class="nav-header">Mensajes</li>
                                 @foreach ($_messages as $message)
                                 <li><a href="#" class="admin-messages" onclick="loadAdminMessage({{ $message['id'] }});">{{ $message['title'] }}<small class="muted"> - {{ $message['published'] }}</small></a></li>
                                 @endforeach
+                                @endif
                             </ul>
                         </li>
                         @endif
                         @if ($_playersAlertsCount > 0)
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                                <span class="count">{{ $_playersAlertsCount }}</span>
+                                <span class="count unread-count">{{ $_playersAlertsCount }}</span>
                                 <span class="head-icon head-users"></span>
                             </a>
                             <ul class="dropdown-menu">
@@ -125,18 +136,29 @@
 
                 <div class="headerinner">
                     <ul class="headmenu">
-                        @if ($_messagesCount)
+                        @if (!empty($_notifications) or !empty($_messages))
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                                <span class="count">{{ $_messagesCount }}</span>
+                                <span class="count unread-count">{{ $_messagesCount }}</span>
                                 <span class="head-icon head-message"></span>
                                 <span class="headmenu-label">Mensajes</span>
                             </a>
                             <ul class="dropdown-menu">
+                                @if (!empty($_notifications))
+                                <li class="nav-header">Notificaciones</li>
+                                @foreach ($_notifications as $notification)
+                                <li><a href="#" class="admin-messages" onclick="loadNotification({{ $notification['id'] }});">{{ $notification['title'] }}<small class="muted"> - {{ $notification['published'] }}</small></a></li>
+                                @endforeach
+                                <li class="viewmore">
+                                    <a href="{{ route('notifications') }}">Ver todas las notificaciones</a>
+                                </li>
+                                @endif
+                                @if (!empty($_messages))
                                 <li class="nav-header">Mensajes</li>
                                 @foreach ($_messages as $message)
                                 <li><a href="#" class="admin-messages" onclick="loadAdminMessage({{ $message['id'] }});">{{ $message['title'] }}<small class="muted"> - {{ $message['published'] }}</small></a></li>
                                 @endforeach
+                                @endif
                             </ul>
                         </li>
                         @endif

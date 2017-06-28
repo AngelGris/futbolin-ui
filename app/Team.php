@@ -204,7 +204,7 @@ class Team extends Model
             $position = $probs[array_rand($probs)];
         }
 
-        $this->createPlayer($number, $position, TRUE);
+        $newbie = $this->createPlayer($number, $position, TRUE);
 
         if (!empty($this->formation) && $pos = array_search($player->id, $this->formation)) {
             $formation = $this->formation;
@@ -212,6 +212,12 @@ class Team extends Model
             $this->formation = $formation;
             $this->save();
         }
+
+        Notification::create([
+            'user_id' => $this->user->id,
+            'title' => $player->first_name . ' ' . $player->last_name . ' se ha retirado',
+            'message' => $player->first_name . ' ' . $player->last_name . ' ha decidido dejar las canchas y <a href="/jugador/' . $newbie->id . '/">' . $newbie->first_name . ' ' . $newbie->last_name . '</a> ha sido incorporado al equipo.',
+        ]);
 
         $player->delete();
     }

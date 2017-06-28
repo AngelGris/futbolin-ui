@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
+use App\Notification;
 
 class User extends Authenticatable
 {
@@ -48,6 +49,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get user's messages
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class)->orderBy('created_at', 'DESC');
+    }
+
+    /**
      * Create a new team for the user
      */
     public function createTeam($request)
@@ -60,6 +69,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get user's admin privileges
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->is_administrator == 1;
+    }
+
+    /**
      * Get user's complete name
      */
     public function getNameAttribute()
@@ -68,11 +85,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get user's admin privileges
+     * Unread messages count
      */
-    public function getIsAdminAttribute()
+    public function getUnreadMessagesAttribute()
     {
-        return $this->is_administrator == 1;
+        return Notification::where('user_id', '=', $this->id)->whereNull('read_on')->count();
     }
 
     /**
