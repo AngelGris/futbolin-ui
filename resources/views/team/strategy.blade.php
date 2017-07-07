@@ -141,7 +141,7 @@ $(function() {
     $('.rollover-player').mouseover(function() {
         var id = parseInt($(this).data('player-id'));
         $('#player-header').html(players[id]['number'] + '. ' + players[id]['name']);
-        $('#player-info .widgetcontent').html('<div class="col-md-6"><strong>EDAD: ' + players[id]['age'] + '</strong><br>ARQ: ' + players[id]['goalkeeping'] + '<br>GAM: ' + players[id]['dribbling'] + '<br>SAL: ' + players[id]['jumping'] + '<br>PRE: ' + players[id]['precision'] + '<br>FUE: ' + players[id]['strength'] + '<br>EXP: ' + players[id]['experience'] + '</div><div class="col-md-6"><strong>MED: ' + players[id]['average'] + '</strong><br>DEF: ' + players[id]['defending'] + '<br>CAB: ' + players[id]['heading'] + '<br>PAS: ' + players[id]['passing'] + '<br>VEL: ' + players[id]['speed'] + '<br>QUI: ' + players[id]['tackling'] + '</div>');
+        $('#player-info .widgetcontent').html('<div class="col-md-6"><strong>EDAD: ' + players[id]['age'] + '</strong><br>ARQ: ' + players[id]['goalkeeping'] + '<br>GAM: ' + players[id]['dribbling'] + '<br>SAL: ' + players[id]['jumping'] + '<br>PRE: ' + players[id]['precision'] + '<br>FUE: ' + players[id]['strength'] + '<br>EXP: ' + players[id]['experience'] + '</div><div class="col-md-6"><strong>MED: ' + players[id]['average'] + '</strong><br>DEF: ' + players[id]['defending'] + '<br>CAB: ' + players[id]['heading'] + '<br>PAS: ' + players[id]['passing'] + '<br>VEL: ' + players[id]['speed'] + '<br>QUI: ' + players[id]['tackling'] + '<br>ENE: ' + players[id]['stamina'] + '</div>');
         $('#player-info').stop().fadeTo(0, 1);
     }).mouseleave(function() {
         $('#player-info').fadeOut(500);
@@ -188,6 +188,9 @@ $(function() {
             if (players[id]['retiring']) {
                 content += '<span class="fa fa-user-times" style="color:#f00;"></span>';
             }
+            if (players[id]['stamina'] < 50) {
+                content += '<span class="fa fa-arrow-down" style="color:#f00;"></span>';
+            }
             content += '<div>';
             $(this).html(content);
             $(this).removeClass('arq');
@@ -205,6 +208,9 @@ $(function() {
                     var content = players[old_id]['number'] + '<div class="status">';
                     if (players[old_id]['retiring']) {
                         content += '<span class="fa fa-user-times" style="color:#f00;"></span>'
+                    }
+                    if (players[id]['stamina'] < 50) {
+                        content += '<span class="fa fa-arrow-down" style="color:#f00;"></span>';
                     }
                     content += '</div>';
                     ui.draggable.html(content);
@@ -263,6 +269,9 @@ $(function() {
                                 @if ($players[$formation[$i - 1]]['retiring'])
                                 <span class="fa fa-user-times" style="color:#f00;"></span>
                                 @endif
+                                @if ($players[$formation[$i - 1]]['stamina'] < 50)
+                                <span class="fa fa-arrow-down" style="color:#f00;"></span>
+                                @endif
                             </div>
                         </div>
                         @endif
@@ -279,6 +288,9 @@ $(function() {
                     <div class="status">
                         @if ($players[$formation[$i - 1]]['retiring'])
                         <span class="fa fa-user-times" style="color:#f00;"></span>
+                        @endif
+                        @if ($players[$formation[$i - 1]]['stamina'] < 50)
+                        <span class="fa fa-arrow-down" style="color:#f00;"></span>
                         @endif
                     </div>
                 </div>

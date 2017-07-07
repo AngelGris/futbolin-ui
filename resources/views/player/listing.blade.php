@@ -38,6 +38,7 @@ Mostrar:
             <th>Nombre</th>
             <th>Edad</th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Posición">POS</span></th>
+            <th><span data-placement="top" data-toggle="tooltip" data-original-title="Energía">ENE</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Arquero">ARQ</span></th>
             <th><span data-placement="top" data-toggle="tooltip" data-original-title="Defensa">DEF</span></th>
@@ -59,6 +60,7 @@ Mostrar:
             <td><a href="{{ route('player', $player['id']) }}">{!! $player['name']  !!}</a></td>
             <td align="center">{{ $player['age'] }}</td>
             <td align="center"><span data-placement="top" data-toggle="tooltip" data-original-title="{{ $player['position_long'] }}">{{ $player['position'] }}</span></td>
+            <td align="right">{{ $player['stamina'] }}</td>
             <td align="right"><strong>{{ $player['average'] }}</strong></td>
             @foreach (['goalkeeping', 'defending', 'dribbling', 'heading', 'jumping', 'passing', 'precision', 'speed', 'strength', 'tackling'] as $attr)
             <td align="right">
@@ -75,4 +77,5 @@ Mostrar:
 </table>
 <span class="fa fa-user-times" style="color:#f00;"></span> = jugadores que se retiran al final de la temporada<br>
 <span class="fa fa-arrow-circle-up" style="color:#080;"></span> = jugadores mejorados después del último partido<br>
+<span class="fa fa-arrow-down" style="color:#f00;"></span> = jugadores con poca energía<br>
 @endsection

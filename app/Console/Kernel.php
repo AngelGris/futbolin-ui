@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Player;
@@ -24,15 +25,29 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        /**
+         *  Run cron to play matches
+         *  Monday, Wednesday and Friday at 8pm
+         */
         $schedule->exec('python3 ' . base_path() . '/python/cron.py')
                  ->cron('0 20 * * 1,3,5 *')
-                 ->sendOutputTo('/var/log/futbolin/cron-' . date('Ymdhis') . '.log')
+                 ->sendOutputTo('/var/log/futbolin/cron-' . date('YmdHis') . '.log')
                  ->after(function() {
                     $players = Player::where('experience', '>=', 100)->get();
                     foreach($players as $player) {
                         $player->upgrade();
                     }
                  });
+
+        /**
+         *  Increase player's stamina by 10 points
+         */
+        $schedule->call(function() {
+                    DB::table('players')->where('stamina', '>=', 90)->update(['stamina' => 100]);
+                    DB::table('players')->where('stamina', '<', 90)->increment('stamina', 10);
+                 })
+                 ->daily()
+                 ->sendOutputTo('/var/log/futbolin/stamina-' . date('YmdHis') . '.log');
     }
 
     /**

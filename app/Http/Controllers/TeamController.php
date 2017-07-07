@@ -436,6 +436,7 @@ class TeamController extends Controller
 
             foreach ($team->players as $player) {
                 $player->experience += $trainning_points;
+                $player->stamina = min(100, $player->stamina + $trainning_points);
                 if ($player->experience >= 100) {
                     $player->upgrade();
                 } else {
@@ -461,10 +462,12 @@ class TeamController extends Controller
                         $ordinal = 'cuarto';
                         break;
                 }
-                $message = '<p>Es tu ' . $ordinal . ' entrenamiento y tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia.</p>';
+                $message = '<p>¡Es tu ' . $ordinal . ' entrenamiento!</p>';
+                $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
                 $message .= '<p>Vuelve a entrenar mañana para ganar ' . ($trainning_points + \Config::get('constants.TRAINNING_POINTS')) . ' puntos mas</p>';
             } else {
-                $message = '<p>Entrenaste a tu equipo ' . $team->trainning_count . ' días seguidos y tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia.</p>';
+                $message = '<p>¡Entrenaste a tu equipo ' . $team->trainning_count . ' días seguidos!</p>';
+                $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
                 $message .= '<p>Vuelve a entrenar mañana para ganar ' . $trainning_points . ' puntos mas</p>';
             }
             return json_encode(['title' => 'Entrenamiento', 'message' => $message, 'remaining' => $team->trainable_remaining]);

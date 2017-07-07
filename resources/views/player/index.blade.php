@@ -4,6 +4,10 @@
 <h3>{{ $player['number'] }} - {!! $player['name'] !!}</h3>
 <h4>{{ $player['position'] }} - {{ $player['age'] }} años</h4>
 <div class="col-xs-12 col-sm-6 col-md-3 zebra">
+    <div class="col-xs-12">
+        <label class="col-xs-9 control-label">Energía</label>
+        <div class="col-xs-3">{{ $player['stamina'] }}</div>
+    </div>
     @foreach (['Arquero' => 'goalkeeping', 'Defensa' => 'defending', 'Gambeta' => 'dribbling', 'Cabeceo' => 'heading', 'Salto' => 'jumping', 'Pase' => 'passing', 'Precisión' => 'precision', 'Velocidad' => 'speed', 'Fuerza' => 'strength', 'Quite' => 'tackling'] as $k => $v)
     <div class="col-xs-12">
         <label class="col-xs-9 control-label">{{ $k }}</label>
