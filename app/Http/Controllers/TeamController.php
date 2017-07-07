@@ -177,7 +177,7 @@ class TeamController extends Controller
                                 'left' => $form['top'] * 1.5,
                                 'top' => $form['left'],
                                 'position' => (!empty($player) ? $player['position'] : ''),
-                                'number' => $form['number'],
+                                'number' => (!empty($player) ? $form['number'] : ''),
                                 'retiring' => (!empty($player) ? $player['retiring'] : FALSE),
                             ];
                         }
@@ -188,7 +188,7 @@ class TeamController extends Controller
                                 'left' => (100 - $form['top']) * 1.5,
                                 'top' => 100 - $form['left'],
                                 'position' => (!empty($player) ? $player['position'] : ''),
-                                'number' => $form['number'],
+                                'number' => (!empty($player) ? $form['number'] : ''),
                                 'retiring' => (!empty($player) ? $player['retiring'] : FALSE),
                             ];
                         }
