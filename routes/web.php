@@ -102,4 +102,12 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/notificaciones', ['as' => 'notifications', 'uses' => 'NotificationController@index']);
     Route::get('/notificacion/{notification}', 'NotificationController@show')->where('notification', '[0-9]+');
+
+    Route::get('/guia-de-usuario/', ['as' => 'user-guide', 'uses' => function() {
+        return view('static.userguide', [
+            'title'     => 'Guía de Usuario',
+            'subtitle'  => 'Las cosas claras',
+            'icon'      => 'fa fa-book'
+        ]);
+    }]);
 });

@@ -269,10 +269,8 @@
                 </div>
                 <div class="footer">
                     <div class="footer-left">
-                        <span>Futbolin</span>
-                    </div>
-                    <div class="footer-right">
-                        <span>Developed by: <a href="https://github.com/AngelGris" target="_blank">Angel Gris</a></span>
+                        <span style="font-weight:bold;">Futbolin</span><br />
+                        <a href="{{ route('user-guide') }}">Guía de Usuario</a>
                     </div>
                 </div>
             </div>

@@ -2620,8 +2620,8 @@ label.error {
 		position: relative;
 	}
 
-	.table-players th:nth-child(n+6),
-	.table-players td:nth-child(n+6) {
+	.table-players th:nth-child(n+7),
+	.table-players td:nth-child(n+7) {
 		display: none;
 	}
 
