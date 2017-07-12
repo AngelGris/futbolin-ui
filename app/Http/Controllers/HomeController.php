@@ -8,6 +8,7 @@ use App\Matches;
 use App\Team;
 use App\Player;
 use App\TournamentCategory;
+use Mail;
 
 class HomeController extends Controller
 {

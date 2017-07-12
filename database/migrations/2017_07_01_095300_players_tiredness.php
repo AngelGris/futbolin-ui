@@ -22,9 +22,9 @@ class PlayersTiredness extends Migration
         $sparrings = Player::where('id', '<=', 36)->get();
         foreach ($sparrings as $sparring) {
             if ($sparring->id <= 18) {
-                $sparring->condition = 40;
+                $sparring->condition = 80;
             } else{
-                $sparring->condition = 60;
+                $sparring->condition = 90;
             }
             $sparring->save();
         }
