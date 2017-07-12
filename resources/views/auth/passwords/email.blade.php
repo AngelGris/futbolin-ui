@@ -22,6 +22,10 @@
             <div class="inputwrapper">
                 <button type="submit" class="btn btn-primary">Enviar e-mail</button>
             </div>
+            <div class="inputwrapper col-xs-12">
+                <a href="{{ route('contact') }}" style="color:#fff;">Contáctenos</a>
+            </div>
+            <div class="clear"></div>
         </form>
     </div>
 </div>
