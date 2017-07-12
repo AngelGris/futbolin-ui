@@ -270,7 +270,8 @@
                 <div class="footer">
                     <div class="footer-left">
                         <span style="font-weight:bold;">Futbolin</span><br />
-                        <a href="{{ route('user-guide') }}">Guía de Usuario</a>
+                        <a href="{{ route('user-guide') }}">Guía de Usuario</a><br />
+                        <a href="{{ route('contact') }}" target="_blank">Formulario de Contacto</a><br />
                     </div>
                 </div>
             </div>

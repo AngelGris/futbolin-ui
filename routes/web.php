@@ -55,6 +55,9 @@ Route::group(['prefix' => 'contrasena'], function() {
     Route::post('recuperar', 'Auth\ResetPasswordController@reset');
     Route::get('recuperar/{token}', ['as' => 'password.reset', 'uses' => 'Auth\ResetPasswordController@showResetForm']);
 });
+Route::get('/contacto/', ['as' => 'contact', 'uses' => 'ContactController@index']);
+Route::post('/contacto/', 'ContactController@send');
+Route::get('/contacto/gracias/', ['as' => 'contact.thanks', 'uses' => 'ContactController@thanks']);
 
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/vestuario', ['as' => 'home', 'uses' => 'HomeController@index']);

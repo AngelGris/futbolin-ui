@@ -64,7 +64,12 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
   	transform: translateY(-50%);
   	width: 290px;
 }
-.loginpanelinner { position: relative; padding: 20px; background-color: #05080a; width: 290px;}
+.loginpanelinner {
+	background-color: #05080a;
+	padding: 20px;
+	position: relative;
+	width: 100%;
+}
 
 .loginpanelinner h1 {
 	color: #fff;
@@ -76,7 +81,7 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .loginpanel .pull-right a { color: #ddd; }
 
 .inputwrapper { margin-bottom: 10px; }
-.inputwrapper input { border: 0; padding: 10px; background: #fff; width: 250px; }
+.inputwrapper input { border: 0; padding: 10px; background: #fff; width: 100%; }
 .inputwrapper input:active, .inputwrapper input:focus { background: #fff; border: 0; }
 .inputwrapper button {
 		  display: block; border: 1px solid #0c57a3; padding: 10px; background: #0972dd; width: 100%;
