@@ -79,7 +79,7 @@ class Player extends Model
         if ($this->upgraded) {
             $output .= ' <span class="fa fa-arrow-circle-up" style="color:#080;"></span>';
         }
-        if ($this->stamina <= 50) {
+        if ($this->tired) {
             $output .= ' <span class="fa fa-arrow-down" style="color:#f00;"></span>';
         }
         return $output;
@@ -124,6 +124,14 @@ class Player extends Model
         }
 
         return $initials . $this->last_name;
+    }
+
+    /**
+     * If stamina <= 50 then the player is tired
+     */
+    public function getTiredAttribute()
+    {
+        return $this->stamina <= 50;
     }
 
     /**

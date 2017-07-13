@@ -9,6 +9,12 @@
                     @if ($strategy[$i]['retiring'])
                     <span class="fa fa-user-times" style="color:#f00;"></span>
                     @endif
+                    @if ($strategy[$i]['upgraded'])
+                    <span class="fa fa-arrow-circle-up" style="color:#080;"></span>
+                    @endif
+                    @if ($strategy[$i]['tired'])
+                    <span class="fa fa-arrow-down" style="color:#f00;"></span>
+                    @endif
                 </div>
             </div>
         @endfor
