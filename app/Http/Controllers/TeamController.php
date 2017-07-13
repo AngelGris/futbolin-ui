@@ -178,9 +178,6 @@ class TeamController extends Controller
                                 'top' => $form['left'],
                                 'position' => (!empty($player) ? $player['position'] : ''),
                                 'number' => (!empty($player) ? $form['number'] : ''),
-                                'retiring' => (!empty($player) ? $player['retiring'] : FALSE),
-                                'upgraded' => (!empty($player) ? $player['upgraded'] : FALSE),
-                                'tired' => (!empty($player) ? $player['tired'] : FALSE),
                             ];
                         }
                     } else {
@@ -191,9 +188,6 @@ class TeamController extends Controller
                                 'top' => 100 - $form['left'],
                                 'position' => (!empty($player) ? $player['position'] : ''),
                                 'number' => (!empty($player) ? $form['number'] : ''),
-                                'retiring' => (!empty($player) ? $player['retiring'] : FALSE),
-                                'upgraded' => (!empty($player) ? $player['upgraded'] : FALSE),
-                                'tired' => (!empty($player) ? $player['tired'] : FALSE),
                             ];
                         }
                     }
