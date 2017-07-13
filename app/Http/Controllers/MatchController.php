@@ -103,6 +103,7 @@ class MatchController extends Controller
                 'posession' => $data['local']['posessionPer'],
                 'shots' => $data['local']['shots'],
                 'shots_goal' => $data['local']['shotsOnTarget'],
+                'substitutions' => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
             ],
             'visit' => [
                 'name' => $visit->name,
@@ -116,6 +117,7 @@ class MatchController extends Controller
                 'posession' => $data['visit']['posessionPer'],
                 'shots' => $data['visit']['shots'],
                 'shots_goal' => $data['visit']['shotsOnTarget'],
+                'substitutions' => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
             ],
             'scorers' => $scorers,
             'actions' => $actions,

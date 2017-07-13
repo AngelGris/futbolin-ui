@@ -100,5 +100,12 @@
         <div class="col-xs-4">Disparos</div>
         <div class="col-xs-4 {{ $local['shots'] < $visit['shots'] ? 'best' : '' }}">{{ $visit['shots'] }} ({{ $visit['shots_goal'] }})</div>
     </div>
+    @if ($local['substitutions'] >= 0)
+    <div class="col-xs-12">
+        <div class="col-xs-4">{{ $local['substitutions'] }}</div>
+        <div class="col-xs-4">Cambios</div>
+        <div class="col-xs-4">{{ $visit['substitutions'] }}</div>
+    </div>
+    @endif
 </div>
 <div class="clear"></div>
