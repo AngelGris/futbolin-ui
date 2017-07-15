@@ -1,8 +1,29 @@
 @extends('layouts.admin')
 
 @section('javascript-inner')
+<script src="{{ asset('js/jquery.flot.min.js') }}"></script>
 <script type="text/javascript">
 $(function(){
+    $.plot($("#graph-players-energy"), [ {{ $players_energy }} ], {
+        series: {
+            stack: false,
+            lines: { show: false, fill: false, steps: false },
+            bars: { show: true, barWidth: 4.5 }
+        },
+        grid: { hoverable: true, clickable: true, borderColor: '#666', borderWidth: 2, labelMargin: 10 },
+        colors: ["#666"]
+    });
+
+    $.plot($("#graph-teams-energy"), [ {{ $teams_energy }} ], {
+        series: {
+            stack: false,
+            lines: { show: false, fill: false, steps: false },
+            bars: { show: true, barWidth: 4.5 }
+        },
+        grid: { hoverable: true, clickable: true, borderColor: '#666', borderWidth: 2, labelMargin: 10 },
+        colors: ["#666"]
+    });
+
     $('.load-match').click(function() {
         $.ajax({
             'method' : 'GET',
@@ -11,7 +32,7 @@ $(function(){
         }).done(function(data){
             refreshResultModal(data);
         });
-    })
+    });
 });
 </script>
 @endsection
@@ -33,6 +54,10 @@ $(function(){
     <div class="col-xs-12">
         <div class="col-xs-10">Últimas 24 horas</div>
         <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['day'] }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-10">Últimas 48 horas</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_users_stats['days'] }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-10">Últimos 7 días</div>
@@ -76,6 +101,10 @@ $(function(){
         <div class="col-xs-2" style="text-align:right;">{{ $last_trainnings_stats['day'] }}</div>
     </div>
     <div class="col-xs-12">
+        <div class="col-xs-10">Últimas 48 horas</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $last_trainnings_stats['days'] }}</div>
+    </div>
+    <div class="col-xs-12">
         <div class="col-xs-10">Últimos 7 días</div>
         <div class="col-xs-2" style="text-align:right;">{{ $last_trainnings_stats['week'] }}</div>
     </div>
@@ -98,6 +127,18 @@ $(function(){
     <a href="{{ route('admin.teams', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
 <div class="clear"></div>
+<div class="col-md-6">
+    <h3>Energía de los jugadores</h3>
+    <div class="widgetcontent">
+        <div id="graph-players-energy" style="height:300px;"></div>
+    </div>
+</div>
+<div class="col-md-6">
+    <h3>Energía de los equipos</h3>
+    <div class="widgetcontent">
+        <div id="graph-teams-energy" style="height:300px;"></div>
+    </div>
+</div>
 <div id="home-last-teams" class="col-md-6 zebra">
     <h3>Últimos equipos</h3>
     @foreach($last_teams as $team)

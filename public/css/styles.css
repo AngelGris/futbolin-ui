@@ -357,7 +357,7 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
 .widgettitle { background: #0866c6; color: #fff; padding: 12px 15px; font-size: 14px; }
 .widgettitle span { vertical-align: top; display: inline-block; margin-right: 8px; }
-.widgetcontent { background: #fff; padding: 15px 12px; border: 2px solid #0866c6; border-top: 0; margin-bottom: 20px; }
+.widgetcontent { background: #fff; padding: 15px 12px; border: 2px solid #0866c6; margin-bottom: 20px; }
 .widgetcontent::after { clear: both; display: block; content: ''; }
 .widgetcontent .form-group::after { clear: both; display: block; content: ''; }
 .wt1 { background: #333; color: #fff; }
