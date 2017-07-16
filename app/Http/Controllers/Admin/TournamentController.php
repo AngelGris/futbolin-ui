@@ -164,7 +164,7 @@ class TournamentController extends Controller
 
             if (($teams_count - $teams_added) > 0) {
                 $groups_remaining = (int)(count($teams[$request->categories]) / 20);
-                if (count($teams) % 20) {
+                if (count($teams[$request->categories]) % 20) {
                     $groups_remaining++;
                 }
 
