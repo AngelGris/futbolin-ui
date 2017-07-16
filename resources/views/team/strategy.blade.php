@@ -69,7 +69,7 @@ $(function() {
             }
         }, {
             popup: {
-                content: '<p>En cada partido de campeonato que juegues tus jugadores ganaran experiencia, y al llegar a 100 puntos de experiencia mejoraran sus atributos. (partidos con sparring y amistosos no suman experiencia)</p><p>Pero en esos partidos los jugadores pierden energía y jugadores cansados rinden menos en los partidos.',
+                content: '<p>En cada partido de campeonato que juegues tus jugadores ganaran experiencia, y al llegar a 100 puntos de experiencia mejoraran sus atributos. (partidos con sparring y amistosos no suman experiencia)</p><p>Pero en esos partidos los jugadores pierden energía y jugadores cansados rinden menos.</p>',
                 type: 'modal'
             }
         }, {
