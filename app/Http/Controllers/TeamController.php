@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Team;
 use App\Matches;
 use App\Player;
+use App\Strategy;
 
 class TeamController extends Controller
 {
@@ -220,6 +221,18 @@ class TeamController extends Controller
             $games[$pos][$match->winner]++;
             $goals[$pos][0] += $match->local_goals;
             $goals[$pos][1] += $match->visit_goals;
+        }
+
+        if (empty($stratregy)) {
+            for ($i = 1; $i <= 11; $i++) {
+                $player = Player::find($team->formation[$i - 1]);
+                $strategy[] = [
+                    'left' => ($team->strategy->{sprintf('j%02d_start_y', $i)} * 100 / 120 ) * 1.5,
+                    'top' => $team->strategy->{sprintf('j%02d_start_x', $i)} * 100 / 90,
+                    'position' => (!empty($player) ? $player['position'] : ''),
+                    'number' => (!empty($player) ? $player['number'] : ''),
+                ];
+            }
         }
 
         $team_id = Auth::user()->team->id;
