@@ -69,13 +69,13 @@ $(function() {
             }
         }, {
             popup: {
-                content: '<p>En cada partido de campeonato que juegues tus jugadores ganaran experiencia, y al llegar a 100 puntos de experiencia mejoraran sus atributos. (partidos con sparring y amistosos no suman experiencia)</p>',
+                content: '<p>En cada partido de campeonato que juegues tus jugadores ganaran experiencia, y al llegar a 100 puntos de experiencia mejoraran sus atributos. (partidos con sparring y amistosos no suman experiencia)</p><p>Pero en esos partidos los jugadores pierden energía y jugadores cansados rinden menos en los partidos.',
                 type: 'modal'
             }
         }, {
             wrapper: $('button.trainning-button').is(':visible') ? 'button.trainning-button' : 'li.trainning',
             popup: {
-                content: '<p>También puedes ayudar a tus jugadores a mejorar haciéndolos entrenar todos los días presionando en el botón "Entrenar"</p>',
+                content: '<p>También puedes ayudar a tus jugadores a mejorar y recuperar energía haciéndolos entrenar todos los días presionando en el botón "Entrenar"</p>',
                 type: 'tooltip',
                 position: 'bottom',
                 offsetHorizontal: $('button.trainning-button').is(':visible') ? -50 : 100,
@@ -83,7 +83,7 @@ $(function() {
             }
         }, {
             popup: {
-                content: '<p>Ahora sí puedes ponerte a trabajar en tu equipo.</p><p>¡Buena suerte!</p>',
+                content: '<p>Ahora sí puedes ponerte a trabajar en tu equipo y cualquier duda que tengas puedes consultar la guía de usuario en el pie de la página.</p><p>¡Buena suerte!</p>',
                 type: 'modal'
             }
         }],
