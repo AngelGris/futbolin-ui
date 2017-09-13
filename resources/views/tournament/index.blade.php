@@ -169,7 +169,7 @@ function movePager(id) {
         </div>
     </div>
 </div>
-@if (!empty($category['scorers']))
+@if ($tournament['id'] > 1 and !empty($category['scorers']))
 <div class="col-xs-12 col-md-6" style="clear:left;float:left;">
     <h4>Goleadores</h4>
     <table class="table table-bordered responsive">
