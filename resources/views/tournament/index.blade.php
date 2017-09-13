@@ -169,5 +169,28 @@ function movePager(id) {
         </div>
     </div>
 </div>
+@if (!empty($category['scorers']))
+<div class="col-xs-12 col-md-6" style="clear:left;float:left;">
+    <h4>Goleadores</h4>
+    <table class="table table-bordered responsive">
+        <thead>
+            <tr>
+                <th>Jugador</th>
+                <th>Equipo</th>
+                <th>Goles</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($category['scorers'] as $scorer)
+            <tr{!! ($scorer['player']['team']['id'] == $_team['id']) ? ' style="background-color:#ddd;"' : '' !!}>
+                <td><a href="{{ route('player', $scorer['player']['id']) }}">{{ $scorer['player']['short_name'] }}</a></td>
+                <td><a href="{{ route('team.show', $scorer['player']['team']['id']) }}">{{ $scorer['player']['team']['name'] }}</a></td>
+                <td style="text-align:right;">{{ $scorer['goals'] }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+@endif
 @endif
 @endsection

@@ -37,7 +37,7 @@ class Player extends Model
     /**
      * Get the player's team
      */
-    public function owner()
+    public function team()
     {
         return $this->belongsTo(Team::class);
     }

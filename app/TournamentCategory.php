@@ -30,6 +30,14 @@ class TournamentCategory extends Model
     }
 
     /**
+     * Scorers for category
+     */
+    public function scorers()
+    {
+        return $this->hasMany(Scorer::class, 'category_id')->orderBy('goals', 'DESC');
+    }
+
+    /**
      * Category's tournament
      */
     public function tournament()
