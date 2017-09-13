@@ -13,6 +13,7 @@ class PlayerController extends Controller
             'icon' => 'fa fa-user',
             'title' => $player['first_name'] . ' ' . $player['last_name'],
             'subtitle' => 'Una parte del todo',
+            'header_team' => $player['team'],
             'player' => $player
         ];
 

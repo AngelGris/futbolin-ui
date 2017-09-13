@@ -10,11 +10,19 @@
 <link rel="stylesheet" href="{{ asset('css/roboto.css') }}" type="text/css" />
 <style type="text/css">
 .shield-primary-color {
+    @if (empty($header_team))
     fill: {{ $_team['primary_color'] }};
+    @else
+    fill: {{ $header_team['primary_color'] }};
+    @endif
 }
 
 .shield-secondary-color {
+    @if (empty($header_team))
     fill: {{ $_team['secondary_color'] }};
+    @else
+    fill: {{ $header_team['secondary_color'] }};
+    @endif
 }
 </style>
 @yield('styles-inner')
@@ -241,8 +249,13 @@
     <div class="rightpanel">
         <div class="pageheader">
             <div class="teamname">
+                @if (empty($header_team))
                 <img class="svg shield" src="{{ asset($_team['shield_file']) }}">
                 <h2>{{ $_team['name'] }}</h2>
+                @else
+                <img class="svg shield" src="{{ asset($header_team['shield_file']) }}">
+                <h2>{{ $header_team['name'] }}</h2>
+                @endif
             </div>
             <div class="pageicon"><span class="{{ $icon }}"></span></div>
             <div class="pagetitle">
