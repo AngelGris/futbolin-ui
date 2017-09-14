@@ -232,6 +232,31 @@ class Team extends Model
     }
 
     /**
+     * Update if the team meats the requirements to play a match
+     */
+    public function updatePlayable()
+    {
+        $playable = FALSE;
+
+        if (count($this->formation) >= 11) {
+            $lineup = array_slice($this->formation, 0, 11);
+            $count = 0;
+            foreach ($lineup as $player) {
+                if ($player != 0) {
+                    $count++;
+                }
+            }
+
+            if ($count == 11) {
+                $playable = TRUE;
+            }
+        }
+
+        $this->playable = $playable;
+        $this->save();
+    }
+
+    /**
      * Get team's average attribute
      */
     public function getAverageAttribute()
@@ -264,30 +289,6 @@ class Team extends Model
                 return 0;
             }
         }
-    }
-
-    /**
-     * Get if the team meats the requirements to play a match
-     */
-    public function getPlayableAttribute()
-    {
-        $playable = FALSE;
-
-        if (count($this->formation) >= 11) {
-            $lineup = array_slice($this->formation, 0, 11);
-            $count = 0;
-            foreach ($lineup as $player) {
-                if ($player != 0) {
-                    $count++;
-                }
-            }
-
-            if ($count == 11) {
-                $playable = TRUE;
-            }
-        }
-
-        return $playable;
     }
 
     /**

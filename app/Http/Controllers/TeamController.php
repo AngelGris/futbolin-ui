@@ -503,6 +503,7 @@ class TeamController extends Controller
         }
         $team->formation = $formation;
         $team->save();
+        $team->updatePlayable();
     }
 
     /**
