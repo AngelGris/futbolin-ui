@@ -48,8 +48,33 @@ $(function() {
     <div class="col-xs-8">{{ $team['stadium_name'] }}</div>
 </div>
 <div class="clear"></div>
+@if(!empty($team->trophies))
+<div class="col-md-6">
+    <h2>Vitrina de trofeos</h2>
+    @foreach($team->trophies as $trophy)
+    <div class="col-md-3" style="position:relative;text-align:center;">
+        @if($trophy->position <= 3)
+        <p>
+            @if($trophy->position == 1)
+            <span class="fa fa-trophy" style="color:#ffd700;font-size:70px;"></span>
+            @elseif($trophy->position == 2)
+            <span class="fa fa-trophy" style="color:#c0c0c0;font-size:70px;"></span>
+            @else
+            <span class="fa fa-trophy" style="color:#cd7f32;font-size:70px;"></span>
+            @endif
+        </p>
+        <div style="font-size:25px;left:0;position:absolute;top:15px;width:100%;">{{ $trophy->position }}</div>
+        @else
+        <div style="font-size:25px;height:70px;left:0;line-height:70px;top:15px;width:100%;">{{ $trophy->position }}°</div>
+        @endif
+        {{ $trophy->category->name }}
+    </div>
+    @endforeach
+</div>
+@endif
 <div class="col-md-12">
-@include('modules.formation')
+    <h2>Formación</h2>
+    @include('modules.formation')
 </div>
 <div class="col-md-6">
     <h2>Estadísticas</h2>

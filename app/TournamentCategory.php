@@ -54,6 +54,17 @@ class TournamentCategory extends Model
     }
 
     /**
+     * Get if category is still open
+     */
+    public function getIsOpenAttribute()
+    {
+        $rounds = $this->rounds;
+
+
+        return ($rounds[37]['datetime'] > $_SERVER['REQUEST_TIME']);
+    }
+
+    /**
      * Category name
      */
     public function getNameAttribute()

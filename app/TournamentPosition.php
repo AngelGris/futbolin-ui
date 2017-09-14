@@ -14,6 +14,14 @@ class TournamentPosition extends Model
     protected $guarded = ['id', 'points', 'played', 'won', 'tied', 'lost', 'goals_favor', 'goals_against', 'goals_difference'];
 
     /**
+     * Position category
+     */
+    public function category()
+    {
+        return $this->belongsTo(TournamentCategory::class, 'category_id');
+    }
+
+    /**
      * Position team
      */
     public function team()

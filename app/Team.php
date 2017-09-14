@@ -93,6 +93,14 @@ class Team extends Model
     }
 
     /**
+     * Get the team's positions
+     */
+    public function positions()
+    {
+        return $this->hasMany(TournamentPosition::class)->orderBy('category_id');
+    }
+
+    /**
      * Get the team's strategy
      */
     public function strategy()
@@ -318,6 +326,22 @@ class Team extends Model
         } else {
             return \Config::get('constants.TIME_TO_TRAIN');
         }
+    }
+
+    /**
+     * Get the team's trophies
+     */
+    public function getTrophiesAttribute()
+    {
+        $positions = $this->positions;
+        $trophies = [];
+        foreach ($positions as $position) {
+            if (!$position->category->isOpen) {
+                $trophies[] = $position;
+            }
+        }
+
+        return $trophies;
     }
 
     /**
