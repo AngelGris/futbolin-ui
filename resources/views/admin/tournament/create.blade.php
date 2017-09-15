@@ -4,12 +4,12 @@
 <script type="text/javascript">
 $(function() {
     var groups = {{ $tournament['groups'] }};
-    $('#sel_categories').change(function() {
-        zones = parseInt(groups / $(this).val());
+    $('#sel_zones').change(function() {
+        categories = parseInt(groups / $(this).val());
         if (groups % $(this).val()) {
-            zones++;
+            categories++;
         }
-        $('#span_zones').text(zones);
+        $('#span_categories').text(categories);
     });
 });
 </script>
@@ -31,17 +31,17 @@ $(function() {
                 </label>
                 @endif
             </div>
-            <label for="name" class="col-md-2 control-label">Categorías</label>
+            <label for="sel_zones" class="col-md-2 control-label">Zonas</label>
             <div class="col-md-10">
-                <select name="categories" id="sel_categories">
+                <select name="zones" id="sel_zones">
                     @for ($i = 1; $i <= $tournament['groups']; $i++)
                     <option value="{{ $i }}">{{ $i }}</option>
                     @endfor
                 </select>
             </div>
-            <label for="name" class="col-md-2 control-label">Zonas</label>
+            <label for="name" class="col-md-2 control-label">Categorías</label>
             <div class="col-md-10">
-                <span id="span_zones">{{ $tournament['groups'] }}</span>
+                <span id="span_categories">{{ $tournament['groups'] }}</span>
             </div>
         </div>
         <div class="form-group">
