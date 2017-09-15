@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Tournament;
 use App\TournamentPosition;
+use App\TournamentCategory;
 use App\Team;
 
 class TournamentController extends Controller
@@ -32,7 +33,7 @@ class TournamentController extends Controller
 
     public function create()
     {
-        $teams_count = Team::where('user_id', '>', 1)->count();
+        $teams_count = Team::where('user_id', '>', 1)->where('playable', '=', 1)->count();
         $groups = (int)($teams_count / 20);
         if ($teams_count % 20) {
             $groups++;
@@ -56,7 +57,7 @@ class TournamentController extends Controller
     public function store(Request $request)
     {
         $last_tournament = Tournament::latest()->limit(1)->get();
-        $teams_count = Team::where('user_id', '>', 1)->count();
+        $teams_count = Team::where('user_id', '>', 1)->where('playable', '=', 1)->count();
         $teams_added = 0;
         $groups = (int)($teams_count / 20);
         if ($teams_count % 20) {
@@ -71,7 +72,7 @@ class TournamentController extends Controller
 
         if (empty($last_tournament[0])) {
             for ($i = 0; $i < $request->categories - 1; $i++) {
-                $teams = Team::where('user_id', '>', 1)->offset($teams_added)->limit(20 * $zones)->oldest()->get();
+                $teams = Team::where('user_id', '>', 1)->where('playable', '=', 1)->offset($teams_added)->limit(20 * $zones)->oldest()->get();
                 $aux = [];
                 foreach ($teams as $team) {
                     $aux[] = $team->id;
@@ -84,7 +85,7 @@ class TournamentController extends Controller
             }
 
             if (($teams_count - $teams_added) > 0) {
-                $teams = Team::where('user_id', '>', 1)->offset($teams_added)->limit(20 * $zones)->oldest()->get();
+                $teams = Team::where('user_id', '>', 1)->where('playable', '=', 1)->offset($teams_added)->limit(20 * $zones)->oldest()->get();
                 $groups_remaining = (int)(count($teams) / 20);
                 if (count($teams) % 20) {
                     $groups_remaining++;
@@ -104,11 +105,11 @@ class TournamentController extends Controller
             }
         } else {
             $teams = [];
-            $last_team = 0;
             foreach ($last_tournament[0]->tournamentCategories as $category) {
                 $positions = TournamentPosition::where('category_id', '=', $category->id)->orderBy('position')->get();
 
                 $count = 0;
+                $max_category = tournamentCategory::orderBy('tournament_id', 'DESC')->orderBy('category', 'DESC')->first();
                 foreach ($positions as $position) {
                     $team = Team::find($position->team_id);
 
@@ -123,21 +124,22 @@ class TournamentController extends Controller
                         } else if ($count <= 17) {
                             $teams[$category->category][] = $team->id;
                         } else {
-                            if ($category->category < $request->categories) {
+                            if ($category->category < $max_category->category) {
                                 $teams[$category->category + 1][] = $team->id;
                             } else {
                                 $teams[$category->category][] = $team->id;
                             }
                         }
-
-                        if ($team->id > $last_team) {
-                            $last_team = $team->id;
-                        }
                     }
                 }
             }
 
-            $new_teams = Team::where('user_id', '>', 1)->where('id', '>', $last_team)->get();
+            $teams_list = [];
+            foreach ($teams as $cat) {
+                $teams_list = array_merge($teams_list, $cat);
+            }
+
+            $new_teams = Team::where('user_id', '>', 1)->whereNotIn('id', $teams_list)->where('playable', '=', 1)->get();
             foreach ($new_teams as $team) {
                 $teams[$request->categories][] = $team->id;
             }
@@ -251,6 +253,12 @@ class TournamentController extends Controller
         \DB::table('players')
            ->whereIn('id', $players_retiring)
            ->update(['retiring' => true]);
+
+        /**
+         * Reset players stamina
+         */
+        \DB::table('players')
+           ->update(['stamina' => 100]);
 
         return redirect(route('admin.tournaments', getDomain()));
     }
