@@ -68,7 +68,32 @@ function movePager(id) {
 @if (empty($tournament))
 <h3>No hay torneos para mostrar (todavía!!!)</h3>
 @else
-<h3 style="margin-bottom:30px;">{{ $category['name'] }}</h3>
+<h3 style="margin-bottom:30px;">
+    {{ $category['name'] }}
+    @if(count($categories) > 1)
+    <a href="#" class="btn btn-primary" style="margin-left:20px;padding:2px 10px;" data-toggle="modal" data-target="#modal-categories">Otras categorías</a>
+    <div class="modal fade" id="modal-categories">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Categorías</h4>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        @foreach($categories as $cat)
+                        <li><a href="{{ route('tournament', $cat->id) }}">{{ $cat->name }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+</div>
+    @endif
+</h3>
 <div class="col-xs-12 col-md-6" style="float:right">
     <div class="col-md-12">
         <ul class="pagination" style="float:left;margin:0;">

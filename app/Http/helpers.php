@@ -7,8 +7,11 @@ function getDomain() {
 function getMatchLog($file) {
     $file_name = base_path() . '/python/logs/' . $file;
 
-    $string = file_get_contents($file_name);
-    $data = json_decode($string,true);
+    $data = [];
+    if (is_file($file_name)) {
+        $string = file_get_contents($file_name);
+        $data = json_decode($string,true);
+    }
 
     return $data;
 }

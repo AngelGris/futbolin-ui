@@ -653,6 +653,11 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 }
 
 /*** TOURNAMENT ***/
+.modal-body ul {
+	font-size: 14px;
+	list-style: none;
+}
+
 .pagination-slider-container {
 	float:left;
 	height: 31px;

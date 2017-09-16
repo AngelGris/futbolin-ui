@@ -9,21 +9,26 @@ use App\TournamentCategory;
 
 class TournamentController extends Controller
 {
-    public function index()
+    public function index($category_id = NULL)
     {
         $vars = [
             'icon' => 'fa fa-trophy',
             'title' => 'Torneos',
-            'subtitle' => 'A demostrar quién manda',
+            'subtitle' => 'A demostrar quién manda'
         ];
 
-        $category_id =  \DB::table('tournament_categories')
-                        ->join('tournament_positions', 'tournament_positions.category_id', '=', 'tournament_categories.id')
-                        ->where('tournament_positions.team_id', '=', Auth::user()->team->id)
-                        ->max('tournament_categories.id');
+        if (is_null($category_id)) {
+            $category_id =  \DB::table('tournament_categories')
+                            ->join('tournament_positions', 'tournament_positions.category_id', '=', 'tournament_categories.id')
+                            ->where('tournament_positions.team_id', '=', Auth::user()->team->id)
+                            ->max('tournament_categories.id');
+        }
 
         if ($category_id) {
-            $category = TournamentCategory::find($category_id);
+            if (!$category = TournamentCategory::find($category_id)) {
+                return redirect()->route('tournaments');
+            }
+
             $tournament = $category->tournament;
 
             $last_round =   \DB::table('tournament_rounds')
@@ -54,6 +59,8 @@ class TournamentController extends Controller
                 $vars['last_round'] = $last_round ? $last_round->number : 1;
             }
         }
+
+        $vars['categories'] = TournamentCategory::where('tournament_id', '=', $tournament->id)->get();
 
         return view('tournament.index', $vars);
     }

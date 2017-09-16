@@ -171,25 +171,27 @@ class TeamController extends Controller
             if (count($last_matches) < 5) {
                 if (empty($last_matches)) {
                     $data = getMatchLog($match['logfile']);
-                    if ($match['local_id'] == $team['id']) {
-                        foreach ($data['local']['formation'] as $form) {
-                            $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->first();
-                            $strategy[] = [
-                                'left' => $form['top'] * 1.5,
-                                'top' => $form['left'],
-                                'position' => (!empty($player) ? $player['position'] : ''),
-                                'number' => (!empty($player) ? $form['number'] : ''),
-                            ];
-                        }
-                    } else {
-                        foreach ($data['visit']['formation'] as $form) {
-                            $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->first();
-                            $strategy[] = [
-                                'left' => (100 - $form['top']) * 1.5,
-                                'top' => 100 - $form['left'],
-                                'position' => (!empty($player) ? $player['position'] : ''),
-                                'number' => (!empty($player) ? $form['number'] : ''),
-                            ];
+                    if (!empty($data)) {
+                        if ($match['local_id'] == $team['id']) {
+                            foreach ($data['local']['formation'] as $form) {
+                                $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->first();
+                                $strategy[] = [
+                                    'left' => $form['top'] * 1.5,
+                                    'top' => $form['left'],
+                                    'position' => (!empty($player) ? $player['position'] : ''),
+                                    'number' => (!empty($player) ? $form['number'] : ''),
+                                ];
+                            }
+                        } else {
+                            foreach ($data['visit']['formation'] as $form) {
+                                $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->first();
+                                $strategy[] = [
+                                    'left' => (100 - $form['top']) * 1.5,
+                                    'top' => 100 - $form['left'],
+                                    'position' => (!empty($player) ? $player['position'] : ''),
+                                    'number' => (!empty($player) ? $form['number'] : ''),
+                                ];
+                            }
                         }
                     }
                 }
