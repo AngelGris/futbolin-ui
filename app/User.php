@@ -30,6 +30,13 @@ class User extends Authenticatable
     ];
 
     /**
+     * Attributes that should be mutated to dates
+     */
+    protected $dates = [
+        'last_activity'
+    ];
+
+    /**
      * Send the password reset notification.
      *
      * @param  string  $token

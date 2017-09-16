@@ -8,6 +8,7 @@ use App\Tournament;
 use App\TournamentPosition;
 use App\TournamentCategory;
 use App\Team;
+use Carbon\Carbon;
 
 class TournamentController extends Controller
 {
@@ -106,6 +107,10 @@ class TournamentController extends Controller
             }
         } else {
             $teams = [];
+
+            /**
+             * Load teams from the last tournament
+             */
             foreach ($last_tournament[0]->tournamentCategories as $category) {
                 $positions = TournamentPosition::where('category_id', '=', $category->id)->orderBy('position')->get();
 
@@ -113,39 +118,63 @@ class TournamentController extends Controller
                 $max_category = tournamentCategory::orderBy('tournament_id', 'DESC')->orderBy('category', 'DESC')->first();
                 foreach ($positions as $position) {
                     $team = Team::find($position->team_id);
-
                     if ($team->user_id > 1) {
                         $count++;
-                        if ($count <= 3) {
-                            if ($category->category > 1) {
-                                $teams[$category->category - 1][] = $team->id;
-                            } else {
-                                $teams[1][] = $team->id;
-                            }
-                        } else if ($count <= 17) {
-                            $teams[$category->category][] = $team->id;
-                        } else {
-                            if ($category->category < $max_category->category) {
-                                $teams[$category->category + 1][] = $team->id;
-                            } else {
-                                $teams[$category->category][] = $team->id;
-                            }
-                        }
+                        $teams[$category->category][] = $team;
                     }
                 }
             }
 
+            /**
+             * Add newly created teams to the last category
+             */
             $teams_list = [];
             foreach ($teams as $cat) {
-                $teams_list = array_merge($teams_list, $cat);
+                $teams_list = array_map(function ($entry) {
+                  return $entry['id'];
+                }, $cat);
             }
 
             $new_teams = Team::where('user_id', '>', 1)->whereNotIn('id', $teams_list)->where('playable', '=', 1)->get();
             foreach ($new_teams as $team) {
-                $teams[$categories][] = $team->id;
+                $teams[$categories][] = $team;
+            }
+
+            /**
+             * Check inactive users and degraded teams
+             */
+            for ($i = count($teams) - 1;  $i > 0; $i--) {
+                $staying = $degrading = [];
+                foreach($teams[$i] as $team) {
+                    if (!is_null($team->user->last_activity) and (Carbon::now()->timestamp - $team->user->last_activity->timestamp) < 2592000) {
+                        $staying[] = $team;
+                    } else {
+                        $degrading[] = $team;
+                    }
+                }
+
+                while (count($degrading) < 3 and count($staying) > 3) {
+                    $degrading[] = array_pop($staying);
+                }
+
+                /**
+                 * Teams keeping category and degrading
+                 */
+                $teams[$i] = $staying;
+                $teams[$i + 1] = array_merge($teams[$i + 1], $degrading);
+
+                /**
+                 * Promote teams from lower category
+                 */
+                $missing_teams = (20 * $zones) - count($teams[$i]);
+                $teams[$i] = array_merge($teams[$i], array_slice($teams[$i + 1], 0, $missing_teams));
+                $teams[$i + 1] = array_slice($teams[$i + 1], $missing_teams);
             }
 
             for ($i = 1; $i < $categories; $i++) {
+                /**
+                 * Make sure each category has 20x teams
+                 */
                 if (count($teams[$i]) < 20 * $zones) {
                     $diff = (20 * $zones) - count($teams[$i]);
                     for ($j = 0; $j < $diff; $j++) {
@@ -154,6 +183,9 @@ class TournamentController extends Controller
                     }
                 }
 
+                /**
+                 * Shuffle teams and create the new category
+                 */
                 $aux = [];
                 foreach ($teams[$i] as $team) {
                     $aux[] = $team;
@@ -165,6 +197,9 @@ class TournamentController extends Controller
                 }
             }
 
+            /**
+             * Complete last category with sparrings
+             */
             if (($teams_count - $teams_added) > 0) {
                 $groups_remaining = (int)(count($teams[$categories]) / 20);
                 if (count($teams[$categories]) % 20) {
@@ -173,9 +208,10 @@ class TournamentController extends Controller
 
                 $sparrings = Team::where('user_id', '=', 1)->limit((20 * $groups_remaining) - count($teams[$categories]))->inRandomOrder()->get();
                 foreach ($sparrings as $team) {
-                    $teams[$categories][] = $team->id;
+                    $teams[$categories][] = $team;
                 }
                 shuffle($teams[$categories]);
+
                 for ($j = 0; $j < $zones; $j++) {
                     $tournament->createCategory($i, $j + 1, array_slice($teams[$categories], $j * 20, 20));
                 }

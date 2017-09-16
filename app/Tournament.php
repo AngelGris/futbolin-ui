@@ -29,6 +29,15 @@ class Tournament extends Model
         $category = $this->tournamentCategories()->create(['category' => $category, 'zone' => $zone]);
 
         /**
+         * Convert teams OBJ to INT
+         */
+        foreach ($teams as $key => $team) {
+            if (is_object($team)) {
+                $teams[$key] = $team->id;
+            }
+        }
+
+        /**
          * Add teams
          */
         foreach($teams as $team) {
