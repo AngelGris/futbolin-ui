@@ -34,7 +34,7 @@ class TournamentCategory extends Model
      */
     public function scorers()
     {
-        return $this->hasMany(Scorer::class, 'category_id')->orderBy('goals', 'DESC');
+        return $this->hasMany(Scorer::class, 'category_id')->where('player_id', '>', 36)->orderBy('goals', 'DESC');
     }
 
     /**
