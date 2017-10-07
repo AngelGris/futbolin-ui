@@ -127,6 +127,28 @@ $(function(){
     <a href="{{ route('admin.teams', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
 <div class="clear"></div>
+<div id="home-last-active-users" class="col-md-6 zebra">
+    <h3>Jugadores Lesionados</h3>
+    @foreach($injured_players as $player)
+    <div class="col-xs-12">
+        <div class="col-xs-3">{{ $player->short_name }}</div>
+        <div class="col-xs-2">{{ $player->team->short_name }}</div>
+        <div class="col-xs-6">{{ $player->injury->name }}</div>
+        <div class="col-xs-1">{{ $player->recovery }}</div>
+    </div>
+    @endforeach
+    <a href="{{ route('admin.injuries', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
+<div id="home-last-active-users" class="col-md-6 zebra">
+    <h3>Tipos de lesiones</h3>
+    @foreach($injury_types as $injury)
+    <div class="col-xs-12">
+        <div class="col-xs-11">{{ $injury->name }}</div>
+        <div class="col-xs-1">{{ $injury->injuries_count }}</div>
+    </div>
+    @endforeach
+</div>
+<div class="clear"></div>
 <div class="col-md-6">
     <h3>Energía de los jugadores</h3>
     <div class="widgetcontent">

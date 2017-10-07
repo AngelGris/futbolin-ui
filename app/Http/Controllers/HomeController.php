@@ -45,6 +45,7 @@ class HomeController extends Controller
                 'position' => $player['position'],
                 'number' => $player['number'],
                 'retiring' => $player['retiring'],
+                'recovery' => $player['recovery'],
                 'upgraded' => $player['upgraded'],
                 'tired' => $player['tired'],
             ];

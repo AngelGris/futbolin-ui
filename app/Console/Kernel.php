@@ -37,6 +37,9 @@ class Kernel extends ConsoleKernel
                     foreach($players as $player) {
                         $player->upgrade();
                     }
+
+                    DB::table('players')->where('recovery', '=', 1)->update(['recovery' => 0, 'injury_id' => null]);
+                    DB::table('players')->where('recovery', '>', 1)->decrement('recovery');
                  });
 
         /**

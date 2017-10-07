@@ -35,6 +35,14 @@ class Player extends Model
     protected $dates = ['last_upgraded', 'deleted_at'];
 
     /**
+     * Player's injury
+     */
+    public function injury()
+    {
+        return $this->belongsTo(Injury::class);
+    }
+
+    /**
      * Get the player's team
      */
     public function team()
@@ -75,6 +83,9 @@ class Player extends Model
         $output = $this->first_name . ' ' . $this->last_name;
         if ($this->retiring) {
             $output .= ' <span class="fa fa-user-times" style="color:#f00;"></span>';
+        }
+        if ($this->recovery) {
+            $output .= ' <span class="fa fa-medkit" style="color:#f00;"> ' . $this->recovery . '</span> ';
         }
         if ($this->upgraded) {
             $output .= ' <span class="fa fa-arrow-circle-up" style="color:#080;"></span>';

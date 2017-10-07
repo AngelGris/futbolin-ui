@@ -91,10 +91,26 @@
                         @if ($_playersAlertsCount > 0)
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                                <span class="count unread-count">{{ $_playersAlertsCount }}</span>
+                                @if (count($_injuries) > 0)
+                                <span class="count count-alert">{{ $_playersAlertsCount }}</span>
+                                @else
+                                <span class="count">{{ $_playersAlertsCount }}</span>
+                                @endif
                                 <span class="head-icon head-users"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                @if (count($_injuries) > 0)
+                                <li class="nav-header">Lesionados</li>
+                                @foreach ($_injuries as $player)
+                                <li>
+                                    <a href="{{ route('player', $player['id']) }}">
+                                        <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
+                                        <small>{{ $player['position'] }}</small><br>
+                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} fechas</span>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
                                 @if (count($_upgraded) > 0)
                                 <li class="nav-header">Mejorados</li>
                                 @foreach ($_upgraded as $player)
@@ -147,7 +163,7 @@
                         @if (count($_notifications) or count($_messages))
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                                <span class="count unread-count">{{ $_messagesCount }}</span>
+                                <span class="count">{{ $_messagesCount }}</span>
                                 <span class="head-icon head-message"></span>
                                 <span class="headmenu-label">Mensajes</span>
                             </a>
@@ -173,12 +189,27 @@
                         @if ($_playersAlertsCount > 0)
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                            @if (count($_injuries) > 0)
+                            <span class="count count-alert">{{ $_playersAlertsCount }}</span>
+                            @else
                             <span class="count">{{ $_playersAlertsCount }}</span>
+                            @endif
                             <span class="head-icon head-users"></span>
                             <span class="headmenu-label">Jugadores</span>
                             </a>
-
                             <ul class="dropdown-menu newusers">
+                                @if (count($_injuries) > 0)
+                                <li class="nav-header">Jugadores lesionados</li>
+                                @foreach ($_injuries as $player)
+                                <li>
+                                    <a href="{{ route('player', $player['id']) }}">
+                                        <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
+                                        <small>{{ $player['position'] }}</small><br>
+                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} fechas</span>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
                                 @if (count($_upgraded) > 0)
                                 <li class="nav-header">Jugadores mejorados</li>
                                 @foreach ($_upgraded as $player)

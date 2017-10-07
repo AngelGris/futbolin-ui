@@ -20,6 +20,8 @@ Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']],
     Route::get('/equipos', ['as' => 'admin.teams', 'uses' => 'Admin\TeamController@index']);
     Route::get('/equipo/{team}', ['as' => 'admin.team', 'uses' => 'Admin\TeamController@show'])->where('team', '[0-9]+');
 
+    Route::get('/lesionados', ['as' => 'admin.injuries', 'uses' => 'Admin\PlayerController@injuries']);
+
     Route::get('/partidos', ['as' => 'admin.matches', 'uses' => 'Admin\MatchController@index']);
     Route::get('/partido', ['as' => 'admin.match', 'uses' => 'Admin\MatchController@show']);
     Route::get('/partido/log/{match}', ['as' => 'admin.match.log', 'uses' => 'Admin\MatchController@showLog'])->where('match', '[0-9]+');

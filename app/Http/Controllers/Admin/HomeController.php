@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Team;
 use App\Matches;
+use App\Player;
 use DB;
 
 class HomeController extends Controller
@@ -33,6 +34,13 @@ class HomeController extends Controller
             'year' => Team::where('user_id', '>', 1)->where('last_trainning', '>', date('Y-m-d H:i:s', time() - 31536000))->count(),
             'total' => Team::where('user_id', '>', 1)->count(),
         ];
+
+        $injury_types = DB::table('injuries')
+            ->join('players', 'players.injury_id', '=', 'injuries.id')
+            ->select(DB::raw('`injuries`.`name`, count(*) AS injuries_count'))
+            ->groupBy('injury_id')
+            ->orderBy('injuries_count', 'DESC')
+            ->get();
 
         $players_energy = DB::table('players')
             ->select(DB::raw('`stamina`, COUNT(*) AS `count`'))
@@ -77,6 +85,8 @@ class HomeController extends Controller
             'last_trainnings_stats' => $last_trainnings_stats,
             'last_teams' => Team::where('user_id', '>', 1)->latest()->limit(10)->get(),
             'last_matches' => Matches::latest()->limit(10)->get(),
+            'injured_players' => Player::where('recovery', '>', 0)->orderBy('recovery')->limit(10)->get(),
+            'injury_types' => $injury_types,
             'players_energy' => json_encode($players_energy),
             'teams_energy' => json_encode($teams_energy),
         ];

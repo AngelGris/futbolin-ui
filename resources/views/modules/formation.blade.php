@@ -10,6 +10,9 @@
                     @if ($strategy[$i]['retiring'])
                     <span class="fa fa-user-times" style="color:#f00;"></span>
                     @endif
+                    @if ($strategy[$i]['recovery'])
+                    <span class="fa fa-medkit" style="color:#f00;"></span>
+                    @endif
                     @if ($strategy[$i]['upgraded'])
                     <span class="fa fa-arrow-circle-up" style="color:#080;"></span>
                     @endif
