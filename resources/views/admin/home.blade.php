@@ -128,6 +128,27 @@ $(function(){
 </div>
 <div class="clear"></div>
 <div id="home-last-active-users" class="col-md-6 zebra">
+    <h3>Tarjetas Amarillas</h3>
+    @foreach($cards_count as $card)
+    <div class="col-xs-12">
+        <div class="col-xs-11">{{ $card->cards }}</div>
+        <div class="col-xs-1">{{ $card->cards_count }}</div>
+    </div>
+    @endforeach
+    <a href="{{ route('admin.cards', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
+<div id="home-last-active-users" class="col-md-6 zebra">
+    <h3>Suspensiones</h3>
+    @foreach($suspensions as $suspension)
+    <div class="col-xs-12">
+        <div class="col-xs-11">{{ $suspension->name }}</div>
+        <div class="col-xs-1">{{ $suspension->suspensions_count }}</div>
+    </div>
+    @endforeach
+    <a href="{{ route('admin.suspensions', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
+<div class="clear"></div>
+<div id="home-last-active-users" class="col-md-6 zebra">
     <h3>Jugadores Lesionados</h3>
     @foreach($injured_players as $player)
     <div class="col-xs-12">

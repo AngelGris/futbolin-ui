@@ -76,6 +76,8 @@ Mostrar:
     </tbody>
 </table>
 <span class="fa fa-user-times" style="color:#f00;"></span> = jugadores que se retiran al final de la temporada<br>
+<span class="fa fa-square" style="color:#ff0;"></span> = jugadores con 4 tarjetas amarillas<br>
+<span class="fa fa-square" style="color:#f00;"></span> = jugadores suspendido<br>
 <span class="fa fa-medkit" style="color:#f00;"></span> = jugadores lesionados<br>
 <span class="fa fa-arrow-circle-up" style="color:#080;"></span> = jugadores mejorados después del último partido<br>
 <span class="fa fa-arrow-down" style="color:#f00;"></span> = jugadores con poca energía<br>

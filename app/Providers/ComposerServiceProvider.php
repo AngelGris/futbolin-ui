@@ -55,6 +55,7 @@ class ComposerServiceProvider extends ServiceProvider
 
                         $request_time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
                         $messages = AdminMessage::where('valid_from', '<', $request_time)->where('valid_to', '>', $request_time)->orderBy('valid_from')->get();
+                        $suspensions = $team->players()->join('player_cards', 'player_cards.player_id', '=', 'players.id')->where('player_cards.suspension', '>', 0)->get();
                         $injuries = $team->players()->where('recovery', '>', 0)->get();
 
                         $view->with('_user', $user)
@@ -62,8 +63,9 @@ class ComposerServiceProvider extends ServiceProvider
                             ->with('_messagesCount', $user->unreadMessages)
                             ->with('_notifications', $user->notifications->take(5))
                             ->with('_messages', $messages)
+                            ->with('_suspensions', $suspensions)
                             ->with('_injuries', $injuries)
-                            ->with('_playersAlertsCount', count($injuries) + count($retiring) + count($upgraded))
+                            ->with('_playersAlertsCount', count($suspensions) + count($injuries) + count($retiring) + count($upgraded))
                             ->with('_retiring', $retiring)
                             ->with('_navigation', $navigation)
                             ->with('_upgraded', $upgraded);

@@ -188,6 +188,12 @@ $(function() {
             if (players[id]['retiring']) {
                 content += '<span class="fa fa-user-times" style="color:#f00;"></span>';
             }
+            if (players[id]['cards_count'] > 3) {
+                content += '<span class="fa fa-square" style="color:#ff0;"></span>';
+            }
+            if (players[id]['suspended']) {
+                content += '<span class="fa fa-square" style="color:#f00;"></span>';
+            }
             if (players[id]['recovery']) {
                 content += '<span class="fa fa-medkit" style="color:#f00;"></span>';
             }
@@ -211,6 +217,12 @@ $(function() {
                     var content = players[old_id]['number'] + '<div class="status">';
                     if (players[old_id]['retiring']) {
                         content += '<span class="fa fa-user-times" style="color:#f00;"></span>'
+                    }
+                    if (players[old_id]['cards_count'] > 3) {
+                        content += '<span class="fa fa-square" style="color:#ff0;"></span>';
+                    }
+                    if (players[old_id]['suspended']) {
+                        content += '<span class="fa fa-square" style="color:#f00;"></span>';
                     }
                     if (players[old_id]['recovery']) {
                         content += '<span class="fa fa-medkit" style="color:#f00;"></span>';
@@ -275,6 +287,12 @@ $(function() {
                                 @if ($players[$formation[$i - 1]]['retiring'])
                                 <span class="fa fa-user-times" style="color:#f00;"></span>
                                 @endif
+                                @if ($players[$formation[$i - 1]]['cards']['cards'] > 3)
+                                <span class="fa fa-square" style="color:#ff0;"></span>
+                                @endif
+                                @if ($players[$formation[$i - 1]]['cards']['suspension'])
+                                <span class="fa fa-square" style="color:#f00;"></span>
+                                @endif
                                 @if ($players[$formation[$i - 1]]['recovery'])
                                 <span class="fa fa-medkit" style="color:#f00;"></span>
                                 @endif
@@ -297,6 +315,12 @@ $(function() {
                     <div class="status">
                         @if ($players[$formation[$i - 1]]['retiring'])
                         <span class="fa fa-user-times" style="color:#f00;"></span>
+                        @endif
+                        @if ($players[$formation[$i - 1]]['cards']['cards'] > 3)
+                        <span class="fa fa-square" style="color:#ff0;"></span>
+                        @endif
+                        @if ($players[$formation[$i - 1]]['cards']['suspension'])
+                        <span class="fa fa-square" style="color:#f00;"></span>
                         @endif
                         @if ($players[$formation[$i - 1]]['recovery'])
                         <span class="fa fa-medkit" style="color:#f00;"></span>

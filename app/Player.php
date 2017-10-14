@@ -25,7 +25,7 @@ class Player extends Model
         'last_upgrade' => 'array',
     ];
 
-    protected $appends = ['name', 'short_name', 'average'];
+    protected $appends = ['name', 'short_name', 'average', 'cards_count', 'suspended'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -33,6 +33,14 @@ class Player extends Model
      * @var array
      */
     protected $dates = ['last_upgraded', 'deleted_at'];
+
+    /**
+     * Player's cards
+     */
+    public function cards()
+    {
+        return $this->hasOne(PlayerCard::class);
+    }
 
     /**
      * Player's injury
@@ -76,6 +84,18 @@ class Player extends Model
     }
 
     /**
+     * Number of yellow cards the player has
+     */
+    public function getCardsCountAttribute()
+    {
+        if ($this->cards) {
+            return $this->cards->cards;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Get player's name
      */
     public function getNameAttribute()
@@ -83,6 +103,14 @@ class Player extends Model
         $output = $this->first_name . ' ' . $this->last_name;
         if ($this->retiring) {
             $output .= ' <span class="fa fa-user-times" style="color:#f00;"></span>';
+        }
+        if ($this->cards) {
+            if ($this->cards->cards > 3) {
+                $output .= ' <span class="fa fa-square" style="color:#ff0;"></span>';
+            }
+            if ($this->cards->suspension > 0) {
+                $output .= ' <span class="fa fa-square" style="color:#f00;"></span>';
+            }
         }
         if ($this->recovery) {
             $output .= ' <span class="fa fa-medkit" style="color:#f00;"> ' . $this->recovery . '</span> ';
@@ -135,6 +163,28 @@ class Player extends Model
         }
 
         return $initials . $this->last_name;
+    }
+
+    /**
+     * Whether the player is suspended or not
+     */
+    public function getSuspendedAttribute()
+    {
+        if ($this->cards) {
+            return $this->cards->suspension > 0;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Get player'0s suspension type
+     */
+    public function getSuspensionTypeAttribute()
+    {
+        $suspension = Suspension::find($this->suspension_id);
+
+        return $suspension->name;
     }
 
     /**

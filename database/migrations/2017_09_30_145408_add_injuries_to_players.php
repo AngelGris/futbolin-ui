@@ -78,5 +78,7 @@ class AddInjuriesToPlayers extends Migration
         Schema::table('players', function (Blueprint $table) {
             $table->dropColumn(['injury_id', 'recovery']);
         });
+
+        Schema::dropIfExists('inuries');
     }
 }

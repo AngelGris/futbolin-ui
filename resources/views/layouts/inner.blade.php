@@ -91,7 +91,7 @@
                         @if ($_playersAlertsCount > 0)
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                                @if (count($_injuries) > 0)
+                                @if (count($_suspensions) > 0 || count($_injuries) > 0)
                                 <span class="count count-alert">{{ $_playersAlertsCount }}</span>
                                 @else
                                 <span class="count">{{ $_playersAlertsCount }}</span>
@@ -99,6 +99,18 @@
                                 <span class="head-icon head-users"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                @if (count($_suspensions) > 0)
+                                <li class="nav-header">Suspendidos</li>
+                                @foreach ($_suspensions as $player)
+                                <li>
+                                    <a href="{{ route('player', $player['id']) }}">
+                                        <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
+                                        <small>{{ $player['position'] }}</small><br>
+                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} fechas</span>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
                                 @if (count($_injuries) > 0)
                                 <li class="nav-header">Lesionados</li>
                                 @foreach ($_injuries as $player)
@@ -189,7 +201,7 @@
                         @if ($_playersAlertsCount > 0)
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                            @if (count($_injuries) > 0)
+                            @if (count($_suspensions) > 0 || count($_injuries) > 0)
                             <span class="count count-alert">{{ $_playersAlertsCount }}</span>
                             @else
                             <span class="count">{{ $_playersAlertsCount }}</span>
@@ -198,6 +210,18 @@
                             <span class="headmenu-label">Jugadores</span>
                             </a>
                             <ul class="dropdown-menu newusers">
+                                @if (count($_suspensions) > 0)
+                                <li class="nav-header">Jugadores suspendidos</li>
+                                @foreach ($_suspensions as $player)
+                                <li>
+                                    <a href="{{ route('player', $player['id']) }}">
+                                        <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
+                                        <small>{{ $player['position'] }}</small><br>
+                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} fechas</span>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
                                 @if (count($_injuries) > 0)
                                 <li class="nav-header">Jugadores lesionados</li>
                                 @foreach ($_injuries as $player)

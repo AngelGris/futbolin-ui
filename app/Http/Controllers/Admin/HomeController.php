@@ -35,9 +35,23 @@ class HomeController extends Controller
             'total' => Team::where('user_id', '>', 1)->count(),
         ];
 
+        $cards_count = DB::table('player_cards')
+            ->select(DB::raw('`cards`, COUNT(*) AS `cards_count`'))
+            ->where('cards', '>', 0)
+            ->groupBy('cards')
+            ->orderBy('cards', 'DESC')
+            ->get();
+
+        $suspensions_count = DB::table('player_cards')
+            ->join('suspensions', 'suspensions.id', '=', 'player_cards.suspension_id')
+            ->select(DB::raw('`suspensions`.`name`, COUNT(*) AS `suspensions_count`'))
+            ->groupBy('suspension_id')
+            ->orderBy('suspensions_count', 'DESC')
+            ->get();
+
         $injury_types = DB::table('injuries')
             ->join('players', 'players.injury_id', '=', 'injuries.id')
-            ->select(DB::raw('`injuries`.`name`, count(*) AS injuries_count'))
+            ->select(DB::raw('`injuries`.`name`, COUNT(*) AS `injuries_count`'))
             ->groupBy('injury_id')
             ->orderBy('injuries_count', 'DESC')
             ->get();
@@ -85,6 +99,8 @@ class HomeController extends Controller
             'last_trainnings_stats' => $last_trainnings_stats,
             'last_teams' => Team::where('user_id', '>', 1)->latest()->limit(10)->get(),
             'last_matches' => Matches::latest()->limit(10)->get(),
+            'cards_count' => $cards_count,
+            'suspensions' => $suspensions_count,
             'injured_players' => Player::where('recovery', '>', 0)->orderBy('recovery')->limit(10)->get(),
             'injury_types' => $injury_types,
             'players_energy' => json_encode($players_energy),

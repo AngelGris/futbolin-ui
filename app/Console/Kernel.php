@@ -38,8 +38,23 @@ class Kernel extends ConsoleKernel
                         $player->upgrade();
                     }
 
+                    /**
+                     * Recover injured players
+                     */
                     DB::table('players')->where('recovery', '=', 1)->update(['recovery' => 0, 'injury_id' => null]);
                     DB::table('players')->where('recovery', '>', 1)->decrement('recovery');
+
+                    /**
+                     * Reduce players' suspensions
+                     */
+                    DB::table('player_cards')->where('suspension', '=', 1)->update(['suspension' => 0, 'suspension_id' => null]);
+                    DB::table('player_cards')->where('suspension', '>', 1)->decrement('suspension');
+
+                    /**
+                     * Suspend players with 5 yellow cards
+                     */
+                    DB::table('player_cards')->where('suspension', '=', 0)->where('cards', '>', 4)->update(['cards' => 0, 'suspension_id' => 1, 'suspension' => 1]);
+
                  });
 
         /**
