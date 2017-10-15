@@ -103,6 +103,8 @@ class MatchController extends Controller
                 'posession' => $data['local']['posessionPer'],
                 'shots' => $data['local']['shots'],
                 'shots_goal' => $data['local']['shotsOnTarget'],
+                'yellow_cards' => (isset($data['local']['yellow_cards']) ? $data['local']['yellow_cards'] : -1),
+                'red_cards' => (isset($data['local']['red_cards']) ? $data['local']['red_cards'] : -1),
                 'substitutions' => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
             ],
             'visit' => [
@@ -117,6 +119,8 @@ class MatchController extends Controller
                 'posession' => $data['visit']['posessionPer'],
                 'shots' => $data['visit']['shots'],
                 'shots_goal' => $data['visit']['shotsOnTarget'],
+                'yellow_cards' => (isset($data['visit']['yellow_cards']) ? $data['visit']['yellow_cards'] : -1),
+                'red_cards' => (isset($data['visit']['red_cards']) ? $data['visit']['red_cards'] : -1),
                 'substitutions' => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
             ],
             'scorers' => $scorers,

@@ -107,5 +107,12 @@
         <div class="col-xs-4">{{ $visit['substitutions'] }}</div>
     </div>
     @endif
+    @if ($local['yellow_cards'] >= 0)
+    <div class="col-xs-12">
+        <div class="col-xs-4">{{ $local['yellow_cards'] }} / {{ $local['red_cards'] }}</div>
+        <div class="col-xs-4">Tarjetas</div>
+        <div class="col-xs-4">{{ $visit['yellow_cards'] }} / {{ $visit['red_cards'] }}</div>
+    </div>
+    @endif
 </div>
 <div class="clear"></div>
