@@ -62,8 +62,10 @@ Route::group(['prefix' => 'contrasena'], function() {
 Route::get('/contacto/', ['as' => 'contact', 'uses' => 'ContactController@index']);
 Route::post('/contacto/', 'ContactController@send');
 Route::get('/contacto/gracias/', ['as' => 'contact.thanks', 'uses' => 'ContactController@thanks']);
+Route::get('/vivo/{match?}', ['as' => 'match.live', 'uses' => 'MatchController@showLive'])->where('match', '[0-9]+');
+Route::get('/vivo/relato/{logfile}', ['as' => 'match.live.log', 'uses' => 'MatchController@getLiveLog']);
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => ['auth', 'liveMatch']], function() {
     Route::get('/vestuario', ['as' => 'home', 'uses' => 'HomeController@index']);
 
     Route::group(['prefix' => 'perfil'], function() {

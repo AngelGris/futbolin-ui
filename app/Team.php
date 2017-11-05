@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Faker;
+use Carbon\Carbon;
 
 class Team extends Model
 {
@@ -151,6 +152,19 @@ class Team extends Model
             'last_upgrade' => '',
             'number' => $number,
         ]);
+    }
+
+    /**
+     * Get live match for team
+     */
+    public function getLiveMatchAttribute()
+    {
+        $match = Matches::where(function ($query) {
+                            $query->where('local_id', $this->id)
+                                  ->orWhere('visit_id', $this->id);
+                        })->where('type_id', '>', 2)->where('created_at', '>=', Carbon::now()->subMinutes(\Config::get('constants.LIVE_MATCH_DURATION')))->first();
+
+        return $match;
     }
 
     /**

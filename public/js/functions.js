@@ -41,6 +41,8 @@ function loadSVGintoIMG(img, url) {
     var imgID = img.attr('id');
     var imgClass = img.attr('class');
     var imgStyle = img.attr('style');
+    var color_primary = img.data('color-primary');
+    var color_secondary = img.data('color-secondary');
 
     $.get(url, function(data) {
         // Get the SVG tag, ignore the rest
@@ -64,6 +66,9 @@ function loadSVGintoIMG(img, url) {
 
         // Replace image with new SVG
         img.replaceWith(svg);
+
+        svg.find('.shield-primary-color').css({ 'fill' : color_primary});
+        svg.find('.shield-secondary-color').css({ 'fill' : color_secondary});
 
         updateShieldColor()
     }, 'xml');

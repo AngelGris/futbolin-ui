@@ -23,6 +23,31 @@ class Matches extends Model
     }
 
     /**
+     * Match's category
+     */
+    public function getCategoryAttribute()
+    {
+        $category = TournamentCategory::join('tournament_rounds', 'tournament_rounds.category_id', '=', 'tournament_categories.id')
+                                      ->join('matches_rounds', 'matches_rounds.round_id', '=', 'tournament_rounds.id')
+                                      ->where('matches_rounds.match_id', $this->id)
+                                      ->first();
+
+        return $category;
+    }
+
+    /**
+     * Match's round
+     */
+    public function getRoundAttribute()
+    {
+        $round = TournamentRound::join('matches_rounds', 'matches_rounds.round_id', '=', 'tournament_rounds.id')
+                                ->where('matches_rounds.match_id', $this->id)
+                                ->first();
+
+        return $round;
+    }
+
+    /**
      * Load last friendly match between 2 teams (fixed local/visit)
      */
     public static function loadLastFriendlyMatch($local_id, $visit_id) {
