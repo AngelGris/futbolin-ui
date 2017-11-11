@@ -19,7 +19,8 @@ $(function() {
                 mp3: '/audio/final_whistle.mp3'
             });
         },
-        swfPath : '/swf/jquery.jplayer.swf'
+        swfPath : '/swf/jquery.jplayer.swf',
+        preload : 'auto'
     });
 
     $('#jplayer-goal').jPlayer({
@@ -28,7 +29,8 @@ $(function() {
                 mp3: '/audio/goal.mp3'
             });
         },
-        swfPath : '/swf/jquery.jplayer.swf'
+        swfPath : '/swf/jquery.jplayer.swf',
+        preload : 'auto'
     });
 
     $('#jplayer-whistle').jPlayer({
@@ -37,7 +39,8 @@ $(function() {
                 mp3: '/audio/whistle.mp3'
             });
         },
-        swfPath : '/swf/jquery.jplayer.swf'
+        swfPath : '/swf/jquery.jplayer.swf',
+        preload : 'auto'
     });
 
     $.ajax({
@@ -169,7 +172,9 @@ $(function() {
             field = '.visit-' + field;
         }
 
-        $(field).hide().text(parseInt($(field).text()) + 1).fadeIn(1000);
+        $(field).each(function(index) {
+            $(this).hide().text(parseInt($(this).text()) + 1).fadeIn(1000);
+        });
     }
 
     function score_other(id, team) {

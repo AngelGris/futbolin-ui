@@ -171,7 +171,7 @@ $(function(){
             trainable_remaining = remaining;
         }
 
-        if (trainable_remaining > 0) {
+        if (typeof trainable_remaining !== 'undefined' && trainable_remaining > 0) {
             updateTrainableTimer()
             remaining_timer = setInterval(updateTrainableTimer, 1000);
         }
