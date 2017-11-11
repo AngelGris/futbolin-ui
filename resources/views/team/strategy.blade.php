@@ -227,7 +227,7 @@ $(function() {
                     if (players[old_id]['recovery']) {
                         content += '<span class="fa fa-medkit" style="color:#f00;"></span>';
                     }
-                    if (players[id]['stamina'] < 50) {
+                    if (players[old_id]['stamina'] < 50) {
                         content += '<span class="fa fa-arrow-down" style="color:#f00;"></span>';
                     }
                     content += '</div>';
