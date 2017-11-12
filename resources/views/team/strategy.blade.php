@@ -354,10 +354,16 @@ $(function() {
                     @if ($player->retiring)
                     <span class="fa fa-user-times" style="color:#f00;"></span>
                     @endif
-                    @if ($player['recovery'])
+                    @if ($player->cards != NULL && $player->cards->cards > 3)
+                    <span class="fa fa-square" style="color:#ff0;"></span>
+                    @endif
+                    @if ($player->cards != NULL && $player->cards->suspension)
+                    <span class="fa fa-square" style="color:#f00;"></span>
+                    @endif
+                    @if ($player->recovery)
                     <span class="fa fa-medkit" style="color:#f00;"></span>
                     @endif
-                    @if ($player['stamina'] < 50)
+                    @if ($player->stamina < 50)
                     <span class="fa fa-arrow-down" style="color:#f00;"></span>
                     @endif
                 </td>
