@@ -18,7 +18,7 @@ class LiveMatch
         if (\Auth::check()) {
             $team = \Auth::user()->team;
 
-            if ($team->live_match) {
+            if ($team && $team->live_match) {
                 return redirect()->route('match.live');
             }
         }

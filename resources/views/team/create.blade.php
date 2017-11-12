@@ -60,7 +60,7 @@
                 <p style="color:#fff;">Escudo</p>
                 <input id="shield-value" type="hidden" name="shield" value="1" />
                 <div style="background-color:#fff;padding:10px;">
-                    <a href="#" id="shield-select"><img class="svg" id="shield-svg" src="{{ asset('/img/shield/shield-01.svg') }}" style="width:70px;" /></a>
+                    <a href="#" id="shield-select"><img class="svg" id="shield-svg" src="{{ asset('/img/shield/shield-01.svg') }}" data-color-primary="#fff" data-color-secondary="#000" style="width:70px;" /></a>
                 </div>
             </div>
             <div class="inputwrapper">
