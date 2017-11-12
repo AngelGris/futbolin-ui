@@ -69,24 +69,12 @@ function loadSVGintoIMG(img, url) {
 
         svg.find('.shield-primary-color').css({ 'fill' : color_primary});
         svg.find('.shield-secondary-color').css({ 'fill' : color_secondary});
-
-        updateShieldColor()
     }, 'xml');
 }
 
 function updateShieldColor() {
     $('#shield-svg .shield-primary-color').css({ 'fill' : $('#primary_color_picker').val() });
     $('#shield-svg .shield-secondary-color').css({ 'fill' : $('#secondary_color_picker').val() });
-
-    $('#shield-local .shield-primary-color').css({ 'fill' : $('#local_primary_color').val() });
-    $('#shield-local .shield-secondary-color').css({ 'fill' : $('#local_secondary_color').val() });
-    $('#shield-visit .shield-primary-color').css({ 'fill' : $('#visit_primary_color').val() });
-    $('#shield-visit .shield-secondary-color').css({ 'fill' : $('#visit_secondary_color').val() });
-
-    $('#shield-local-res .shield-primary-color').css({ 'fill' : $('#local_primary_color_res').val() });
-    $('#shield-local-res .shield-secondary-color').css({ 'fill' : $('#local_secondary_color_res').val() });
-    $('#shield-visit-res .shield-primary-color').css({ 'fill' : $('#visit_primary_color_res').val() });
-    $('#shield-visit-res .shield-secondary-color').css({ 'fill' : $('#visit_secondary_color_res').val() });
 }
 
 function refreshResultModal(data) {

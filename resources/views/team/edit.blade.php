@@ -52,7 +52,7 @@
         <label class="col-md-2 control-label">Escudo</label>
         <div class="col-md-10">
             <input id="shield-value" type="hidden" name="shield" value="{{ $_team['shield'] }}" />
-            <a href="#" id="shield-select"><img class="svg" id="shield-svg" src="{{ $_team['shieldFile'] }}" style="width:70px;" /></a>
+            <a href="#" id="shield-select"><img class="svg" id="shield-svg" src="{{ $_team['shieldFile'] }}"  data-color-primary="{{ $_team['primary_color'] }}" data-color-secondary="{{ $_team['secondary_color'] }}" style="width:70px;" /></a>
         </div>
     </div>
     <div class="form-group">

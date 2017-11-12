@@ -22,7 +22,7 @@
 </div>
 <div class="form-group">
     <label class="col-md-2 control-label">Escudo</label>
-    <div class="col-md-10"><img class="svg" src="{{ $_team['shieldFile'] }}" style="width:70px;"></div>
+    <div class="col-md-10"><img class="svg" src="{{ $_team['shieldFile'] }}"  data-color-primary="{{ $_team['primary_color'] }}" data-color-secondary="{{ $_team['secondary_color'] }}" style="width:70px;"></div>
 </div>
 <div class="form-group">
     <a href="{{ route('team.edit') }}" class="btn btn-default">Editar equipo</a>

@@ -24,15 +24,11 @@ var match_duration = {{ config('constants.LIVE_MATCH_DURATION') * 60 }};
     <div class="col-xs-4 col-sm-5 title-local">
         <span class="title-local-name">{{ $match->local->name }}</span>
         <span class="title-local-shortname">{{ $match->local->short_name }}</span>
-        <img class="svg" id="shield-local-res" src="{{ $match->local->shield_file }}" style="height:50px;">
-        <input type="hidden" id="local_primary_color_res" value="{{ $match->local->primary_color }}">
-        <input type="hidden" id="local_secondary_color_res" value="{{ $match->local->secondary_color }}">
+        <img class="svg" id="shield-local-res" src="{{ $match->local->shield_file }}"  data-color-primary="{{ $match->local->primary_color }}" data-color-secondary="{{ $match->local->secondary_color }}" style="height:50px;">
     </div>
     <div class="col-xs-4 col-sm-2 title-goals"><span class="local-goals">0</span> : <span class="visit-goals">0</span></div>
     <div class="col-xs-4 col-sm-5 title-visit">
-        <img class="svg" id="shield-visit-res" src="{{ $match->visit->shield_file }}" style="height:50px;">
-        <input type="hidden" id="visit_primary_color_res" value="{{ $match->visit->primary_color }}">
-        <input type="hidden" id="visit_secondary_color_res" value="{{ $match->visit->secondary_color }}">
+        <img class="svg" id="shield-visit-res" src="{{ $match->visit->shield_file }}"  data-color-primary="{{ $match->visit->primary_color }}" data-color-secondary="{{ $match->visit->secondary_color }}" style="height:50px;">
         <span class="title-visit-name">{{ $match->visit->name }}</span>
         <span class="title-visit-shortname">{{ $match->visit->short_name }}</span>
     </div>

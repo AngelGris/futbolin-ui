@@ -27,14 +27,10 @@ $(function() {
         <div class="col-xs-12" id="home-next-match-date"><h3>{{ $tournament['next_match']['date'] }}</h3></div>
         <div class="col-xs-12" id="home-next-match-stadium"><h4>{{ $tournament['next_match']['local']['stadium_name'] }}</h4></div>
         <div class="col-xs-6 teams"><a href="{{ route('team.show', $tournament['next_match']['local']['id']) }}">
-            <img id="shield-local" class="svg" src="{{ $tournament['next_match']['local']['shieldFile'] }}" style="height:70px;" /><br />{{ $tournament['next_match']['local']['name'] }}</a>
-            <input type="hidden" id="local_primary_color" value="{{ $tournament['next_match']['local']['primary_color'] }}">
-            <input type="hidden" id="local_secondary_color" value="{{ $tournament['next_match']['local']['secondary_color'] }}">
+            <img id="shield-local" class="svg" src="{{ $tournament['next_match']['local']['shieldFile'] }}" data-color-primary="{{ $tournament['next_match']['local']['primary_color'] }}" data-color-secondary="{{ $tournament['next_match']['local']['secondary_color'] }}" style="height:70px;" /><br />{{ $tournament['next_match']['local']['name'] }}</a>
         </div>
         <div class="col-xs-6 teams">
-            <a href="{{ route('team.show', $tournament['next_match']['visit']['id']) }}"><img id="shield-visit" class="svg" src="{{ $tournament['next_match']['visit']['shieldFile'] }}" style="height:70px;" /><br />{{ $tournament['next_match']['visit']['name'] }}</a>
-            <input type="hidden" id="visit_primary_color" value="{{ $tournament['next_match']['visit']['primary_color'] }}">
-            <input type="hidden" id="visit_secondary_color" value="{{ $tournament['next_match']['visit']['secondary_color'] }}">
+            <a href="{{ route('team.show', $tournament['next_match']['visit']['id']) }}"><img id="shield-visit" class="svg" src="{{ $tournament['next_match']['visit']['shieldFile'] }}" data-color-primary="{{ $tournament['next_match']['visit']['primary_color'] }}" data-color-secondary="{{ $tournament['next_match']['visit']['secondary_color'] }}" style="height:70px;" /><br />{{ $tournament['next_match']['visit']['name'] }}</a>
         </div>
     </div>
     <div class="clear"></div>

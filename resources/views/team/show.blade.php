@@ -32,7 +32,7 @@ $(function() {
 
 @section('content-inner')
 <div class="col-xs-12" style="margin-bottom:20px;text-align:center;">
-    <img id="other-shield" class="svg" src="{{ $team['shieldFile'] }}" style="width:70px;" />
+    <img id="other-shield" class="svg" src="{{ $team['shieldFile'] }}"  data-color-primary="{{ $team['primary_color'] }}" data-color-secondary="{{ $team['secondary_color'] }}" style="width:70px;" />
     <h2 style="text-align:center;width:auto;">{{ $team['name'] }}</h2>
 </div>
 <div class="col-md-12" style="height:30px;">

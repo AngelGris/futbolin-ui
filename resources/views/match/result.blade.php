@@ -4,16 +4,12 @@
     @endif
     <h4 style="margin-bottom:20px;">{{ $stadium }} ({{ $datetime }})</h4>
     <div class="col-xs-4">
-        <img class="svg" id="shield-local-res" src="{{ $local['shield_file'] }}" style="height:70px;">
-        <input type="hidden" id="local_primary_color_res" value="{{ $local['primary_color'] }}">
-        <input type="hidden" id="local_secondary_color_res" value="{{ $local['secondary_color'] }}">
+        <img class="svg" id="shield-local-res" src="{{ $local['shield_file'] }}"  data-color-primary="{{ $local['primary_color'] }}" data-color-secondary="{{ $local['secondary_color'] }}" style="height:70px;">
         <h4>{{ $local['name'] }}</h4>
     </div>
     <div class="col-xs-4 result"><h4>{{ $local['goals'] }} - {{ $visit['goals'] }}</h4></div>
     <div class="col-xs-4">
-        <img class="svg" id="shield-visit-res" src="{{ $visit['shield_file'] }}" style="height:70px;">
-        <input type="hidden" id="visit_primary_color_res" value="{{ $visit['primary_color'] }}">
-        <input type="hidden" id="visit_secondary_color_res" value="{{ $visit['secondary_color'] }}">
+        <img class="svg" id="shield-visit-res" src="{{ $visit['shield_file'] }}"  data-color-primary="{{ $visit['primary_color'] }}" data-color-secondary="{{ $visit['secondary_color'] }}" style="height:70px;">
         <h4>{{ $visit['name'] }}</h4>
     </div>
 </div>

@@ -8,23 +8,6 @@
 <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ asset('css/lato.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ asset('css/roboto.css') }}" type="text/css" />
-<style type="text/css">
-.shield-primary-color {
-    @if (empty($header_team))
-    fill: {{ $_team['primary_color'] }};
-    @else
-    fill: {{ $header_team['primary_color'] }};
-    @endif
-}
-
-.shield-secondary-color {
-    @if (empty($header_team))
-    fill: {{ $_team['secondary_color'] }};
-    @else
-    fill: {{ $header_team['secondary_color'] }};
-    @endif
-}
-</style>
 @yield('styles-inner')
 @endsection
 
@@ -305,10 +288,10 @@
         <div class="pageheader">
             <div class="teamname">
                 @if (empty($header_team))
-                <img class="svg shield" src="{{ asset($_team['shield_file']) }}">
+                <img class="svg shield" src="{{ asset($_team['shield_file']) }}" data-color-primary="{{ $_team['primary_color'] }}" data-color-secondary="{{ $_team['secondary_color'] }}">
                 <h2>{{ $_team['name'] }}</h2>
                 @else
-                <img class="svg shield" src="{{ asset($header_team['shield_file']) }}">
+                <img class="svg shield" src="{{ asset($header_team['shield_file']) }}" data-color-primary="{{ $header_team['primary_color'] }}" data-color-secondary="{{ $header_team['secondary_color'] }}">
                 <h2>{{ $header_team['name'] }}</h2>
                 @endif
             </div>
