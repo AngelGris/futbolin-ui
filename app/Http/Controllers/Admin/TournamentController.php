@@ -130,9 +130,11 @@ class TournamentController extends Controller
              */
             $teams_list = [];
             foreach ($teams as $cat) {
-                $teams_list = array_map(function ($entry) {
+                $teams_listing = array_map(function ($entry) {
                   return $entry['id'];
                 }, $cat);
+
+                $teams_list = array_merge($teams_list, $teams_listing);
             }
 
             $new_teams = Team::where('user_id', '>', 1)->whereNotIn('id', $teams_list)->where('playable', '=', 1)->get();
@@ -143,7 +145,7 @@ class TournamentController extends Controller
             /**
              * Check inactive users and degraded teams
              */
-            for ($i = count($teams) - 1;  $i > 0; $i--) {
+            for ($i = count($teams);  $i > 0; $i--) {
                 $staying = $degrading = [];
                 foreach($teams[$i] as $team) {
                     if (!is_null($team->user->last_activity) and (Carbon::now()->timestamp - $team->user->last_activity->timestamp) < 2592000) {
@@ -161,7 +163,11 @@ class TournamentController extends Controller
                  * Teams keeping category and degrading
                  */
                 $teams[$i] = $staying;
-                $teams[$i + 1] = array_merge($teams[$i + 1], $degrading);
+                if (empty($teams[$i + 1])) {
+                    $teams[$i + 1] = $degrading;
+                } else{
+                    $teams[$i + 1] = array_merge($teams[$i + 1], $degrading);
+                }
 
                 /**
                  * Promote teams from lower category
