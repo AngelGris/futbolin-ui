@@ -153,7 +153,7 @@ $(function() {
 
     function format_time(time) {
         minutes = Math.floor(time / 60);
-        seconds = time % 60;
+        seconds = Math.floor(time % 60);
 
         if (minutes < 10) {
             minutes = '0' + minutes;
@@ -227,8 +227,18 @@ $(function() {
                         increase_stats(log_plays[plays_index][2], 'shots');
                         break;
                     case 22:
-                    case 23:
                         increase_stats(log_plays[plays_index][2], 'substitutions');
+                        break;
+                    case 23:
+                        if (log_plays[plays_index][2] == 0) {
+                            field = '.local-substitutions';
+                        } else {
+                            field = '.visit-substitutions';
+                        }
+
+                        if (parseInt($(field).text()) < 3) {
+                            increase_stats(log_plays[plays_index][2], 'substitutions');
+                        }
                         break;
                     case 24:
                         increase_stats(log_plays[plays_index][2], 'yellow-cards');
@@ -267,7 +277,7 @@ $(function() {
                 $('#match-timer').text('Descanso');
                 setTimeout(function() {
                     time_interval = setInterval(update_broadcast, 1000);
-                }, 60000);
+                }, 10000);
             } else {
                 $('#match-timer').text('Finalizado');
                 setTimeout(function() {
