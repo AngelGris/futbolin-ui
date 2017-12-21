@@ -57,7 +57,7 @@ $(function() {
         </div>
         @for ($i = 0; $i < 10; $i++)
         <div class="col-xs-12" style="padding:0;{{ ($_team['id'] == $tournament['category']['positions'][$i]['team_id']) ? 'background-color:#f99;' : ''}}">
-            <div class="col-xs-2" style="text-align:right;">{{ $tournament['category']['positions'][$i]['position'] }}</div>
+            <div class="col-xs-2" style="text-align:right;">{!! $tournament['category']['positions'][$i]['position_full'] !!}</div>
             <div class="col-xs-7"><a href="{{ route('team.show', $tournament['category']['positions'][$i]['team_id']) }}">{{ $tournament['category']['positions'][$i]['team']['name'] }}</a></div>
             <div class="col-xs-3" style="text-align:right;">{{ $tournament['category']['positions'][$i]['points'] }}</div>
         </div>

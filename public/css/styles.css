@@ -1921,6 +1921,26 @@ strong, .headmenu .nav-header,
 	border: 0;
 }
 
+.position-full-up {
+	color: #090;
+}
+
+.position-full-down {
+	color: #900;
+}
+
+.position-full-right {
+	color: #999;
+}
+
+.position-full-down,
+.position-full-right,
+.position-full-up {
+	font-size:8px !important;
+	margin-top: -3px;
+	vertical-align: middle;
+}
+
 .tabbable > .nav-tabs {
 	background: #0866c6;
 	margin: 0;

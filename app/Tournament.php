@@ -40,8 +40,9 @@ class Tournament extends Model
         /**
          * Add teams
          */
+        $i = 0;
         foreach($teams as $team) {
-            TournamentPosition::create(['category_id' => $category->id, 'team_id' => $team, 'position' => 1]);
+            TournamentPosition::create(['category_id' => $category->id, 'team_id' => $team, 'position' => ++$i]);
         }
 
         /**

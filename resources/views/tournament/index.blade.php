@@ -172,7 +172,7 @@ function movePager(id) {
         <tbody>
             @foreach ($category['positions'] as $position)
             <tr{!! ($position['team']['id'] == $_team['id']) ? ' style="background-color:#ddd;"' : '' !!}>
-                <td style="padding-right:5px;text-align:right;">{{ $position['position'] }}</td>
+                <td style="padding-right:5px;text-align:right;">{!! $position['position_full'] !!}</td>
                 <td><a href="{{ route('team.show', $position['team']['id']) }}">{{ $position['team']['name'] }}</a></td>
                 <td style="text-align:right;">{{ $position['points'] }}</td>
                 <td style="text-align:right;">{{ $position['played'] }}</td>

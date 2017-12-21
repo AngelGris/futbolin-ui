@@ -28,4 +28,22 @@ class TournamentPosition extends Model
     {
         return $this->belongsTo(Team::class);
     }
+
+    /**
+     * Get position and comparison with last_position
+     */
+    public function getPositionFullAttribute()
+    {
+        $output = $this->position;
+        if ($this->last_position > 0) {
+            if ($this->last_position > $this->position) {
+                $output .= ' <span class="fa fa-chevron-up position-full-up"></span>';
+            } else if ($this->last_position < $this->position) {
+                $output .= ' <span class="fa fa-chevron-down position-full-down"></span>';
+            } else {
+                $output .= ' <span class="fa fa-chevron-right position-full-right"></span>';
+            }
+        }
+        return ($output);
+    }
 }
