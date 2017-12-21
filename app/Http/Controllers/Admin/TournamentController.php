@@ -35,8 +35,8 @@ class TournamentController extends Controller
     public function create()
     {
         $teams_count = Team::where('user_id', '>', 1)->where('playable', '=', 1)->count();
-        $groups = (int)($teams_count / 20);
-        if ($teams_count % 20) {
+        $groups = (int)($teams_count / \Config::get('constants.TEAMS_PER_CATEGORY'));
+        if ($teams_count % \Config::get('constants.TEAMS_PER_CATEGORY')) {
             $groups++;
         }
 
@@ -60,8 +60,8 @@ class TournamentController extends Controller
         $last_tournament = Tournament::latest()->limit(1)->get();
         $teams_count = Team::where('user_id', '>', 1)->where('playable', '=', 1)->count();
         $teams_added = 0;
-        $groups = (int)($teams_count / 20);
-        if ($teams_count % 20) {
+        $groups = (int)($teams_count / \Config::get('constants.TEAMS_PER_CATEGORY'));
+        if ($teams_count % \Config::get('constants.TEAMS_PER_CATEGORY')) {
             $groups++;
         }
         $zones = $request->zones;
@@ -74,7 +74,7 @@ class TournamentController extends Controller
 
         if (empty($last_tournament[0])) {
             for ($i = 0; $i < $categories - 1; $i++) {
-                $teams = Team::where('user_id', '>', 1)->where('playable', '=', 1)->offset($teams_added)->limit(20 * $zones)->oldest()->get();
+                $teams = Team::where('user_id', '>', 1)->where('playable', '=', 1)->offset($teams_added)->limit(\Config::get('constants.TEAMS_PER_CATEGORY') * $zones)->oldest()->get();
                 $aux = [];
                 foreach ($teams as $team) {
                     $aux[] = $team->id;
@@ -82,17 +82,17 @@ class TournamentController extends Controller
                 shuffle($aux);
                 $teams_added += count($teams);
                 for ($j = 0; $j < $zones; $j++) {
-                    $tournament->createCategory($i + 1, $j + 1, array_slice($aux, $j * 20, 20));
+                    $tournament->createCategory($i + 1, $j + 1, array_slice($aux, $j * \Config::get('constants.TEAMS_PER_CATEGORY'), \Config::get('constants.TEAMS_PER_CATEGORY')));
                 }
             }
 
             if (($teams_count - $teams_added) > 0) {
-                $teams = Team::where('user_id', '>', 1)->where('playable', '=', 1)->offset($teams_added)->limit(20 * $zones)->oldest()->get();
-                $groups_remaining = (int)(count($teams) / 20);
-                if (count($teams) % 20) {
+                $teams = Team::where('user_id', '>', 1)->where('playable', '=', 1)->offset($teams_added)->limit(\Config::get('constants.TEAMS_PER_CATEGORY') * $zones)->oldest()->get();
+                $groups_remaining = (int)(count($teams) / \Config::get('constants.TEAMS_PER_CATEGORY'));
+                if (count($teams) % \Config::get('constants.TEAMS_PER_CATEGORY')) {
                     $groups_remaining++;
                 }
-                $sparrings = Team::where('user_id', '=', 1)->limit((20 * $groups_remaining) - count($teams))->inRandomOrder()->get();
+                $sparrings = Team::where('user_id', '=', 1)->limit((\Config::get('constants.TEAMS_PER_CATEGORY') * $groups_remaining) - count($teams))->inRandomOrder()->get();
                 $aux = [];
                 foreach ($teams as $team){
                     $aux[] = $team->id;
@@ -102,7 +102,7 @@ class TournamentController extends Controller
                 }
                 shuffle($aux);
                 for ($j = 0; $j < $zones; $j++) {
-                    $tournament->createCategory($i + 1, $j + 1, array_slice($aux, $j * 20, 20));
+                    $tournament->createCategory($i + 1, $j + 1, array_slice($aux, $j * \Config::get('constants.TEAMS_PER_CATEGORY'), \Config::get('constants.TEAMS_PER_CATEGORY')));
                 }
             }
         } else {
@@ -145,44 +145,69 @@ class TournamentController extends Controller
             /**
              * Check inactive users and degraded teams
              */
-            for ($i = count($teams);  $i > 0; $i--) {
+            $degrading_prev = [];
+            for ($i = 1; $i <= $groups - 0; $i++) {
                 $staying = $degrading = [];
                 foreach($teams[$i] as $team) {
-                    if (!is_null($team->user->last_activity) and (Carbon::now()->timestamp - $team->user->last_activity->timestamp) < 2592000) {
+                    if (!is_null($team->user->last_activity) and (Carbon::now()->timestamp - $team->user->last_activity->timestamp) < \Config::get('constants.USER_INACTIVE')) {
                         $staying[] = $team;
                     } else {
                         $degrading[] = $team;
                     }
                 }
 
-                while (count($degrading) < 3 and count($staying) > 3) {
-                    $degrading[] = array_pop($staying);
+                while ((count($staying) + count($degrading_prev)) > ((\Config::get('constants.TEAMS_PER_CATEGORY')) - \Config::get('constants.DEGRADES_PER_CATEGORY'))) {
+                    if (
+                        count($staying) == 0 ||
+                        (
+                            count($degrading_prev) > 0 &&
+                            (
+                                is_null($degrading_prev[count($degrading_prev) - 1]->user->last_activity) ||
+                                (Carbon::now()->timestamp - $degrading_prev[count($degrading_prev) - 1]->user->last_activity->timestamp) < \Config::get('constants.USER_INACTIVE')
+                            )
+                        )
+                    ) {
+                        array_unshift($degrading, array_pop($degrading_prev));
+                    } else {
+                        array_unshift($degrading, array_pop($staying));
+                    }
                 }
 
                 /**
                  * Teams keeping category and degrading
                  */
-                $teams[$i] = $staying;
-                if (empty($teams[$i + 1])) {
-                    $teams[$i + 1] = $degrading;
-                } else{
-                    $teams[$i + 1] = array_merge($teams[$i + 1], $degrading);
-                }
+                $teams[$i] = array_merge($staying, $degrading_prev);
+                $degrading_prev = $degrading;
+            }
 
+            if (!empty($degrading_prev)) {
+                $teams[$groups + 1] = $degrading_prev;
+            }
+
+            for ($i = 1; $i <= $groups; $i++) {
                 /**
                  * Promote teams from lower category
                  */
-                $missing_teams = (20 * $zones) - count($teams[$i]);
+                $missing_teams = (\Config::get('constants.TEAMS_PER_CATEGORY') * $zones) - count($teams[$i]);
                 $teams[$i] = array_merge($teams[$i], array_slice($teams[$i + 1], 0, $missing_teams));
                 $teams[$i + 1] = array_slice($teams[$i + 1], $missing_teams);
             }
 
+            /*foreach($teams as $k => $v) {
+                echo($k . '<br>');
+                foreach($v as $t) {
+                    echo($t->id . ' - ' . $t->name . '<br>');
+                }
+                echo('<br>');
+            }
+            exit;*/
+
             for ($i = 1; $i < $categories; $i++) {
                 /**
-                 * Make sure each category has 20x teams
+                 * Make sure each category has TEAMS_PER_CATEGORY teams
                  */
-                if (count($teams[$i]) < 20 * $zones) {
-                    $diff = (20 * $zones) - count($teams[$i]);
+                if (count($teams[$i]) < \Config::get('constants.TEAMS_PER_CATEGORY') * $zones) {
+                    $diff = (\Config::get('constants.TEAMS_PER_CATEGORY') * $zones) - count($teams[$i]);
                     for ($j = 0; $j < $diff; $j++) {
                         $teams[$i][] = $teams[$i + 1][$j];
                         unset($teams[$i + 1][$j]);
@@ -199,7 +224,7 @@ class TournamentController extends Controller
                 shuffle($aux);
                 $teams_added += count($teams[$i]);
                 for ($j = 0; $j < $zones; $j++) {
-                    $tournament->createCategory($i, $j + 1, array_slice($aux, $j * 20, 20));
+                    $tournament->createCategory($i, $j + 1, array_slice($aux, $j * \Config::get('constants.TEAMS_PER_CATEGORY'), \Config::get('constants.TEAMS_PER_CATEGORY')));
                 }
             }
 
@@ -207,19 +232,19 @@ class TournamentController extends Controller
              * Complete last category with sparrings
              */
             if (($teams_count - $teams_added) > 0) {
-                $groups_remaining = (int)(count($teams[$categories]) / 20);
-                if (count($teams[$categories]) % 20) {
+                $groups_remaining = (int)(count($teams[$categories]) / \Config::get('constants.TEAMS_PER_CATEGORY'));
+                if (count($teams[$categories]) % \Config::get('constants.TEAMS_PER_CATEGORY')) {
                     $groups_remaining++;
                 }
 
-                $sparrings = Team::where('user_id', '=', 1)->limit((20 * $groups_remaining) - count($teams[$categories]))->inRandomOrder()->get();
+                $sparrings = Team::where('user_id', '=', 1)->limit((\Config::get('constants.TEAMS_PER_CATEGORY') * $groups_remaining) - count($teams[$categories]))->inRandomOrder()->get();
                 foreach ($sparrings as $team) {
                     $teams[$categories][] = $team;
                 }
                 shuffle($teams[$categories]);
 
                 for ($j = 0; $j < $zones; $j++) {
-                    $tournament->createCategory($i, $j + 1, array_slice($teams[$categories], $j * 20, 20));
+                    $tournament->createCategory($i, $j + 1, array_slice($teams[$categories], $j * \Config::get('constants.TEAMS_PER_CATEGORY'), \Config::get('constants.TEAMS_PER_CATEGORY')));
                 }
             }
         }
@@ -298,10 +323,26 @@ class TournamentController extends Controller
            ->update(['retiring' => true]);
 
         /**
+         * Heal players for 3 matches
+         */
+        \DB::table('players')
+            ->where('recovery', '<=', 3)
+            ->update(['recovery' => 0, 'injury_id' => NULL]);
+
+        \DB::table('players')
+            ->where('recovery', '>', 3)
+            ->decrement('recovery', 3);
+
+        /**
          * Reset players stamina
          */
         \DB::table('players')
            ->update(['stamina' => 100]);
+
+        /**
+         * Delete yellow cards
+         */
+        \DB::table('player_cards')->truncate();
 
         return redirect(route('admin.tournaments', getDomain()));
     }

@@ -1,5 +1,13 @@
 @extends('layouts.inner')
 
+@section('styles-inner')
+<style type="text/css">
+    .pagination-slider {
+        width: {{ (count($category['rounds']) * 45) - (count($category['rounds']) - 1) }}px;
+    }
+</style>
+@endsection
+
 @section('javascript-inner')
 <script type="text/javascript">
 $(function() {
@@ -101,7 +109,7 @@ function movePager(id) {
         </ul>
         <div class="pagination-slider-container">
             <ul class="pagination pagination-slider">
-                @for ($i = 1; $i <= 38; $i++)
+                @for ($i = 1; $i <= count($category['rounds']); $i++)
                 <li class="pagination-round{{ $i == $last_round ? ' active' : '' }}" data-id="{{ $i }}"><a href="#" style="text-align:center;width:45px;">{{ $i }}</a></li>
                 @endfor
             </ul>

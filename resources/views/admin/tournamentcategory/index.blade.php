@@ -42,7 +42,7 @@
 <div id="modal-category-matches" class="col-xs-12" style="display:none;">
     <h4>Partidos</h4>
     Fecha: <select onChange="changeRound(this);">
-    @for ($i = 1; $i <= 38; $i++)
+    @for ($i = 1; $i <= count($category['rounds']); $i++)
         <option value="{{ $i }}">{{ $i }}</option>
     @endfor
     </select>

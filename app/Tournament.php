@@ -49,7 +49,7 @@ class Tournament extends Model
          */
         $round_time = strtotime('next monday') + 72000;
         $round_time_back = $round_time + 3801600;
-        for ($i = 0; $i < 19; $i++) {
+        for ($i = 0; $i < \Config::get('constants.TEAMS_PER_CATEGORY') - 1; $i++) {
             $round_number = $i + 1;
             $round1 = \DB::table('tournament_rounds')->insertGetId([
                 'category_id' => $category->id,
@@ -60,27 +60,27 @@ class Tournament extends Model
             ]);
             $round2 = \DB::table('tournament_rounds')->insertGetId([
                 'category_id' => $category->id,
-                'number' => $round_number + 19,
+                'number' => $round_number + \Config::get('constants.TEAMS_PER_CATEGORY') - 1,
                 'datetime' =>  $round_time_back,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
 
             $aux = [$teams[0]];
-            for ($j = 1; $j < 20; $j++) {
-                if (($j + $i) < 20) {
+            for ($j = 1; $j < \Config::get('constants.TEAMS_PER_CATEGORY'); $j++) {
+                if (($j + $i) < \Config::get('constants.TEAMS_PER_CATEGORY')) {
                     $aux[] = $teams[$j + $i];
                 } else {
-                    $aux[] = $teams[($j + $i + 1) % 20];
+                    $aux[] = $teams[($j + $i + 1) % \Config::get('constants.TEAMS_PER_CATEGORY')];
                 }
             }
 
-            for ($j = 0; $j < 10; $j++) {
+            for ($j = 0; $j < \Config::get('constants.TEAMS_PER_CATEGORY') / 2; $j++) {
                 if ($i % 2) {
                     $team1 = $aux[$j];
-                    $team2 = $aux[19 - $j];
+                    $team2 = $aux[\Config::get('constants.TEAMS_PER_CATEGORY') - $j - 1];
                 } else {
-                    $team1 = $aux[19 - $j];
+                    $team1 = $aux[\Config::get('constants.TEAMS_PER_CATEGORY') - $j - 1];
                     $team2 = $aux[$j];
                 }
 
