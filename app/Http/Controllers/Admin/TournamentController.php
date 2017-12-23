@@ -193,15 +193,6 @@ class TournamentController extends Controller
                 $teams[$i + 1] = array_slice($teams[$i + 1], $missing_teams);
             }
 
-            /*foreach($teams as $k => $v) {
-                echo($k . '<br>');
-                foreach($v as $t) {
-                    echo($t->id . ' - ' . $t->name . '<br>');
-                }
-                echo('<br>');
-            }
-            exit;*/
-
             for ($i = 1; $i < $categories; $i++) {
                 /**
                  * Make sure each category has TEAMS_PER_CATEGORY teams
@@ -321,17 +312,6 @@ class TournamentController extends Controller
         \DB::table('players')
            ->whereIn('id', $players_retiring)
            ->update(['retiring' => true]);
-
-        /**
-         * Heal players for 3 matches
-         */
-        \DB::table('players')
-            ->where('recovery', '<=', 3)
-            ->update(['recovery' => 0, 'injury_id' => NULL]);
-
-        \DB::table('players')
-            ->where('recovery', '>', 3)
-            ->decrement('recovery', 3);
 
         /**
          * Reset players stamina
