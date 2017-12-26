@@ -60,8 +60,7 @@ class TournamentCategory extends Model
     {
         $rounds = $this->rounds;
 
-
-        return ($rounds[37]['datetime'] > $_SERVER['REQUEST_TIME']);
+        return ($rounds[count($rounds) - 1]['datetime'] > $_SERVER['REQUEST_TIME']);
     }
 
     /**
