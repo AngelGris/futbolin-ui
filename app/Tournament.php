@@ -48,9 +48,13 @@ class Tournament extends Model
         /**
          * Create fixture
          */
+        // Tournament starting round
         $round_time = strtotime('next monday') + 72000;
-        $round_time_back = $round_time + 3801600;
-        for ($i = 0; $i < \Config::get('constants.TEAMS_PER_CATEGORY') - 1; $i++) {
+        // Back phase starting round
+        $rounds_in_phase = \Config::get('constants.TEAMS_PER_CATEGORY') - 1;
+        $phase_days = ((int)(($rounds_in_phase) / 3) * 7) + (($rounds_in_phase % 3) * 2);
+        $round_time_back = strtotime(sprintf('next monday +%d days', $phase_days)) + 72000;
+        for ($i = 0; $i < $rounds_in_phase; $i++) {
             $round_number = $i + 1;
             $round1 = \DB::table('tournament_rounds')->insertGetId([
                 'category_id' => $category->id,
@@ -61,7 +65,7 @@ class Tournament extends Model
             ]);
             $round2 = \DB::table('tournament_rounds')->insertGetId([
                 'category_id' => $category->id,
-                'number' => $round_number + \Config::get('constants.TEAMS_PER_CATEGORY') - 1,
+                'number' => $round_number + $rounds_in_phase,
                 'datetime' =>  $round_time_back,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -109,10 +113,10 @@ class Tournament extends Model
                 $round_time += 259200;
             }
 
-            if ($round_number % 3 == 2) {
-                $round_time_back += 259200;
-            } else {
+            if (($rounds_in_phase + $round_number) % 3) {
                 $round_time_back += 172800;
+            } else {
+                $round_time_back += 259200;
             }
         }
     }
