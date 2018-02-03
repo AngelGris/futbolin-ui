@@ -135,9 +135,14 @@ class TeamController extends Controller
         }
 
         if (!is_integer($team)) {
+            $formation = [];
             foreach ($players as $num => $pos) {
                 $player = $team->createPlayer($num, $pos);
+                if (count($formation) < 18) {
+                    $formation[] = $player->id;
+                }
             }
+            $team->formation = $formation;
         }
 
         $team->save();
