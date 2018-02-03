@@ -3,6 +3,7 @@
 /public/hot
 /python
 /storage/*.key
+/storage/debugbar/
 /vendor
 /.idea
 Homestead.json
