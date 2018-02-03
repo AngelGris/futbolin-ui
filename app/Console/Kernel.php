@@ -53,8 +53,7 @@ class Kernel extends ConsoleKernel
                     /**
                      * Suspend players with 5 yellow cards
                      */
-                    DB::table('player_cards')->where('suspension', '=', 0)->where('cards', '>', 4)->update(['cards' => 0, 'suspension_id' => 1, 'suspension' => 1]);
-
+                    DB::table('player_cards')->where('suspension', '=', 0)->where('cards', '>=', \Config::get('constants.YELLOW_CARDS_SUSPENSION'))->update(['cards' => 0, 'suspension_id' => 1, 'suspension' => 1]);
                  });
 
         /**

@@ -8,6 +8,7 @@ return [
 
     'TEAMS_PER_CATEGORY' => 10, // number of teams to play in each category
     'DEGRADES_PER_CATEGORY' => 2, // minimum number of teams degraded per category
+    'YELLOW_CARDS_SUSPENSION' => 3, // number of yellow cards a player must have to get a suspension
 
     'USER_INACTIVE' => 2592000, // seconds to consider a user inactive
 ];
