@@ -80,7 +80,7 @@ $(function() {
             </div>
             <label for="valid-from" class="col-md-2 control-label">Mensaje</label>
             <div class="col-md-10">
-                <textarea name="message" class="form-control input-default" required>{{ old('message', $message['message']) }}</textarea>
+                <textarea name="message" class="form-control input-default">{{ old('message', $message['message']) }}</textarea>
                 @if ($errors->has('message'))
                 <label class="error">
                     <strong>{{ $errors->first('message') }}</strong>
