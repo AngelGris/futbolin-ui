@@ -264,49 +264,56 @@ class TournamentController extends Controller
         /**
          * Players retiring next tournament
          */
-        $players = \DB::table('players')
-                      ->select(['id', 'age'])
-                      ->where('team_id', '>', 1)
-                      ->where('age', '>=', 33)
+        $teams = Team::where('user_id', '>', 1)->get();
+        $players_retiring = [];
+        foreach ($teams as $team) {
+            $players = $team->players()
+                      ->where('age', '>=', 32)
                       ->where('retiring', '=', FALSE)
                       ->whereNull('deleted_at')
+                      ->orderBy('age', 'DESC')
                       ->get();
-        $players_retiring = [];
-        foreach ($players as $player) {
-            switch ($player->age) {
-                case '33':
-                    $limit = 10;
-                    break;
-                case '34':
-                    $limit = 25;
-                    break;
-                case '35':
-                    $limit = 60;
-                    break;
-                case '36':
-                    $limit = 75;
-                    break;
-                case '37':
-                    $limit = 85;
-                    break;
-                case '38':
-                    $limit = 95;
-                    break;
-                default:
-                    $limit = 100;
-                    break;
-            }
 
-            $retiring = TRUE;
-            if ($limit < 100) {
-                $num = mt_rand(1, 100);
-                if ($num > $limit) {
-                    $retiring = FALSE;
+            $team_retiring = FALSE; // This team has a player retiring?
+            foreach ($players as $player) {
+                switch ($player->age) {
+                    case '32':
+                        $limit = 10;
+                        break;
+                    case '33':
+                        $limit = 25;
+                        break;
+                    case '34':
+                        $limit = 60;
+                        break;
+                    case '35':
+                        $limit = 75;
+                        break;
+                    default:
+                        $limit = 100;
+                        break;
+                }
+
+                $retiring = TRUE;
+                if ($limit < 100) {
+                    $num = mt_rand(1, 100);
+                    if ($num > $limit) {
+                        $retiring = FALSE;
+                    }
+                }
+
+                if ($retiring) {
+                    $team_retiring = TRUE;
+                    $players_retiring[] = $player->id;
                 }
             }
 
-            if ($retiring) {
-                $players_retiring[] = $player->id;
+            /**
+             * Make sure each team with at least 3 players in retiring age
+             * has at least 1 player retiring
+             */
+            if (count($players) >= 3 && !$team_retiring) {
+                $players_retiring[] = $players[0]->id;
             }
         }
         \DB::table('players')
