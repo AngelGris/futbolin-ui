@@ -147,6 +147,9 @@ class TeamController extends Controller
 
         $team->save();
 
+        // Check if the team is ready to play
+        $team->updatePlayable();
+
         $request->session()->flash('show_walkthrough', TRUE);
 
         return redirect()->route('strategy');
