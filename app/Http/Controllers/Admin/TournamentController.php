@@ -274,7 +274,7 @@ class TournamentController extends Controller
                       ->orderBy('age', 'DESC')
                       ->get();
 
-            $team_retiring = FALSE; // This team has a player retiring?
+            $team_retiring = 0; // This team has a player retiring?
             foreach ($players as $player) {
                 switch ($player->age) {
                     case '32':
@@ -303,16 +303,25 @@ class TournamentController extends Controller
                 }
 
                 if ($retiring) {
-                    $team_retiring = TRUE;
+                    $team_retiring++;
                     $players_retiring[] = $player->id;
+
+                    if ($team_retiring == 2) {
+                        break;
+                    }
                 }
             }
 
             /**
              * Make sure each team with at least 3 players in retiring age
+             * and at least one with 33 years
              * has at least 1 player retiring
              */
-            if (count($players) >= 3 && !$team_retiring) {
+            if (
+                !$team_retiring &&
+                count($players) >= 3 &&
+                $players[0]->age >= 33
+            ) {
                 $players_retiring[] = $players[0]->id;
             }
         }
