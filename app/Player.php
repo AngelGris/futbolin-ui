@@ -105,7 +105,7 @@ class Player extends Model
             $output .= ' <span class="fa fa-user-times" style="color:#f00;"></span>';
         }
         if ($this->cards) {
-            if ($this->cards->cards > 3) {
+            if ($this->cards->cards >= \Config::get('constants.YELLOW_CARDS_SUSPENSION') - 1) {
                 $output .= ' <span class="fa fa-square" style="color:#ff0;"></span>';
             }
             if ($this->cards->suspension > 0) {

@@ -110,7 +110,6 @@ $(function() {
         "paging": false,
         "searching": false,
         "info": false,
-        "sScrollY": "405px"
     });
 
     $('.change-formation').click(function(e) {
@@ -188,7 +187,7 @@ $(function() {
             if (players[id]['retiring']) {
                 content += '<span class="fa fa-user-times" style="color:#f00;"></span>';
             }
-            if (players[id]['cards_count'] > 3) {
+            if (players[id]['cards_count'] >= {{ config('constants.YELLOW_CARDS_SUSPENSION') - 1}}) {
                 content += '<span class="fa fa-square" style="color:#ff0;"></span>';
             }
             if (players[id]['suspended']) {
@@ -218,7 +217,7 @@ $(function() {
                     if (players[old_id]['retiring']) {
                         content += '<span class="fa fa-user-times" style="color:#f00;"></span>'
                     }
-                    if (players[old_id]['cards_count'] > 3) {
+                    if (players[old_id]['cards_count'] >= {{ config('constants.YELLOW_CARDS_SUSPENSION') - 1 }}) {
                         content += '<span class="fa fa-square" style="color:#ff0;"></span>';
                     }
                     if (players[old_id]['suspended']) {
@@ -287,7 +286,7 @@ $(function() {
                                 @if ($players[$formation[$i - 1]]['retiring'])
                                 <span class="fa fa-user-times" style="color:#f00;"></span>
                                 @endif
-                                @if ($players[$formation[$i - 1]]['cards']['cards'] > 3)
+                                @if ($players[$formation[$i - 1]]['cards']['cards'] >= (config('constants.YELLOW_CARDS_SUSPENSION') - 1))
                                 <span class="fa fa-square" style="color:#ff0;"></span>
                                 @endif
                                 @if ($players[$formation[$i - 1]]['cards']['suspension'])
@@ -373,6 +372,12 @@ $(function() {
             @endforeach
         </tbody>
     </table>
+    <span class="fa fa-user-times" style="color:#f00;"></span> = jugadores que se retiran al final de la temporada<br>
+    <span class="fa fa-square" style="color:#ff0;"></span> = jugadores con {{ config('constants.YELLOW_CARDS_SUSPENSION') - 1 }} tarjetas amarillas<br>
+    <span class="fa fa-square" style="color:#f00;"></span> = jugadores suspendido<br>
+    <span class="fa fa-medkit" style="color:#f00;"></span> = jugadores lesionados<br>
+    <span class="fa fa-arrow-circle-up" style="color:#080;"></span> = jugadores mejorados después del último partido<br>
+    <span class="fa fa-arrow-down" style="color:#f00;"></span> = jugadores con poca energía<br>
 </div>
 <div class="col-md-3">
     <div id="player-info" class="widgetbox col-md-12" style="display:none;">
