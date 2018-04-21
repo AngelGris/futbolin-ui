@@ -353,7 +353,7 @@ $(function() {
                     @if ($player->retiring)
                     <span class="fa fa-user-times" style="color:#f00;"></span>
                     @endif
-                    @if ($player->cards != NULL && $player->cards->cards > 3)
+                    @if ($player->cards != NULL && $player->cards->cards >= config('constants.YELLOW_CARDS_SUSPENSION') - 1)
                     <span class="fa fa-square" style="color:#ff0;"></span>
                     @endif
                     @if ($player->cards != NULL && $player->cards->suspension)
