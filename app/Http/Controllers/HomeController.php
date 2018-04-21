@@ -45,7 +45,7 @@ class HomeController extends Controller
                 'position' => $player['position'],
                 'number' => $player['number'],
                 'retiring' => $player['retiring'],
-                'cards' => $player['cards']['cards'] > 3,
+                'cards' => $player['cards']['cards'] >= \Config('constants.YELLOW_CARDS_SUSPENSION') - 1,
                 'suspended' => $player['cards']['suspension'] > 0,
                 'recovery' => $player['recovery'],
                 'upgraded' => $player['upgraded'],
