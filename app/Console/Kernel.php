@@ -34,7 +34,12 @@ class Kernel extends ConsoleKernel
         $schedule->exec('python3 ' . base_path() . '/python/cron.py')
                  ->cron('0 20 * * 1,3,5 *')
                  ->sendOutputTo('/var/log/futbolin/cron-' . date('YmdHis') . '.log')
-                 ->after(function() {
+                 ->before(function() {
+                    $teams = Team::where('trainer', '>=', Carbon::now())->get();
+                    foreach ($teams as $team) {
+                        $team->train(TRUE);
+                    }
+                 })->after(function() {
                     $players = Player::where('experience', '>=', 100)->get();
                     foreach($players as $player) {
                         $player->upgrade();
@@ -62,11 +67,6 @@ class Kernel extends ConsoleKernel
          *  Increase player's stamina by 10 points
          */
         $schedule->call(function() {
-                    $teams = Team::where('trainer', '>=', Carbon::now())->get();
-                    foreach ($teams as $team) {
-                        $team->train(TRUE);
-                    }
-
                     DB::table('players')->where('stamina', '>=', 90)->update(['stamina' => 100]);
                     DB::table('players')->where('stamina', '<', 90)->increment('stamina', 10);
                  })
