@@ -108,6 +108,17 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
     Route::get('/torneos', ['as' => 'tournaments', 'uses' => 'TournamentController@index']);
     Route::get('/torneo/{category}', ['as' => 'tournament', 'uses' => 'TournamentController@index'])->where('tournament', '[0-9]+');
 
+    Route::group(['prefix' => 'shopping'], function() {
+        Route::get('/', ['as' => 'shopping', 'uses' => 'ShoppingController@index']);
+        Route::get('/creditos', ['as' => 'shopping.credits', 'uses' => 'CreditController@index']);
+        Route::post('/comprar', ['as' => 'shopping.buy', 'uses' => 'ShoppingController@buy']);
+    });
+
+    Route::group(['prefix' => 'payment'], function() {
+        Route::post('/', ['as' => 'payment.checkout', 'uses' => 'PaymentController@checkout']);
+        Route::get('/paypal/process', ['as' => 'payment.paypal.process', 'uses' => 'PaymentController@processPaypal']);
+    });
+
     Route::get('/mensaje-admin/{message}', 'Admin\MessageController@showPublic')->where('message', '[0-9]+');
 
     Route::get('/notificaciones', ['as' => 'notifications', 'uses' => 'NotificationController@index']);

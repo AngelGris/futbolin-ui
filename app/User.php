@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\CreditItem;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use App\Notification;
 
@@ -56,11 +57,33 @@ class User extends Authenticatable
     }
 
     /**
+     * Get user's transactions
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    /**
      * Get user's messages
      */
     public function notifications()
     {
         return $this->hasMany(Notification::class)->orderBy('created_at', 'DESC');
+    }
+
+    /**
+     * Add credits to account
+     * @param integer $creditItemID
+     *
+     * @return integer Credits added
+     */
+    public function addCreditItem($creditItemId) {
+        $creditItem = CreditItem::find($creditItemId);
+        $this->credits += $creditItem->quantity;
+        $this->save();
+
+        return $creditItem->quantity;
     }
 
     /**

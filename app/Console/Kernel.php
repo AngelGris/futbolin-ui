@@ -2,9 +2,11 @@
 
 namespace App\Console;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Team;
 use App\Player;
 
 class Kernel extends ConsoleKernel
@@ -41,7 +43,7 @@ class Kernel extends ConsoleKernel
                     /**
                      * Recover injured players
                      */
-                    DB::table('players')->where('recovery', '=', 1)->update(['recovery' => 0, 'injury_id' => null]);
+                    DB::table('players')->where('recovery', '=', 1)->update(['recovery' => 0, 'injury_id' => null, 'healed' => FALSE]);
                     DB::table('players')->where('recovery', '>', 1)->decrement('recovery');
 
                     /**
@@ -51,7 +53,7 @@ class Kernel extends ConsoleKernel
                     DB::table('player_cards')->where('suspension', '>', 1)->decrement('suspension');
 
                     /**
-                     * Suspend players with 5 yellow cards
+                     * Suspend players with YELLOW_CARDS_SUSPENSION yellow cards
                      */
                     DB::table('player_cards')->where('suspension', '=', 0)->where('cards', '>=', \Config::get('constants.YELLOW_CARDS_SUSPENSION'))->update(['cards' => 0, 'suspension_id' => 1, 'suspension' => 1]);
                  });
@@ -60,6 +62,11 @@ class Kernel extends ConsoleKernel
          *  Increase player's stamina by 10 points
          */
         $schedule->call(function() {
+                    $teams = Team::where('trainer', '>=', Carbon::now())->get();
+                    foreach ($teams as $team) {
+                        $team->train(TRUE);
+                    }
+
                     DB::table('players')->where('stamina', '>=', 90)->update(['stamina' => 100]);
                     DB::table('players')->where('stamina', '<', 90)->increment('stamina', 10);
                  })

@@ -60,6 +60,8 @@ class Player extends Model
 
     /**
      * Get player's average attribute
+     *
+     * @return float
      */
     public function getAverageAttribute()
     {
@@ -85,6 +87,8 @@ class Player extends Model
 
     /**
      * Number of yellow cards the player has
+     *
+     * @return integer
      */
     public function getCardsCountAttribute()
     {
@@ -97,35 +101,42 @@ class Player extends Model
 
     /**
      * Get player's name
+     *
+     * @return string
      */
     public function getNameAttribute()
     {
         $output = $this->first_name . ' ' . $this->last_name;
         if ($this->retiring) {
-            $output .= ' <span class="fa fa-user-times" style="color:#f00;"></span>';
+            $output .= ' <span class="fa fa-user-times" style="color:#f00;" data-toggle="tooltip" title="Se retira"></span>';
         }
         if ($this->cards) {
             if ($this->cards->cards >= \Config::get('constants.YELLOW_CARDS_SUSPENSION') - 1) {
-                $output .= ' <span class="fa fa-square" style="color:#ff0;"></span>';
+                $output .= ' <span class="fa fa-square" style="color:#ff0;" data-toggle="tooltip" title="Tiene ' . (\Config::get('constants.YELLOW_CARDS_SUSPENSION') - 1) . ' amarillas"></span>';
             }
             if ($this->cards->suspension > 0) {
-                $output .= ' <span class="fa fa-square" style="color:#f00;"></span>';
+                $output .= ' <span class="fa fa-square" style="color:#f00;" data-toggle="tooltip" title="Suspendido"></span>';
             }
         }
         if ($this->recovery) {
-            $output .= ' <span class="fa fa-medkit" style="color:#f00;"> ' . $this->recovery . '</span> ';
+            $output .= ' <span class="fa fa-medkit" style="color:#f00;" data-toggle="tooltip" title="Lesionado"> ' . $this->recovery . '</span> ';
+        }
+        if ($this->healed) {
+            $output .= ' <span class="fa fa-plus-circle" style="color:#0a0;" data-toggle="tooltip" title="Tratado"></span>';
         }
         if ($this->upgraded) {
-            $output .= ' <span class="fa fa-arrow-circle-up" style="color:#080;"></span>';
+            $output .= ' <span class="fa fa-arrow-circle-up" style="color:#0a0;" data-toggle="tooltip" title="Subió de nivel"></span>';
         }
         if ($this->tired) {
-            $output .= ' <span class="fa fa-arrow-down" style="color:#f00;"></span>';
+            $output .= ' <span class="fa fa-arrow-down" style="color:#f00;" data-toggle="tooltip" title="Pocas energías"></span>';
         }
         return $output;
     }
 
     /**
      * Get position complete name
+     *
+     * @return string
      */
     public function getPositionLongAttribute()
     {
@@ -151,6 +162,8 @@ class Player extends Model
 
     /**
      * Get player's short name
+     *
+     * @return string
      */
     public function getShortNameAttribute()
     {
@@ -167,6 +180,8 @@ class Player extends Model
 
     /**
      * Whether the player is suspended or not
+     *
+     * @return boolean
      */
     public function getSuspendedAttribute()
     {
@@ -178,7 +193,9 @@ class Player extends Model
     }
 
     /**
-     * Get player'0s suspension type
+     * Get player's suspension type
+     *
+     * @return string
      */
     public function getSuspensionTypeAttribute()
     {
@@ -189,6 +206,8 @@ class Player extends Model
 
     /**
      * If stamina <= 50 then the player is tired
+     *
+     * @return boolean
      */
     public function getTiredAttribute()
     {
@@ -196,7 +215,33 @@ class Player extends Model
     }
 
     /**
+     * Is player available for injury treatment
+     *
+     * @return boolean
+     */
+    public function getTreatableAttribute()
+    {
+        if ($this->recovery > 0 && $this->healed == FALSE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Number of matches a player recovers with treatment
+     *
+     * @return integer
+     */
+    public function getTreatmentImprovementAttribute()
+    {
+        return ceil($this->recovery / 2);
+    }
+
+    /**
      * Player was upgraded after last match
+     *
+     * @return boolean
      */
     public function getUpgradedAttribute()
     {
@@ -209,7 +254,23 @@ class Player extends Model
     }
 
     /**
+     * Treat injured player
+     *
+     * @return void
+     */
+    public function treat()
+    {
+        $this->recovery -= $this->treatment_improvement;
+        if ($this->recovery > 0) {
+            $this->healed = TRUE;
+        }
+        $this->save();
+    }
+
+    /**
      * Upgrade player
+     *
+     * @return void
      */
     public function upgrade()
     {

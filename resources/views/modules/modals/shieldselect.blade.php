@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-shield-select">
+<div class="modal fade" id="modal-shield-select" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

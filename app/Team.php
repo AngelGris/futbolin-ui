@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Faker;
 use Carbon\Carbon;
+use DB;
 
 class Team extends Model
 {
@@ -27,7 +28,7 @@ class Team extends Model
     /**
      * Carbon instance fields
      */
-    protected $dates = ['last_trainning', 'created_at', 'updated_at'];
+    protected $dates = ['last_trainning', 'trainer', 'created_at', 'updated_at'];
 
     /**
      * Attribute limits for newly created players
@@ -152,6 +153,14 @@ class Team extends Model
             'last_upgrade' => '',
             'number' => $number,
         ]);
+    }
+
+    /**
+     * Injured players in the team
+     */
+    public function getInjuredPlayersAttribute()
+    {
+        return $this->players()->where('recovery', '>', 0)->get();
     }
 
     /**
@@ -318,6 +327,38 @@ class Team extends Model
     }
 
     /**
+     * Get remaining time for the trainer
+     */
+    public function getTrainerRemainingAttribute()
+    {
+        $now = Carbon::now();
+        if ($this->trainer <= $now) {
+            return 0;
+        }
+
+        $diff = $now->diffInDays($this->trainer);
+        if ($diff > 0) {
+            return $diff . ' días';
+        }
+
+        $diff = $now->diffInHours($this->trainer);
+        if ($diff > 0) {
+            return $diff . ' horas';
+        }
+
+        $diff = $now->diffInMinutes($this->trainer);
+        if ($diff > 0) {
+            return $diff . ' minutos';
+        }
+
+        $diff = $now->diffInSeconds($this->trainer);
+        if ($diff > 0) {
+            return $diff . ' segundos';
+        }
+
+    }
+
+    /**
      * Check if team is in train spam
      */
     public function getInTrainningSpamAttribute()
@@ -367,5 +408,38 @@ class Team extends Model
         $file = '/img/shield/shield-' . sprintf('%02d', $this->shield) . '.svg';
 
         return $file;
+    }
+
+    /**
+     * Train teh team
+     * @param boolean $force Force trainning (used for personal trainer)
+     *
+     * @return boolean Team trained
+     */
+    public function train($force = FALSE)
+    {
+        if ($force || $this->trainable) {
+            if (!$this->inTrainningSpam) {
+                $this->trainning_count = 1;
+            } else {
+                $this->trainning_count++;
+            }
+            $trainning_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $this->trainning_count);
+
+            DB::table('players')->where('team_id', $this->id)->where('recovery', 0)->increment('experience', $trainning_points);
+            DB::table('players')->where('team_id', $this->id)->where('recovery', 0)->increment('stamina', $trainning_points);
+            DB::table('players')->where('team_id', $this->id)->where('stamina', '>', 100)->update(['stamina' => 100]);
+            $players = $this->players()->where('experience', '>=', 100)->get();
+            foreach ($players as $player) {
+                $player->upgrade();
+            }
+
+            $this->last_trainning = Carbon::now();
+            $this->save();
+
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 }

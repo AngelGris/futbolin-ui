@@ -447,28 +447,8 @@ class TeamController extends Controller
     public function train(Request $request)
     {
         $team = Auth::user()->team;
-        if ($team->trainable) {
-            if (!$team->inTrainningSpam) {
-                $team->trainning_count = 1;
-            } else {
-                $team->trainning_count++;
-            }
+        if ($team->train()) {
             $trainning_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $team->trainning_count);
-
-            foreach ($team->players as $player) {
-                if ($player->recovery == 0) {
-                    $player->experience += $trainning_points;
-                    $player->stamina = min(100, $player->stamina + $trainning_points);
-                    if ($player->experience >= 100) {
-                        $player->upgrade();
-                    } else {
-                        $player->save();
-                    }
-                }
-            }
-
-            $team->last_trainning = $_SERVER['REQUEST_TIME'];
-            $team->save();
 
             if ($team->trainning_count < 5) {
                 switch ($team->trainning_count) {

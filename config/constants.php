@@ -11,5 +11,7 @@ return [
     'YELLOW_CARDS_SUSPENSION' => 3, // number of yellow cards a player must have to get a suspension
 
     'USER_INACTIVE' => 1209600, // seconds to consider a user inactive
+
+    'CURRENCY' => 'USD', // currency used in the system
 ];
 ?>

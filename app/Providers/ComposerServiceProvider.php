@@ -41,6 +41,7 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estrategia'],
                         ['url' => 'amistosos', 'icon' => 'fa fa-handshake-o', 'name' => 'Amistosos'],
                         ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
+                        ['url' => 'shopping', 'icon' => 'fa fa-shopping-cart', 'name' => 'Shopping']
                     ];
 
                     $user = Auth::user();

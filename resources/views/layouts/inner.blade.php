@@ -131,6 +131,12 @@
                             </ul>
                         </li>
                         @endif
+                        @if($_team->trainer > \Carbon\Carbon::now())
+                        <li class="trainning-disabled">
+                            <span class="fa fa-star-half-o"></span>
+                            <div>{{ $_team->trainer_remaining }}</div>
+                        </li>
+                        @else
                         <li class="trainning"{!! ($_team['trainable'] ? '' : ' style="display:none;"') !!}>
                             <a href="#" class="trainning-button" data-token="{{ csrf_token() }}">
                                 <span class="fa fa-star"></span>
@@ -140,6 +146,7 @@
                             <span class="fa fa-star-o"></span>
                             <div class="remaining-timer">00:00:00</div>
                         </li>
+                        @endif
                     </ul>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
@@ -244,14 +251,21 @@
                         @endif
                         <li class="right">
                             <div class="userloggedinfo">
-                                <button class="trainning-button"{!! ($_team['trainable'] ? '' : ' style="display:none;"') !!} data-token="{{ csrf_token() }}">
+                                @if($_team->trainer > \Carbon\Carbon::now())
+                                <div class="trainning-button-disabled">
+                                    <span class="fa fa-star-half-o"></span>
+                                    <p>{{ $_team->trainer_remaining }}</p>
+                                </div>
+                                @else
+                                <button class="trainning-button"{!! ($_team->trainable ? '' : ' style="display:none;"') !!} data-token="{{ csrf_token() }}">
                                     <span class="fa fa-star"></span>
                                     <p>Entrenar</p>
                                 </button>
-                                <div class="trainning-button-disabled"{!! ($_team['trainable'] ? ' style="display:none;"' : '') !!}>
+                                <div class="trainning-button-disabled"{!! ($_team->trainable ? ' style="display:none;"' : '') !!}>
                                     <span class="fa fa-star-o"></span>
                                     <p class="remaining-timer">00:00:00</p>
                                 </div>
+                                @endif
                                 <div class="userinfo">
                                     <h5>
                                         {{ $_user['first_name'] }} {{ $_user['last_name'] }} <br>
@@ -307,13 +321,13 @@
                 <div class="alert alert-success" role="alert">{!! session('flash_success') !!}</div>
                 @endif
                 @if(Session::has('flash_info'))
-                <div class="alert alert-info" role="alert">{!! session('flash_success') !!}</div>
+                <div class="alert alert-info" role="alert">{!! session('flash_info') !!}</div>
                 @endif
                 @if(Session::has('flash_warning'))
-                <div class="alert alert-warning" role="alert">{!! session('flash_success') !!}</div>
+                <div class="alert alert-warning" role="alert">{!! session('flash_warning') !!}</div>
                 @endif
                 @if(Session::has('flash_danger'))
-                <div class="alert alert-danger" role="alert">{!! session('flash_success') !!}</div>
+                <div class="alert alert-danger" role="alert">{!! session('flash_danger') !!}</div>
                 @endif
                 <div class="row" style="margin:0;width:100%;">
                     @yield('content-inner')
