@@ -41,10 +41,12 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estrategia'],
                         ['url' => 'amistosos', 'icon' => 'fa fa-handshake-o', 'name' => 'Amistosos'],
                         ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
-                        ['url' => 'shopping', 'icon' => 'fa fa-shopping-cart', 'name' => 'Shopping']
                     ];
 
                     $user = Auth::user();
+                    if ($user->id == 2) {
+                        $navigation[] = ['url' => 'shopping', 'icon' => 'fa fa-shopping-cart', 'name' => 'Shopping'];
+                    }
                     $team = $user->team;
                     if ($team) {
                         $retiring = $team->players->where('retiring', '=', 1);
