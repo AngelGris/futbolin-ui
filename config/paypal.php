@@ -1,5 +1,5 @@
 <?php
-return array(
+return [
     /**
      * Set our Sandbox and Live credentials
      */
@@ -40,4 +40,4 @@ return array(
          */
         'log.LogLevel' => 'DEBUG'
     ),
-);
+];

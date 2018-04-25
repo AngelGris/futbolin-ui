@@ -43,6 +43,7 @@
 </div>
 <div style="margin-top: 20px;">
     <div class="col-xs-12" style="text-align: center;">
+        <btn class="btn btn-primary btn-lg btn-payment" data-method="CC" disabled>Pagar con Tarjeta</btn>
         <btn class="btn btn-primary btn-lg btn-payment" data-method="PP" disabled>Pagar con PayPal</btn>
     </div>
     <form method="POST" id="payment-form" action="{{ route('payment.checkout') }}" >

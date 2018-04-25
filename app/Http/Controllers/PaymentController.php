@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\CreditItem;
+use MercadoPago\SDK as MercadoPago;
+use MercadoPago\Payment as MercadoPago_Payment;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Amount;
@@ -29,13 +31,20 @@ class PaymentController extends Controller
     // Create a new instance with our paypal credentials
     public function __construct()
     {
-        // Detect if we are running in live mode or sandbox
+        // Detect if we are running PayPal in live mode or sandbox
         if(config('paypal.settings.mode') == 'live'){
             $this->paypal_client_id = config('paypal.live_client_id');
             $this->paypal_secret = config('paypal.live_secret');
         } else {
             $this->paypal_client_id = config('paypal.sandbox_client_id');
             $this->paypal_secret = config('paypal.sandbox_secret');
+        }
+
+        // Detect if we are running MercadoPago in live mode or sandbox
+        if(config('mercadopago.mode') == 'live'){
+            MercadoPago::setAccessToken(config('mercadopago.live_access_token'));
+        } else {
+            MercadoPago::setAccessToken(config('mercadopago.sandbox_access_token'));
         }
 
         // Set the Paypal API Context/Credentials
@@ -53,11 +62,45 @@ class PaymentController extends Controller
         $package = CreditItem::find($request->input('id'));
 
         if ($request->input('method') == 'PP') {
-            return $this->checkout_paypal($package->name, \config('constants.CURRENCY'), $package->price, $package->id);
+            return $this->checkoutPaypal($package->id, $package->name, \config('constants.CURRENCY'), $package->price);
+        } else {
+            return $this->checkoutMercadopago($package->id, $package->name, \config('constants.CURRENCY'), $package->price);
         }
     }
 
-    private function checkout_paypal($title, $currency, $total_amount, $item_id, $quantity = 1) {
+    private function checkoutMercadopago($item_id, $title, $currency, $total_amount, $quantity = 1)
+    {
+        $user = Auth::user();
+        # Create a preference object
+        $preference = new \MercadoPago\Preference();
+        # Create an item object
+        $item = new \MercadoPago\Item();
+        $item->id = $item_id;
+        $item->title = $title;
+        $item->quantity = $quantity;
+        $item->currency_id = $currency;
+        $item->unit_price = $total_amount;
+        # Create a payer object
+        $payer = new \MercadoPago\Payer();
+        $payer->email = $user->email;
+        # Setting preference properties
+        $preference->items = array($item);
+        $preference->payer = $payer;
+        $body = array(
+            "json_data" => array(
+                "site_id" => "MLB"
+            )
+        );
+
+        # Save and posting preference
+        dd($preference->save($body));
+
+        dd($preference);
+        //return redirect($preference->init_point);*/
+    }
+
+    private function checkoutPaypal($item_id, $title, $currency, $total_amount, $quantity = 1)
+    {
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
 
@@ -112,6 +155,11 @@ class PaymentController extends Controller
         $approvalUrl = $payment->getApprovalLink();
 
         return redirect($approvalUrl);
+    }
+
+    public function processMercadopago(Request $request)
+    {
+        // TODO
     }
 
     public function processPaypal(Request $request)

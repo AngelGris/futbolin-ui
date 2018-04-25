@@ -117,6 +117,7 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
     Route::group(['prefix' => 'payment'], function() {
         Route::post('/', ['as' => 'payment.checkout', 'uses' => 'PaymentController@checkout']);
         Route::get('/paypal/process', ['as' => 'payment.paypal.process', 'uses' => 'PaymentController@processPaypal']);
+        Route::post('/mercadopago/ipn', 'PaymentController@processMercadopago');
     });
 
     Route::get('/mensaje-admin/{message}', 'Admin\MessageController@showPublic')->where('message', '[0-9]+');
