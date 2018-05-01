@@ -238,7 +238,8 @@ class Team extends Model
 
         $newbie = $this->createPlayer($number, $position, TRUE);
 
-        if (!empty($this->formation) && $pos = array_search($player->id, $this->formation)) {
+        $pos = array_search($player->id, $this->formation);
+        if (!empty($this->formation) && $pos >= 0) {
             $formation = $this->formation;
             $formation[$pos] = $newbie->id;
             $this->formation = $formation;
