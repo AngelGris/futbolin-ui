@@ -40,13 +40,6 @@ class PaymentController extends Controller
             $this->paypal_secret = config('paypal.sandbox_secret');
         }
 
-        // Detect if we are running MercadoPago in live mode or sandbox
-        if(config('mercadopago.mode') == 'live'){
-            MercadoPago::setAccessToken(config('mercadopago.live_access_token'));
-        } else {
-            MercadoPago::setAccessToken(config('mercadopago.sandbox_access_token'));
-        }
-
         // Set the Paypal API Context/Credentials
         $this->paypal_apiContext = new ApiContext(new OAuthTokenCredential($this->paypal_client_id, $this->paypal_secret));
         $this->paypal_apiContext->setConfig(config('paypal.settings'));
@@ -66,37 +59,6 @@ class PaymentController extends Controller
         } else {
             return $this->checkoutMercadopago($package->id, $package->name, \config('constants.CURRENCY'), $package->price);
         }
-    }
-
-    private function checkoutMercadopago($item_id, $title, $currency, $total_amount, $quantity = 1)
-    {
-        $user = Auth::user();
-        # Create a preference object
-        $preference = new \MercadoPago\Preference();
-        # Create an item object
-        $item = new \MercadoPago\Item();
-        $item->id = $item_id;
-        $item->title = $title;
-        $item->quantity = $quantity;
-        $item->currency_id = $currency;
-        $item->unit_price = $total_amount;
-        # Create a payer object
-        $payer = new \MercadoPago\Payer();
-        $payer->email = $user->email;
-        # Setting preference properties
-        $preference->items = array($item);
-        $preference->payer = $payer;
-        $body = array(
-            "json_data" => array(
-                "site_id" => "MLB"
-            )
-        );
-
-        # Save and posting preference
-        dd($preference->save($body));
-
-        dd($preference);
-        //return redirect($preference->init_point);*/
     }
 
     private function checkoutPaypal($item_id, $title, $currency, $total_amount, $quantity = 1)
