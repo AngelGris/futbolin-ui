@@ -303,10 +303,13 @@
             <div class="teamname">
                 @if (empty($header_team))
                 <img class="svg shield" src="{{ asset($_team['shield_file']) }}" data-color-primary="{{ $_team['primary_color'] }}" data-color-secondary="{{ $_team['secondary_color'] }}">
-                <h2>{{ $_team['name'] }}</h2>
+                <div>
+                    <h2>{{ $_team['name'] }}</h2>
+                    <h4>Fúlbos: {{ $_user->credits }} <a href="{{ route('shopping.credits') }}" class="btn btn-xs btn-primary">Comprar Fúlbos</a></h4>
+                </div>
                 @else
                 <img class="svg shield" src="{{ asset($header_team['shield_file']) }}" data-color-primary="{{ $header_team['primary_color'] }}" data-color-secondary="{{ $header_team['secondary_color'] }}">
-                <h2>{{ $header_team['name'] }}</h2>
+                <h2 class="no-credits">{{ $header_team['name'] }}</h2>
                 @endif
             </div>
             <div class="pageicon"><span class="{{ $icon }}"></span></div>
