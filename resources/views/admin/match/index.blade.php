@@ -19,6 +19,7 @@ $(function(){
 @section('content-inner')
 <div class="col-md-6 zebra">
     <h3>Partidos</h3>
+    {{ $matches->links() }}
     @foreach($matches as $match)
     <div class="col-xs-12">
         <div class="col-xs-4">{{ date('d/m/y H:i:s', strtotime($match['created_at'])) }}</div>
@@ -27,6 +28,7 @@ $(function(){
         <div class="col-xs-1"><a href="{{ route('admin.match.log', [getDomain(), $match['id']]) }}" target="_blank"><span class="fa fa-file-text-o" data-file="{{ $match['logfile'] }}"></span></a></div>
     </div>
     @endforeach
+    {{ $matches->links() }}
 </div>
 <div class="modal fade" id="modal-match-result">
     <div class="modal-dialog">

@@ -11,7 +11,7 @@ class MatchController extends Controller
     public function index()
     {
         $vars = [
-            'matches' => Matches::latest()->get(),
+            'matches' => Matches::latest()->paginate(50),
         ];
 
         return view('admin.match.index', $vars);
