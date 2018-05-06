@@ -12,4 +12,11 @@ class PaymentStatus extends Model
      * @var boolean
      */
     public $timestamps = false;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'payment_status';
 }

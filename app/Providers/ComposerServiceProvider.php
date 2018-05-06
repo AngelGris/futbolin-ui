@@ -23,6 +23,8 @@ class ComposerServiceProvider extends ServiceProvider
                 if (Auth::user()->isAdmin) {
                     $navigation = [
                         ['url' => '', 'icon' => 'fa fa-dashboard', 'name' => 'Panel'],
+                        ['url' => 'compras', 'icon' => 'fa fa-money', 'name' => 'Compras'],
+                        ['url' => 'transacciones', 'icon' => 'fa fa-shopping-cart', 'name' => 'Transacciones'],
                         ['url' => 'usuarios', 'icon' => 'fa fa-group', 'name' => 'Usuarios'],
                         ['url' => 'equipos', 'icon' => 'fa fa-shield', 'name' => 'Equipos'],
                         ['url' => 'mensajes', 'icon' => 'fa fa-envelope', 'name' => 'Mensajes'],
@@ -41,12 +43,10 @@ class ComposerServiceProvider extends ServiceProvider
                         ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estrategia'],
                         ['url' => 'amistosos', 'icon' => 'fa fa-handshake-o', 'name' => 'Amistosos'],
                         ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
+                        ['url' => 'shopping', 'icon' => 'fa fa-shopping-cart', 'name' => 'Shopping'],
                     ];
 
                     $user = Auth::user();
-                    if ($user->id == 2) {
-                        $navigation[] = ['url' => 'shopping', 'icon' => 'fa fa-shopping-cart', 'name' => 'Shopping'];
-                    }
                     $team = $user->team;
                     if ($team) {
                         $retiring = $team->players->where('retiring', '=', 1);

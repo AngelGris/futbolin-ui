@@ -14,6 +14,8 @@
 Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']], function() {
     Route::get('/', ['as' => 'admin', 'uses' => 'Admin\HomeController@showIndex']);
 
+    Route::get('/compras', ['as' => 'admin.payments', 'uses' => 'Admin\PaymentController@index']);
+
     Route::get('/contrasena', ['as' => 'admin.password', 'uses' => 'Admin\HomeController@editPassword']);
     Route::patch('/contrasena', 'Admin\HomeController@updatePassword');
 
@@ -27,6 +29,8 @@ Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']],
     Route::get('/partidos', ['as' => 'admin.matches', 'uses' => 'Admin\MatchController@index']);
     Route::get('/partido', ['as' => 'admin.match', 'uses' => 'Admin\MatchController@show']);
     Route::get('/partido/log/{match}', ['as' => 'admin.match.log', 'uses' => 'Admin\MatchController@showLog'])->where('match', '[0-9]+');
+
+    Route::get('/transacciones', ['as' => 'admin.transactions', 'uses' => 'Admin\TransactionController@index']);
 
     Route::get('/usuarios', ['as' => 'admin.users', 'uses' => 'Admin\UserController@index']);
     Route::get('/usuario/{user}', ['as' => 'admin.user', 'uses' => 'Admin\UserController@show'])->where('user', '[0-9]+');

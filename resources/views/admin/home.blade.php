@@ -38,7 +38,92 @@ $(function(){
 @endsection
 
 @section('content-inner')
-<div id="home-last-active-users" class="col-md-6 zebra">
+<div class="col-md-6 zebra">
+    <h3>Compras</h3>
+    <div class="col-xs-12">
+        <div class="col-xs-6">Últimas 24 horas</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $payments['day']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['day']->total, 2) }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['day']->earnings, 2) }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-6">Últimas 48 horas</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $payments['days']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['days']->total, 2) }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['days']->earnings, 2) }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-6">Últimos 7 días</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $payments['week']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['week']->total, 2) }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['week']->earnings, 2) }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-6">Últimos 30 días</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $payments['month']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['month']->total, 2) }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['month']->earnings, 2) }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-6">Últimos 6 meses</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $payments['semester']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['semester']->total, 2) }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['semester']->earnings, 2) }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-6">Último año</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $payments['year']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['year']->total, 2) }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['year']->earnings, 2) }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-6">Total de compras</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $payments['total']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['total']->total, 2) }}</div>
+        <div class="col-xs-2" style="text-align:right;">${{ number_format($payments['total']->earnings, 2) }}</div>
+    </div>
+    <a href="{{ route('admin.payments', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
+<div class="col-md-6 zebra">
+    <h3>Transacciones</h3>
+    <div class="col-xs-12">
+        <div class="col-xs-8">Últimas 24 horas</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['day']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['day']->total }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-8">Últimas 48 horas</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['days']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['days']->total }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-8">Últimos 7 días</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['week']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['week']->total }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-8">Últimos 30 días</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['month']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['month']->total }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-8">Últimos 6 meses</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['semester']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['semester']->total }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-8">Último año</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['year']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['year']->total }}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-8">Total de compras</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['total']->count }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['total']->total }}</div>
+    </div>
+    <a href="{{ route('admin.transactions', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
+<div class="col-md-6 zebra">
     <h3>Últimos usuarios activos</h3>
     @foreach($last_users as $user)
     <div class="col-xs-12">
@@ -49,7 +134,7 @@ $(function(){
     @endforeach
     <a href="{{ route('admin.users', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
-<div id="home-last-active-users" class="col-md-6 zebra">
+<div class="col-md-6 zebra">
     <h3>Usuarios activos</h3>
     <div class="col-xs-12">
         <div class="col-xs-10">Últimas 24 horas</div>
@@ -82,7 +167,7 @@ $(function(){
     <a href="{{ route('admin.users', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
 <div class="clear"></div>
-<div id="home-last-active-users" class="col-md-6 zebra">
+<div class="col-md-6 zebra">
     <h3>Últimos entrenamientos</h3>
     @foreach($last_trainnings as $team)
     <div class="col-xs-12">
@@ -94,7 +179,7 @@ $(function(){
     @endforeach
     <a href="{{ route('admin.teams', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
-<div id="home-last-active-users" class="col-md-6 zebra">
+<div class="col-md-6 zebra">
     <h3>Equipos entrenados</h3>
     <div class="col-xs-12">
         <div class="col-xs-10">Últimas 24 horas</div>
@@ -127,7 +212,7 @@ $(function(){
     <a href="{{ route('admin.teams', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
 <div class="clear"></div>
-<div id="home-last-active-users" class="col-md-6 zebra">
+<div class="col-md-6 zebra">
     <h3>Tarjetas Amarillas</h3>
     @foreach($cards_count as $card)
     <div class="col-xs-12">
@@ -137,7 +222,7 @@ $(function(){
     @endforeach
     <a href="{{ route('admin.cards', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
-<div id="home-last-active-users" class="col-md-6 zebra">
+<div class="col-md-6 zebra">
     <h3>Suspensiones</h3>
     @foreach($suspensions as $suspension)
     <div class="col-xs-12">
@@ -148,7 +233,7 @@ $(function(){
     <a href="{{ route('admin.suspensions', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
 <div class="clear"></div>
-<div id="home-last-active-users" class="col-md-6 zebra">
+<div class="col-md-6 zebra">
     <h3>Jugadores Lesionados</h3>
     @foreach($injured_players as $player)
     <div class="col-xs-12">
@@ -160,7 +245,7 @@ $(function(){
     @endforeach
     <a href="{{ route('admin.injuries', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>
-<div id="home-last-active-users" class="col-md-6 zebra">
+<div class="col-md-6 zebra">
     <h3>Tipos de lesiones</h3>
     @foreach($injury_types as $injury)
     <div class="col-xs-12">
