@@ -21,7 +21,7 @@ $(function() {
 @section('content-inner')
 @foreach($_team->injured_players as $player)
 @if($player->treatable)
-<div class="alert alert-warning" role="alert">{{ $player->short_name }} se ha lesonado y puede ser tratado para recuperarse más rápido. <div style="float:right;"><a class="btn btn-primary btn-xs" href="{{ route('player', $player->id) }}">Ver jugador</a></div></div>
+<div class="alert alert-warning" role="alert">{{ $player->short_name }} se ha lesionado y puede ser tratado para recuperarse más rápido. <div style="float:right;"><a class="btn btn-primary btn-xs" href="{{ route('player', $player->id) }}">Ver jugador</a></div></div>
 @endif
 @endforeach
 @if(isset($tournament))
