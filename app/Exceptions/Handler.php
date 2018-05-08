@@ -44,7 +44,20 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        return parent::render($request, $exception);
+        if ($request->expectsJson()) {
+            $errors = [];
+            foreach ($exception->validator->errors()->toArray() as $error => $messages) {
+                foreach ($messages as $message) {
+                    $errors[] = [
+                        'type'      => $error,
+                        'message'   => $message
+                    ];
+                }
+            }
+            return response()->json($errors, 422);
+        } else {
+            return parent::render($request, $exception);
+        }
     }
 
     /**

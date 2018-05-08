@@ -13,16 +13,6 @@ use App\Strategy;
 class TeamController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -70,71 +60,83 @@ class TeamController extends Controller
          * Create Team
          */
         $this->validate($request, [
-            'name' => 'required|min:3|max:255',
-            'short_name' => 'required|max:5',
-            'stadium_name' => 'required|min:3|max:255',
-            'primary_color' => 'required|size:7',
-            'secondary_color' => 'required|size:7',
-            'shield' => 'required',
+            'name'              => 'required|min:3|max:255',
+            'short_name'        => 'required|max:5',
+            'stadium_name'      => 'required|min:3|max:255',
+            'primary_color'     => 'required|size:7',
+            'secondary_color'   => 'required|size:7',
+            'shield'            => 'required',
         ]);
 
         $request['text_color'] = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
 
-        $team = Auth::user()->createTeam($request);
-
-        /**
-         * Create players
-         */
-        $players = [
-            1   => 'ARQ',
-            2   => 'DEF',
-            3   => 'DEF',
-            4   => 'DEF',
-            5   => 'DEF',
-            6   => 'MED',
-            7   => 'MED',
-            8   => 'MED',
-            9   => 'ATA',
-            10  => 'MED',
-            11  => 'ATA',
-            12  => 'ARQ',
-            13  => 'DEF',
-            14  => 'DEF',
-            15  => 'MED',
-            16  => 'MED',
-            17  => 'MED',
-            18  => 'ATA',
-            19  => 'DEF',
-            20  => 'ARQ',
-            21  => 'DEF',
-        ];
-
-        if (rand(1, 100) > 60) {
-            $players[5] = 'MED';
-        }
-        if (rand(1, 100) <= 40) {
-            $players[6] = 'DEF';
-        }
-        if (rand(1, 100) > 50) {
-            $players[10] = 'ATA';
-        }
-        if ($value = rand(1, 100) > 50) {
-            $players[19] = 'ATA';
-        }
-        if ($value = rand(1, 100) > 40) {
-            if ($value <= 60) {
-                $player[20] = 'DEF';
-            } elseif ($value <= 80) {
-                $player[20] = 'MED';
-            } else {
-                $player[20] = 'ATA';
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+            if (!is_null($user->team)) {
+                return response()->json([
+                    'errors' => {
+                        'type'      => 'team_exists',
+                        'message'   => 'El usuario ya tiene un equipo'
+                ], 400);
             }
+        } else {
+            $user = Auth::user();
         }
-        if ($value = rand(1, 100) > 50) {
-            $players[21] = 'MED';
-        }
+        $team = $user->createTeam($request);
 
         if (!is_integer($team)) {
+            /**
+             * Create players
+             */
+            $players = [
+                1   => 'ARQ',
+                2   => 'DEF',
+                3   => 'DEF',
+                4   => 'DEF',
+                5   => 'DEF',
+                6   => 'MED',
+                7   => 'MED',
+                8   => 'MED',
+                9   => 'ATA',
+                10  => 'MED',
+                11  => 'ATA',
+                12  => 'ARQ',
+                13  => 'DEF',
+                14  => 'DEF',
+                15  => 'MED',
+                16  => 'MED',
+                17  => 'MED',
+                18  => 'ATA',
+                19  => 'DEF',
+                20  => 'ARQ',
+                21  => 'DEF',
+            ];
+
+            if (rand(1, 100) > 60) {
+                $players[5] = 'MED';
+            }
+            if (rand(1, 100) <= 40) {
+                $players[6] = 'DEF';
+            }
+            if (rand(1, 100) > 50) {
+                $players[10] = 'ATA';
+            }
+            if ($value = rand(1, 100) > 50) {
+                $players[19] = 'ATA';
+            }
+            if ($value = rand(1, 100) > 40) {
+                if ($value <= 60) {
+                    $player[20] = 'DEF';
+                } elseif ($value <= 80) {
+                    $player[20] = 'MED';
+                } else {
+                    $player[20] = 'ATA';
+                }
+            }
+            if ($value = rand(1, 100) > 50) {
+                $players[21] = 'MED';
+            }
+
             $formation = [];
             foreach ($players as $num => $pos) {
                 $player = $team->createPlayer($num, $pos);
@@ -143,16 +145,24 @@ class TeamController extends Controller
                 }
             }
             $team->formation = $formation;
+
+            $team->save();
+
+            // Check if the team is ready to play
+            $team->updatePlayable();
+        } else {
+            $team = $user->team;
         }
 
-        $team->save();
+        if ($request->expectsJson()) {
+            return response()->json([
+                'team' => $team
+            ], 201);
+        } else {
+            $request->session()->flash('show_walkthrough', TRUE);
 
-        // Check if the team is ready to play
-        $team->updatePlayable();
-
-        $request->session()->flash('show_walkthrough', TRUE);
-
-        return redirect()->route('strategy');
+            return redirect()->route('strategy');
+        }
     }
 
     /**

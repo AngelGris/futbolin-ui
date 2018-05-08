@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -35,6 +38,48 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+    }
+
+    /**
+     * Login through the API
+     *
+     * @param Illuminate\Http\Request
+     * @return \Illuminate\Http\Response
+     */
+    public function apiLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email'         => 'required|email|max:255',
+            'password'      => 'required|min:6',
+            'device_id'     => 'required|string',
+            'device_name'   => 'required|string'
+        ]);
+
+        if ($this->attemptLogin($request)) {
+            $user = $this->guard()->user();
+            $token = $user->generateToken($request->input('device_id'), $request->input('device_name'));
+
+            return response()->json([
+                'token'     => $token
+            ], 200);
+        }
+
+        return response()->json([
+            'errors'   => [
+                'type'      => 'login',
+                'message'   => 'Login failed'
+            ],
+        ], 400);
+    }
+
+    /**
+     * Logout thriugh the API
+     */
+    public function apiLogout(Request $request)
+    {
+        Auth::guard('api')->user()->delete();
+
+        return response()->json([], 204);
     }
 
     /**

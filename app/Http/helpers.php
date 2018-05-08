@@ -1,10 +1,12 @@
 <?php
-function getDomain() {
+function getDomain()
+{
     $host = parse_url(\Request::server('HTTP_HOST'));
     return str_replace('admin.', '', (!empty($host['host']) ? $host['host'] : $host['path']));
 }
 
-function getMatchLog($file) {
+function getMatchLog($file)
+{
     $file_name = base_path() . '/python/logs/' . $file;
 
     $data = [];
@@ -16,7 +18,8 @@ function getMatchLog($file) {
     return $data;
 }
 
-function lumdiff($color1, $color2) {
+function lumdiff($color1, $color2)
+{
     $L1 = 0.2126 * pow($color1[0]/255, 2.2) +
           0.7152 * pow($color1[1]/255, 2.2) +
           0.0722 * pow($color1[2]/255, 2.2);
@@ -32,7 +35,8 @@ function lumdiff($color1, $color2) {
     }
 }
 
-function randomGauss($min, $max, $std_deviation, $step=1) {
+function randomGauss($min, $max, $std_deviation, $step=1)
+{
     $rand1 = (float)mt_rand()/(float)mt_getrandmax();
     $rand2 = (float)mt_rand()/(float)mt_getrandmax();
     $gaussian_number = sqrt(-2 * log($rand1)) * cos(2 * M_PI * $rand2);
@@ -46,7 +50,8 @@ function randomGauss($min, $max, $std_deviation, $step=1) {
     return $random_number;
 }
 
-function readableTime($seconds, $short = FALSE) {
+function readableTime($seconds, $short = FALSE)
+{
     if ($short) {
         $hours_label = ['h', 'h'];
         $minutes_label = ['m', 'm'];
@@ -65,7 +70,8 @@ function readableTime($seconds, $short = FALSE) {
     return $output;
 }
 
-function textColor($bgColor, $optColor) {
+function textColor($bgColor, $optColor)
+{
     if (lumdiff($bgColor, $optColor) >= 5) {
         return '#' . sprintf('%02s', dechex($optColor[0])) . sprintf('%02s', dechex($optColor[1])) . sprintf('%02s', dechex($optColor[2]));
     } else if (lumdiff($bgColor, [0, 0, 0]) >= 5) {
