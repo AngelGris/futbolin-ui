@@ -13,6 +13,15 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * Attributes that should be mutated to dates
+     *
+     * @var array
+     */
+    protected $dates = [
+        'last_activity'
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -27,16 +36,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'is_administrator', 'created_at', 'updated_at'
     ];
 
     /**
-     * Attributes that should be mutated to dates
+     * The relationships that should be included in arrays.
      *
      * @var array
      */
-    protected $dates = [
-        'last_activity'
+    protected $with = [
+        'team'
     ];
 
     /**

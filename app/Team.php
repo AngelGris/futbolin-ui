@@ -31,6 +31,15 @@ class Team extends Model
     protected $dates = ['last_trainning', 'trainer', 'created_at', 'updated_at'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
+
+    /**
      * Attribute limits for newly created players
      *
      * @var arrau
