@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\AdminMessage;
+use Carbon\Carbon;
 
 class UserActivity
 {
@@ -19,7 +20,7 @@ class UserActivity
         if (\Auth::check()) {
             $user = \Auth::user();
 
-            $request_time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
+            $request_time = Carbon::now();
             $message = AdminMessage::where('valid_from', '>', $user->last_activity ? $user->last_activity->toDatetimeString() : 0)->where('valid_from', '<', $request_time)->where('valid_to', '>', $request_time)->latest()->first();
 
             if ($message) {
@@ -27,7 +28,8 @@ class UserActivity
             } else {
                 \Session::forget('admin_message');
             }
-            \DB::table('users')->where('id', '=', $user->id)->update(['last_activity' => date('Y-m-d H:i:s')]);
+            $user->last_activity = Carbon::now();
+            $user->save();
         }
 
         return $next($request);

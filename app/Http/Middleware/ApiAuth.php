@@ -58,8 +58,13 @@ class ApiAuth
             ], 401);
         }
 
+        // Update Token activity
         $apiToken->used_on = Carbon::now();
         $apiToken->save();
+
+        // Update User activity
+        $apiToken->user->last_activity = Carbon::now();
+        $apiToken->user->save();
 
         return $next($request);
     }
