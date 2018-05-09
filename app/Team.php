@@ -36,7 +36,7 @@ class Team extends Model
      * @var array
      */
     protected $hidden = [
-        'created_at', 'updated_at'
+        'last_trainning', 'trainer', 'trainning_count', 'created_at', 'updated_at'
     ];
 
     /**

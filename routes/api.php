@@ -19,6 +19,8 @@ Route::group(['middleware' => ['auth.api']], function() {
     Route::get('/me', 'UserController@index');
 
     Route::post('/team', 'TeamController@store');
+
+    Route::get('/user/{user}', 'UserController@show')->where('user', '[0-9]+');
 });
 
 Route::post('/register', 'Auth\RegisterController@apiRegister');
