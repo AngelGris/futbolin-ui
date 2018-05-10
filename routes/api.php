@@ -18,6 +18,9 @@ Route::group(['middleware' => ['auth.api']], function() {
 
     Route::get('/me', 'UserController@index');
 
+    Route::get('/players', 'PlayerController@showListing');
+    Route::get('/player/{player}', 'PlayerController@index')->where('player', '[0-9]+');
+
     Route::group(['prefix' => 'team'], function() {
         Route::post('/', 'TeamController@store');
         Route::patch('/', 'TeamController@update');

@@ -25,7 +25,21 @@ class Player extends Model
         'last_upgrade' => 'array',
     ];
 
-    protected $appends = ['name', 'short_name', 'average', 'cards_count', 'suspended'];
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'cards', 'created_at', 'updated_at', 'deleted_at'
+    ];
+
+    /**
+     * Attributes to be append to arrays.
+     *
+     * @var array
+     */
+    protected $appends = ['short_name', 'average', 'cards_count', 'suspended'];
 
     /**
      * The attributes that should be mutated to dates.

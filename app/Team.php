@@ -42,7 +42,7 @@ class Team extends Model
     /**
      * Attribute limits for newly created players
      *
-     * @var arrau
+     * @var array
      */
     private $limits = [
         'ARQ' => [
