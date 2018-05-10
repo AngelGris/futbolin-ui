@@ -74,9 +74,10 @@ class TeamController extends Controller
             $user = Auth::guard('api')->user()->user;
             if (!is_null($user->team)) {
                 return response()->json([
-                    'errors' => {
+                    'errors' => [
                         'type'      => 'team_exists',
                         'message'   => 'El usuario ya tiene un equipo'
+                    ]
                 ], 400);
             }
         } else {
@@ -171,11 +172,11 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(\App\Team $team)
+    public function show(Team $team, Request $request)
     {
         $matches = Matches::where(function($query) use ($team) {
-            $query->where('local_id', '=', $team['id']);
-            $query->orWhere('visit_id', '=', $team['id']);
+            $query->where('local_id', '=', $team->id);
+            $query->orWhere('visit_id', '=', $team->id);
         })
         ->where('type_id', '>', 1)
         ->latest()
@@ -187,33 +188,6 @@ class TeamController extends Controller
         $strategy = [];
         foreach ($matches as $match) {
             if (count($last_matches) < 5) {
-                if (empty($last_matches)) {
-                    $data = getMatchLog($match['logfile']);
-                    if (!empty($data)) {
-                        if ($match['local_id'] == $team['id']) {
-                            foreach ($data['local']['formation'] as $form) {
-                                $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->first();
-                                $strategy[] = [
-                                    'left' => $form['top'] * 1.5,
-                                    'top' => $form['left'],
-                                    'position' => (!empty($player) ? $player['position'] : ''),
-                                    'number' => (!empty($player) ? $form['number'] : ''),
-                                ];
-                            }
-                        } else {
-                            foreach ($data['visit']['formation'] as $form) {
-                                $player = Player::where('team_id', '=', $team->id)->where('number', '=', $form['number'])->first();
-                                $strategy[] = [
-                                    'left' => (100 - $form['top']) * 1.5,
-                                    'top' => 100 - $form['left'],
-                                    'position' => (!empty($player) ? $player['position'] : ''),
-                                    'number' => (!empty($player) ? $form['number'] : ''),
-                                ];
-                            }
-                        }
-                    }
-                }
-
                 $won = FALSE;
                 if (($team['id'] == $match->local_id && $match->local_goals > $match->visit_goals) || ($team['id'] == $match->visit_id && $match->local_goals < $match->visit_goals)) {
                     $won = TRUE;
@@ -243,19 +217,12 @@ class TeamController extends Controller
             $goals[$pos][1] += $match->visit_goals;
         }
 
-        if (empty($stratregy)) {
-            for ($i = 1; $i <= 11; $i++) {
-                $player = Player::find($team->formation[$i - 1]);
-                $strategy[] = [
-                    'left' => ($team->strategy->{sprintf('j%02d_start_y', $i)} * 100 / 120 ) * 1.5,
-                    'top' => $team->strategy->{sprintf('j%02d_start_x', $i)} * 100 / 90,
-                    'position' => (!empty($player) ? $player['position'] : ''),
-                    'number' => (!empty($player) ? $player['number'] : ''),
-                ];
-            }
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
         }
-
-        $team_id = Auth::user()->team->id;
+        $team_id = $user->team->id;
 
         $matches = Matches::whereIn('local_id', [$team_id, $team['id']])
             ->WhereIn('visit_id', [$team_id, $team['id']])
@@ -299,20 +266,69 @@ class TeamController extends Controller
             }
         }
 
-        $vars = [
-            'icon' => 'fa fa-shield',
-            'title' => $team->name,
-            'subtitle' => 'Estudiando al rival',
-            'team' => $team,
-            'matches' => $games,
-            'goals' => $goals,
-            'last_matches' => $last_matches,
-            'strategy' => $strategy,
-            'matches_versus' => $games_versus,
-            'goals_versus' => $goals_versus,
-            'last_matches_versus' => $last_matches_versus,
-        ];
-        return view('team.show', $vars);
+        if($request->expectsJson()) {
+            return response()->json([
+                'team'                  => $team,
+                'strategy'              => $team->strategy_public,
+                'matches'               => [
+                    'local' => [
+                        'tied'              => $games[0][0],
+                        'won'               => $games[0][1],
+                        'lost'              => $games[0][2],
+                        'total'             => $games[0][0] + $games[0][1] + $games[0][2],
+                        'goals_favor'       => $goals[0][0],
+                        'goals_against'     => $goals[0][1],
+                        'goals_difference'  => $goals[0][0] - $goals[0][1]
+                    ],
+                    'visit' => [
+                        'tied'              => $games[1][0],
+                        'won'               => $games[1][2],
+                        'lost'              => $games[1][1],
+                        'total'             => $games[1][0] + $games[1][1] + $games[1][2],
+                        'goals_favor'       => $goals[1][1],
+                        'goals_against'     => $goals[1][0],
+                        'goals_difference'  => $goals[1][1] - $goals[1][0]
+                    ]
+                ],
+                'last_matches'          => $last_matches,
+                'matches_versus'        => [
+                    'local' => [
+                        'tied'              => $games_versus[0][0],
+                        'won'               => $games_versus[0][1],
+                        'lost'              => $games_versus[0][2],
+                        'total'             => $games_versus[0][0] + $games_versus[0][1] + $games_versus[0][2],
+                        'goals_favor'       => $goals_versus[0][0],
+                        'goals_against'     => $goals_versus[0][1],
+                        'goals_difference'  => $goals_versus[0][0] - $goals_versus[0][1]
+                    ],
+                    'visit' => [
+                        'tied'              => $games_versus[1][0],
+                        'won'               => $games_versus[1][2],
+                        'lost'              => $games_versus[1][1],
+                        'total'             => $games_versus[1][0] + $games_versus[1][1] + $games_versus[1][2],
+                        'goals_favor'       => $goals_versus[1][1],
+                        'goals_against'     => $goals_versus[1][0],
+                        'goals_difference'  => $goals_versus[1][1] - $goals_versus[1][0]
+                    ]
+                ],
+                'last_matches_versus'   => $last_matches_versus,
+            ], 200);
+        } else {
+            $vars = [
+                'icon'                  => 'fa fa-shield',
+                'title'                 => $team->name,
+                'subtitle'              => 'Estudiando al rival',
+                'team'                  => $team,
+                'matches'               => $games,
+                'goals'                 => $goals,
+                'last_matches'          => $last_matches,
+                'strategy'              => $team->strategy_public,
+                'matches_versus'        => $games_versus,
+                'goals_versus'          => $goals_versus,
+                'last_matches_versus'   => $last_matches_versus,
+            ];
+            return view('team.show', $vars);
+        }
     }
 
     /**

@@ -18,7 +18,10 @@ Route::group(['middleware' => ['auth.api']], function() {
 
     Route::get('/me', 'UserController@index');
 
-    Route::post('/team', 'TeamController@store');
+    Route::group(['prefix' => 'team'], function() {
+        Route::post('/', 'TeamController@store');
+        Route::get('/{team}', 'TeamController@show')->where('team', '[0-9]+');
+    });
 
     Route::get('/user/{user}', 'UserController@show')->where('user', '[0-9]+');
 });

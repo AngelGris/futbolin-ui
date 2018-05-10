@@ -36,7 +36,7 @@ class Team extends Model
      * @var array
      */
     protected $hidden = [
-        'last_trainning', 'trainer', 'trainning_count', 'created_at', 'updated_at'
+        'strategy', 'last_trainning', 'trainer', 'trainning_count', 'created_at', 'updated_at'
     ];
 
     /**
@@ -97,6 +97,8 @@ class Team extends Model
 
     /**
      * Get the players associated with the team
+     *
+     * @return Collection Player
      */
     public function players()
     {
@@ -105,6 +107,8 @@ class Team extends Model
 
     /**
      * Get the team's positions
+     *
+     * @return Collection TournamentPosition
      */
     public function positions()
     {
@@ -113,6 +117,8 @@ class Team extends Model
 
     /**
      * Get the team's strategy
+     *
+     * @return Strategy
      */
     public function strategy()
     {
@@ -121,6 +127,8 @@ class Team extends Model
 
     /**
      * Get the user associated with the team
+     *
+     * @return User
      */
     public function user()
     {
@@ -129,6 +137,11 @@ class Team extends Model
 
     /**
      * Create new player in the team
+     *
+     * @param int $number
+     * @param string $position
+     * @param boolean $max_age
+     * @return Player
      */
     public function createPlayer($number, $position, $max_age = FALSE)
     {
@@ -166,6 +179,8 @@ class Team extends Model
 
     /**
      * Injured players in the team
+     *
+     * @return Collection Player
      */
     public function getInjuredPlayersAttribute()
     {
@@ -174,6 +189,8 @@ class Team extends Model
 
     /**
      * Get live match for team
+     *
+     * @return Collection Match
      */
     public function getLiveMatchAttribute()
     {
@@ -187,6 +204,9 @@ class Team extends Model
 
     /**
      * Replace player with a new one
+     *
+     * @param int $player_id
+     * @return void
      */
     public function replacePlayer($player_id)
     {
@@ -266,6 +286,8 @@ class Team extends Model
 
     /**
      * Update if the team meats the requirements to play a match
+     *
+     * @return void
      */
     public function updatePlayable()
     {
@@ -291,6 +313,8 @@ class Team extends Model
 
     /**
      * Get team's average attribute
+     *
+     * @return int
      */
     public function getAverageAttribute()
     {
@@ -325,7 +349,74 @@ class Team extends Model
     }
 
     /**
+     * Get the public strategy info
+     *
+     * @return Array
+     */
+    public function getStrategyPublicAttribute()
+    {
+        $team = $this;
+        $match = Matches::where(function($query) use ($team) {
+            $query->where('local_id', '=', $team->id);
+            $query->orWhere('visit_id', '=', $team->id);
+        })
+        ->where('type_id', '>', 1)
+        ->latest()
+        ->first();
+
+        /**
+         * Load strategy from last official match
+         */
+        $strategy = [];
+        $data = getMatchLog($match['logfile']);
+        if (!empty($data)) {
+            if ($match->local_id == $this->id) {
+                foreach ($data['local']['formation'] as $form) {
+                    $player = Player::where('team_id', '=', $this->id)->where('number', '=', $form['number'])->first();
+                    $strategy[] = [
+                        'left' => number_format($form['top'] * 1.5, 2),
+                        'top' => number_format($form['left'], 2),
+                        'position' => (!empty($player) ? $player->position : ''),
+                        'number' => (!empty($player) ? $form['number'] : ''),
+                    ];
+                }
+            } else {
+                foreach ($data['visit']['formation'] as $form) {
+                    $player = Player::where('team_id', '=', $this->id)->where('number', '=', $form['number'])->first();
+                    $strategy[] = [
+                        'left' => (100 - $form['top']) * 1.5,
+                        'top' => 100 - $form['left'],
+                        'position' => (!empty($player) ? $player->position : ''),
+                        'number' => (!empty($player) ? $form['number'] : ''),
+                    ];
+                }
+            }
+        }
+
+        /**
+         * If $strategy is empty, load it from the DB
+         */
+        if (empty($strategy)) {
+            for ($i = 1; $i <= 11; $i++) {
+                $player = Player::find($this->formation[$i - 1]);
+                $strategy[] = [
+                    'left' => ($this->strategy->{sprintf('j%02d_start_y', $i)} * 100 / 120 ) * 1.5,
+                    'top' => $this->strategy->{sprintf('j%02d_start_x', $i)} * 100 / 90,
+                    'position' => (!empty($player) ? $player['position'] : ''),
+                    'number' => (!empty($player) ? $player['number'] : ''),
+                ];
+            }
+        } else { // else, cut it to 11 players
+            $strategy = array_slice($strategy, 0, 11);
+        }
+
+        return $strategy;
+    }
+
+    /**
      * Check if team can train
+     *
+     * @return boolean
      */
     public function getTrainableAttribute()
     {
@@ -338,6 +429,8 @@ class Team extends Model
 
     /**
      * Get remaining time for the trainer
+     *
+     * @return void
      */
     public function getTrainerRemainingAttribute()
     {
@@ -370,6 +463,8 @@ class Team extends Model
 
     /**
      * Check if team is in train spam
+     *
+     * @return boolean
      */
     public function getInTrainningSpamAttribute()
     {
@@ -382,6 +477,8 @@ class Team extends Model
 
     /**
      * Remaining time to become trainable
+     *
+     * @return int
      */
     public function getTrainableRemainingAttribute()
     {
@@ -396,6 +493,8 @@ class Team extends Model
 
     /**
      * Get the team's trophies
+     *
+     * @return Array int
      */
     public function getTrophiesAttribute()
     {
@@ -412,6 +511,8 @@ class Team extends Model
 
     /**
      * Get SVG file for the team shield
+     *
+     * @return URI
      */
     public function getShieldFileAttribute()
     {
@@ -421,7 +522,7 @@ class Team extends Model
     }
 
     /**
-     * Train teh team
+     * Train the team
      * @param boolean $force Force trainning (used for personal trainer)
      *
      * @return boolean Team trained
