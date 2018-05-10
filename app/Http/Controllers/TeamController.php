@@ -366,7 +366,13 @@ class TeamController extends Controller
             'shield' => 'required',
         ]);
 
-        $team = Auth::user()->team;
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
+
+        $team = $user->team;
         $team->name = $request->name;
         $team->short_name = $request->short_name;
         $team->stadium_name = $request->stadium_name;
@@ -376,9 +382,15 @@ class TeamController extends Controller
         $team->shield = $request->shield;
         $team->save();
 
-        \Session::flash('flash_success', 'Equipo actualizado');
+        if ($request->expectsJson()) {
+            return response()->json([
+                'team'  => $team
+            ], 200);
+        } else {
+            \Session::flash('flash_success', 'Equipo actualizado');
 
-        return redirect()->route('team');
+            return redirect()->route('team');
+        }
     }
 
     /**

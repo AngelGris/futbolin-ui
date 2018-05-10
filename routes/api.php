@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth.api']], function() {
 
     Route::group(['prefix' => 'team'], function() {
         Route::post('/', 'TeamController@store');
+        Route::patch('/', 'TeamController@update');
         Route::get('/{team}', 'TeamController@show')->where('team', '[0-9]+');
     });
 
