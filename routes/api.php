@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['middleware' => ['auth.api']], function() {
+    Route::get('/credit_items', 'CreditController@index');
+
     Route::post('/logout', 'Auth\LoginController@apiLogout');
 
     Route::group(['prefix' => 'me'], function() {
@@ -25,6 +27,8 @@ Route::group(['middleware' => ['auth.api']], function() {
 
     Route::get('/players', 'PlayerController@showListing');
     Route::get('/player/{player}', 'PlayerController@index')->where('player', '[0-9]+');
+
+    Route::get('/shopping_items', 'ShoppingController@index');
 
     Route::group(['prefix' => 'team'], function() {
         Route::post('/', 'TeamController@store');

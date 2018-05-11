@@ -17,16 +17,22 @@ class ShoppingController extends Controller
      *
      * @return void
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vars = [
-            'icon'      => 'fa fa-shopping-cart',
-            'title'     => 'Shopping',
-            'subtitle'  => 'Hora de hacer compras',
-            'items'     => ShoppingItem::where('in_shopping', TRUE)->get()
-        ];
+        if ($request->expectsJson()) {
+            return response()->json([
+                'items' => ShoppingItem::where('in_shopping', TRUE)->get()
+            ], 200);
+        } else {
+            $vars = [
+                'icon'      => 'fa fa-shopping-cart',
+                'title'     => 'Shopping',
+                'subtitle'  => 'Hora de hacer compras',
+                'items'     => ShoppingItem::where('in_shopping', TRUE)->get()
+            ];
 
-        return view('shopping.index', $vars);
+            return view('shopping.index', $vars);
+        }
     }
 
     /**
