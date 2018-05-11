@@ -10,15 +10,21 @@ class CreditController extends Controller
     /**
      * Credits index page
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vars = [
-            'icon'      => 'fa fa-soccer-ball-o',
-            'title'     => 'Fúlbos',
-            'subtitle'  => 'Un empujoncito no viene mal',
-            'items'     => CreditItem::get()
-        ];
+        if ($request->expectsJson()) {
+            return response()->json([
+                'items' => CreditItem::get()
+            ], 200);
+        } else {
+            $vars = [
+                'icon'      => 'fa fa-soccer-ball-o',
+                'title'     => 'Fúlbos',
+                'subtitle'  => 'Un empujoncito no viene mal',
+                'items'     => CreditItem::get()
+            ];
 
-        return view('credits.index', $vars);
+            return view('credits.index', $vars);
+        }
     }
 }
