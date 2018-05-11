@@ -46,6 +46,9 @@ class Handler extends ExceptionHandler
     {
         if ($request->expectsJson()) {
             $errors = [];
+            if (empty($exception->validator)) {
+                dd($exception);
+            }
             foreach ($exception->validator->errors()->toArray() as $error => $messages) {
                 foreach ($messages as $message) {
                     $errors[] = [

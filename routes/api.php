@@ -18,6 +18,8 @@ Route::group(['middleware' => ['auth.api']], function() {
 
     Route::get('/me', 'UserController@index');
 
+    Route::patch('/password', 'AccountSettingsController@updatePassword');
+
     Route::get('/players', 'PlayerController@showListing');
     Route::get('/player/{player}', 'PlayerController@index')->where('player', '[0-9]+');
 
