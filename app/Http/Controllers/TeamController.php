@@ -541,9 +541,23 @@ class TeamController extends Controller
      */
     public function updateStrategy(Request $request)
     {
-        $team = Auth::user()->team;
+        $this->validate($request, [
+            'strategy' => 'required|integer|exists:strategies,id'
+        ]);
+
+        if ($request->expectsJson()) {
+            $team = Auth::guard('api')->user()->user->team;
+        } else {
+            $team = Auth::user()->team;
+        }
         $team->strategy_id = $request->strategy;
         $team->save();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'team' => $team
+            ], 200);
+        }
     }
 
     /**

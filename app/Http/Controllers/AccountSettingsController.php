@@ -37,14 +37,25 @@ class AccountSettingsController extends Controller
             'last_name' => 'required|max:255'
         ]);
 
-        $user = Auth::user();
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
+
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
         $user->save();
 
-        \Session::flash('flash_success', 'Perfil actualizado');
+        if ($request->expectsJson()) {
+            return response()->json([
+                'user'  => $user
+            ], 200);
+        } else {
+            \Session::flash('flash_success', 'Perfil actualizado');
 
-        return redirect()->route('profile.edit');
+            return redirect()->route('profile.edit');
+        }
     }
 
     public function editPassword()

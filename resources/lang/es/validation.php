@@ -150,6 +150,7 @@ return [
         'secondary_color'       => 'color secundario',
         'old_password'          => 'contraseña actual',
         'new_password'          => 'contraseña nueva',
+        'strategy'              => 'estrategia',
     ],
 
 ];

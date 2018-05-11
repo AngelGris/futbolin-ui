@@ -16,7 +16,10 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => ['auth.api']], function() {
     Route::post('/logout', 'Auth\LoginController@apiLogout');
 
-    Route::get('/me', 'UserController@index');
+    Route::group(['prefix' => 'me'], function() {
+        Route::get('/', 'UserController@index');
+        Route::patch('/', 'AccountSettingsController@update');
+    });
 
     Route::patch('/password', 'AccountSettingsController@updatePassword');
 
@@ -27,6 +30,7 @@ Route::group(['middleware' => ['auth.api']], function() {
         Route::post('/', 'TeamController@store');
         Route::patch('/', 'TeamController@update');
         Route::get('/{team}', 'TeamController@show')->where('team', '[0-9]+');
+        Route::patch('/strategy', 'TeamController@updateStrategy');
     });
 
     Route::get('/user/{user}', 'UserController@show')->where('user', '[0-9]+');
