@@ -484,7 +484,18 @@ class TeamController extends Controller
 
     public function train(Request $request)
     {
-        $team = Auth::user()->team;
+        $api = FALSE;
+        if ($request->expectsJson()) {
+            if (empty(Auth::guard('api')->user())) {
+                $team = Auth::user()->team;
+            } else {
+                $team = Auth::guard('api')->user()->user->team;
+                $api = TRUE;
+            }
+        } else {
+            $team = Auth::user()->team;
+        }
+
         if ($team->train()) {
             $trainning_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $team->trainning_count);
 
@@ -511,9 +522,28 @@ class TeamController extends Controller
                 $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
                 $message .= '<p>Vuelve a entrenar mañana para ganar ' . $trainning_points . ' puntos mas</p>';
             }
-            return json_encode(['title' => 'Entrenamiento', 'message' => $message, 'remaining' => $team->trainable_remaining]);
+
+            if ($api) {
+                return response()->json([
+                    'trained'   => TRUE,
+                    'count'     => $team->trainning_count,
+                    'points'    => $trainning_points,
+                    'next'      => $team->trainable_remaining
+                ], 200);
+            } else {
+                return json_encode(['title' => 'Entrenamiento', 'message' => $message, 'remaining' => $team->trainable_remaining]);
+            }
         } else {
-            return json_encode(['title' => 'Entrenamiento', 'message' => '<p>Debes esperar ' . readableTime($team->trainable_remaining) . ' para poder entrenar nuevamente.</p>', 'remaining' => $team->trainable_remaining]);
+            if ($api) {
+                return response()->json([
+                    'trained'   => FALSE,
+                    'count'     => $team->trainning_count,
+                    'points'    => 0,
+                    'next'      => $team->trainable_remaining
+                ], 200);
+            } else {
+                return json_encode(['title' => 'Entrenamiento', 'message' => '<p>Debes esperar ' . readableTime($team->trainable_remaining) . ' para poder entrenar nuevamente.</p>', 'remaining' => $team->trainable_remaining]);
+            }
         }
     }
 

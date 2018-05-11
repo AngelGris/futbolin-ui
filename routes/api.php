@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth.api']], function() {
         Route::get('/{team}', 'TeamController@show')->where('team', '[0-9]+');
         Route::patch('/formation', 'TeamController@updateFormation');
         Route::patch('/strategy', 'TeamController@updateStrategy');
+        Route::post('/train', 'TeamController@train');
     });
 
     Route::get('/user/{user}', 'UserController@show')->where('user', '[0-9]+');
