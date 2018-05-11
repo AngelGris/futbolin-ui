@@ -151,6 +151,7 @@ return [
         'old_password'          => 'contraseña actual',
         'new_password'          => 'contraseña nueva',
         'strategy'              => 'estrategia',
+        'formation'             => 'formación',
     ],
 
 ];

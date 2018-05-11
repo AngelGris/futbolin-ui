@@ -522,10 +522,28 @@ class TeamController extends Controller
      */
     public function updateFormation(Request $request)
     {
-        $team = Auth::user()->team;
+        $this->validate($request, [
+            'formation' => 'required|array|size:18'
+        ]);
+
+        if ($request->expectsJson()) {
+            if (empty(Auth::guard('api')->user())) {
+                $team = Auth::user()->team;
+            } else {
+                $team = Auth::guard('api')->user()->user->team;
+            }
+        } else {
+            $team = Auth::user()->team;
+        }
         $formation = [];
+        $players = [];
+        $result = Player::whereIn('id', $request->input('formation'))->where('team_id', $team->id)->get();
+        foreach ($result as $row) {
+            $players[] = $row->id;
+        }
+
         foreach ($request->formation as $value) {
-            if (in_array($value, $formation)) {
+            if (!in_array($value, $players) || in_array($value, $formation)) {
                 $formation[] = '0';
             } else {
                 $formation[] = $value;
@@ -534,6 +552,12 @@ class TeamController extends Controller
         $team->formation = $formation;
         $team->save();
         $team->updatePlayable();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'team' => $team
+            ], 200);
+        }
     }
 
     /**
