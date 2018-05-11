@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Tournament extends Model
@@ -21,6 +22,119 @@ class Tournament extends Model
         return $this->hasMany(TournamentCategory::class);
     }
 
+    /**
+     * Close a tournament doing maintenance
+     *
+     * @return void
+     */
+    public function close()
+    {
+        /**
+         * Players aging
+         */
+        $sql = \DB::table('players')
+           ->where('team_id', '>', 1)
+           ->whereNull('deleted_at')
+           ->increment('age');
+
+        /**
+         * Retire players and create young players
+         */
+        $players = \DB::table('players')
+                      ->select(['id', 'team_id'])
+                      ->where('retiring', '=', TRUE)
+                      ->whereNull('deleted_at')
+                      ->get();
+        foreach ($players as $player) {
+            Team::find($player->team_id)->replacePlayer($player->id);
+        }
+
+        /**
+         * Players retiring next tournament
+         */
+        $teams = Team::where('user_id', '>', 1)->get();
+        $players_retiring = [];
+        foreach ($teams as $team) {
+            $players = $team->players()
+                      ->where('age', '>=', 32)
+                      ->where('retiring', '=', FALSE)
+                      ->orderBy('age', 'DESC')
+                      ->get();
+
+            $team_retiring = 0; // This team has a player retiring?
+            foreach ($players as $player) {
+                switch ($player->age) {
+                    case '32':
+                        $limit = 10;
+                        break;
+                    case '33':
+                        $limit = 25;
+                        break;
+                    case '34':
+                        $limit = 60;
+                        break;
+                    case '35':
+                        $limit = 75;
+                        break;
+                    default:
+                        $limit = 100;
+                        break;
+                }
+
+                $retiring = TRUE;
+                if ($limit < 100) {
+                    $num = mt_rand(1, 100);
+                    if ($num > $limit) {
+                        $retiring = FALSE;
+                    }
+                }
+
+                if ($retiring) {
+                    $team_retiring++;
+                    $players_retiring[] = $player->id;
+
+                    if ($team_retiring == 2) {
+                        break;
+                    }
+                }
+            }
+
+            /**
+             * Make sure each team with at least 3 players in retiring age
+             * and at least one with 33 years
+             * has at least 1 player retiring
+             */
+            if (
+                !$team_retiring &&
+                count($players) >= 3 &&
+                $players[0]->age >= 33
+            ) {
+                $players_retiring[] = $players[0]->id;
+            }
+        }
+        \DB::table('players')
+           ->whereIn('id', $players_retiring)
+           ->update(['retiring' => true]);
+
+        /**
+         * Delete yellow cards
+         */
+        \DB::table('player_cards')->truncate();
+
+        /**
+         * Mark tournaments as closed
+         */
+        \DB::table('tournaments')->update(['closed' => TRUE]);
+    }
+
+    /**
+     * Create a new category for the tournament
+     * @param integer $category
+     * @param integer $zone
+     * @param integer $teams
+     *
+     * @return void
+     */
     public function createCategory($category, $zone, $teams)
     {
         /**
