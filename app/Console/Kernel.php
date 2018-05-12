@@ -80,7 +80,7 @@ class Kernel extends ConsoleKernel
                         $tournament->close();
                     }
                 })
-                //->cron('0 12 * * 6 *')
+                ->cron('0 12 * * 6 *')
                 ->appendOutputTo('/var/log/futbolin/tournament.log');
     }
 
