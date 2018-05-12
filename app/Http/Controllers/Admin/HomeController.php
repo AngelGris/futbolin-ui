@@ -40,6 +40,7 @@ class HomeController extends Controller
             'year' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->where('created_at', '>', $today->copy()->subYear())->first(),
             'total' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->first(),
             'this_month' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->where('created_at', '>', $today->copy()->startOfMonth())->first(),
+            'last_month' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->whereBetween('created_at', [$today->copy()->subMonth()->startOfMonth(), $today->copy()->subMonth()->endOfMonth()])->first(),
         ];
         $last_users_stats = [
             'day' => User::where('id', '>', 1)->where('last_activity', '>', $today->copy()->subDay())->count(),

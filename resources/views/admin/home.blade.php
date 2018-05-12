@@ -88,7 +88,7 @@ $(function(){
 </div>
 <div class="col-md-6 zebra">
     <h3>Transacciones</h3>
-    <div class="col-xs-6 no-zebra">Este mes: {{ $transactions['this_month']->count }}</div>
+    <div class="col-xs-6 no-zebra">Este mes: {{ $transactions['this_month']->count }} ({{ $transactions['this_month']->total or 0 }}) | Mes pasado: {{ $transactions['last_month']->count }} ({{ $transactions['last_month']->total or 0 }})</div>
     <div class="col-xs-6 no-zebra">Créditos en el sistema: {{ $total_credits }}</div>
     <div class="col-xs-12">
         <div class="col-xs-8">Últimas 24 horas</div>
