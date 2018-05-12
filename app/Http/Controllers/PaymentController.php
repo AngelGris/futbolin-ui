@@ -152,7 +152,7 @@ class PaymentController extends Controller
                     $payment = Payment::get($paymentId, $this->paypal_apiContext);
                     $credit_item_id = $payment->transactions[0]->item_list->items[0]->sku;
                     $amount_total = $payment->transactions[0]->item_list->items[0]->price;
-                    $amount_earnings = number_format($amount_total - (0.044 * $amount_total) - 0.3, 2);
+                    $amount_earnings = number_format($amount_total - (0.054 * $amount_total) - 0.3, 2);
                     $user = Auth::user();
 
                     if ($payment->state == 'approved') {
