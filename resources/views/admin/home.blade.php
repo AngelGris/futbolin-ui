@@ -40,6 +40,8 @@ $(function(){
 @section('content-inner')
 <div class="col-md-6 zebra">
     <h3>Compras</h3>
+    <div class="col-xs-6 no-zebra">Este mes: ${{ number_format($payments['this_month']->total, 2) }}</div>
+    <div class="col-xs-6 no-zebra">Mes pasado: ${{ number_format($payments['last_month']->total, 2) }}</div>
     <div class="col-xs-12">
         <div class="col-xs-6">Últimas 24 horas</div>
         <div class="col-xs-2" style="text-align:right;">{{ $payments['day']->count }}</div>
@@ -86,40 +88,42 @@ $(function(){
 </div>
 <div class="col-md-6 zebra">
     <h3>Transacciones</h3>
+    <div class="col-xs-6 no-zebra">Este mes: {{ $transactions['this_month']->count }}</div>
+    <div class="col-xs-6 no-zebra">Créditos en el sistema: {{ $total_credits }}</div>
     <div class="col-xs-12">
         <div class="col-xs-8">Últimas 24 horas</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['day']->count }}</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $transactions['day']->total }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['day']->total or 0 }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-8">Últimas 48 horas</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['days']->count }}</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $transactions['days']->total }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['days']->total or 0 }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-8">Últimos 7 días</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['week']->count }}</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $transactions['week']->total }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['week']->total or 0 }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-8">Últimos 30 días</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['month']->count }}</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $transactions['month']->total }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['month']->total or 0 }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-8">Últimos 6 meses</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['semester']->count }}</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $transactions['semester']->total }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['semester']->total or 0 }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-8">Último año</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['year']->count }}</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $transactions['year']->total }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['year']->total or 0 }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-8">Total de compras</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['total']->count }}</div>
-        <div class="col-xs-2" style="text-align:right;">{{ $transactions['total']->total }}</div>
+        <div class="col-xs-2" style="text-align:right;">{{ $transactions['total']->total or 0 }}</div>
     </div>
     <a href="{{ route('admin.transactions', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
 </div>

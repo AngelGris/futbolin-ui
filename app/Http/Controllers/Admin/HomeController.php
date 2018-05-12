@@ -27,7 +27,9 @@ class HomeController extends Controller
             'month' => Payment::select(DB::raw('COUNT(*) as `count`, SUM(`amount_total`) as `total`, SUM(`amount_earnings`) as `earnings`'))->where('payment_status_id', 2)->where('created_at', '>', $today->copy()->subMonth())->first(),
             'semester' => Payment::select(DB::raw('COUNT(*) as `count`, SUM(`amount_total`) as `total`, SUM(`amount_earnings`) as `earnings`'))->where('payment_status_id', 2)->where('created_at', '>', $today->copy()->subMonths(6))->first(),
             'year' => Payment::select(DB::raw('COUNT(*) as `count`, SUM(`amount_total`) as `total`, SUM(`amount_earnings`) as `earnings`'))->where('payment_status_id', 2)->where('created_at', '>', $today->copy()->subYear())->first(),
-            'total' => Payment::select(DB::raw('COUNT(*) as `count`, SUM(`amount_total`) as `total`, SUM(`amount_earnings`) as `earnings`'))->where('payment_status_id', 2)->first()
+            'total' => Payment::select(DB::raw('COUNT(*) as `count`, SUM(`amount_total`) as `total`, SUM(`amount_earnings`) as `earnings`'))->where('payment_status_id', 2)->first(),
+            'this_month' => Payment::select(DB::raw('COUNT(*) as `count`, SUM(`amount_total`) as `total`, SUM(`amount_earnings`) as `earnings`'))->where('payment_status_id', 2)->where('created_at', '>', $today->copy()->startOfMonth())->first(),
+            'last_month' => Payment::select(DB::raw('COUNT(*) as `count`, SUM(`amount_total`) as `total`, SUM(`amount_earnings`) as `earnings`'))->where('payment_status_id', 2)->whereBetween('created_at', [$today->copy()->subMonth()->startOfMonth(), $today->copy()->subMonth()->endOfMonth()])->first(),
         ];
         $transactions = [
             'day' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->where('created_at', '>', $today->copy()->subDay())->first(),
@@ -36,7 +38,8 @@ class HomeController extends Controller
             'month' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->where('created_at', '>', $today->copy()->subMonth())->first(),
             'semester' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->where('created_at', '>', $today->copy()->subMonths(6))->first(),
             'year' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->where('created_at', '>', $today->copy()->subYear())->first(),
-            'total' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->first()
+            'total' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->first(),
+            'this_month' => Transaction::select(DB::raw('COUNT(*) as `count`, SUM(`credits`) as `total`'))->where('created_at', '>', $today->copy()->startOfMonth())->first(),
         ];
         $last_users_stats = [
             'day' => User::where('id', '>', 1)->where('last_activity', '>', $today->copy()->subDay())->count(),
@@ -117,6 +120,7 @@ class HomeController extends Controller
         $vars = [
             'payments' => $payments,
             'transactions' => $transactions,
+            'total_credits' => User::sum('credits'),
             'last_users' => User::where('id', '>', 1)->whereNotNull('last_activity')->orderBy('last_activity', 'DESC')->limit(10)->get(),
             'last_users_stats' => $last_users_stats,
             'last_trainnings' => Team::where('user_id', '>', 1)->whereNotNull('last_trainning')->orderBy('last_trainning', 'DESC')->limit(10)->get(),
