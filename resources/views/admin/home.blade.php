@@ -40,8 +40,8 @@ $(function(){
 @section('content-inner')
 <div class="col-md-6 zebra">
     <h3>Compras</h3>
-    <div class="col-xs-6 no-zebra">Este mes: ${{ number_format($payments['this_month']->total, 2) }}</div>
-    <div class="col-xs-6 no-zebra">Mes pasado: ${{ number_format($payments['last_month']->total, 2) }}</div>
+    <div class="col-xs-6 no-zebra">Este mes: ${{ number_format($payments['this_month']->earnings, 2) }}</div>
+    <div class="col-xs-6 no-zebra">Mes pasado: ${{ number_format($payments['last_month']->earnings, 2) }}</div>
     <div class="col-xs-12">
         <div class="col-xs-6">Últimas 24 horas</div>
         <div class="col-xs-2" style="text-align:right;">{{ $payments['day']->count }}</div>
