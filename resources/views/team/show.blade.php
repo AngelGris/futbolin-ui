@@ -82,9 +82,11 @@ $(function() {
 </div>
 @include('modules.lastmatches')
 <div class="clear"></div>
+@if ($_team->id != $team->id)
 <div class="col-md-6">
     <h2>Contra {{ $_team['name'] }}</h2>
     @include('modules.statsmatches', ['matches' => $matches_versus, 'goals' => $goals_versus])
 </div>
 @include('modules.lastmatches', ['last_matches' => $last_matches_versus])
+@endif
 @endsection
