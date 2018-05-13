@@ -320,7 +320,13 @@ class Team extends Model
      */
     public function getTrainableAttribute()
     {
-        if ($this->last_trainning && $_SERVER['REQUEST_TIME'] - $this->last_trainning->timestamp < \Config::get('constants.TIME_TO_TRAIN')) {
+        if (
+            (
+                $this->last_trainning &&
+                $_SERVER['REQUEST_TIME'] - $this->last_trainning->timestamp < \Config::get('constants.TIME_TO_TRAIN')
+            ) ||
+            $this->trainer > Carbon::now()
+        ) {
             return FALSE;
         } else {
             return TRUE;
@@ -412,7 +418,7 @@ class Team extends Model
     }
 
     /**
-     * Train teh team
+     * Train the team
      * @param boolean $force Force trainning (used for personal trainer)
      *
      * @return boolean Team trained
