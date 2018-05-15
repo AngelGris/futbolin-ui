@@ -49,10 +49,10 @@ $(function() {
 </div>
 <div class="clear"></div>
 @if(!empty($team->trophies))
-<div class="col-md-6">
+<div class="col-sm-12">
     <h2>Vitrina de trofeos</h2>
     @foreach($team->trophies as $trophy)
-    <div class="col-md-3" style="position:relative;text-align:center;">
+    <div class="col-xs-6 col-sm-3 col-md-2" style="position:relative;text-align:center;">
         @if($trophy->position <= 3)
         <p>
             @if($trophy->position == 1)
@@ -71,6 +71,7 @@ $(function() {
     </div>
     @endforeach
 </div>
+<div class="clear"></div>
 @endif
 <div class="col-md-12">
     <h2>Formación</h2>
