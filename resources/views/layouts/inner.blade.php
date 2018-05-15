@@ -301,7 +301,7 @@
     <div class="rightpanel">
         <div class="pageheader">
             <div class="teamname">
-                @if (empty($header_team))
+                @if (empty($header_team) || $header_team->id == $_team->id)
                 <img class="svg shield" src="{{ asset($_team['shield_file']) }}" data-color-primary="{{ $_team['primary_color'] }}" data-color-secondary="{{ $_team['secondary_color'] }}">
                 <div>
                     <h2>{{ $_team['name'] }}</h2>

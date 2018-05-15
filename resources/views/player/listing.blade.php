@@ -10,6 +10,10 @@ $(function(){
         "info": false
     });
 
+    $('.attribute-upgraded').each(function(index, item) {
+        $(item).after('<sub class="attribute-upgraded">+' + $(item).data('upgraded') + '</sub>');
+    });
+
     $('#players-filtering').change(function() {
         if ($(this).val() != '') {
             $('tbody tr').hide();
@@ -65,7 +69,7 @@ Mostrar:
             @foreach (['goalkeeping', 'defending', 'dribbling', 'heading', 'jumping', 'passing', 'precision', 'speed', 'strength', 'tackling'] as $attr)
             <td align="right">
                 @if ($player['upgraded'] && !empty($player['last_upgrade'][$attr]))
-                <span style="color:#009900;">{{ $player[$attr] }}<sub>+{{ $player['last_upgrade'][$attr] }}</sub></span>
+                <span class="attribute-upgraded" data-upgraded="{{ $player['last_upgrade'][$attr] }}">{{ $player[$attr] }}</span>
                 @else
                 {{ $player[$attr] }}
                 @endif

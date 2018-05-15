@@ -49,10 +49,10 @@ $(function() {
 </div>
 <div class="clear"></div>
 @if(!empty($team->trophies))
-<div class="col-md-6">
+<div class="col-sm-12">
     <h2>Vitrina de trofeos</h2>
     @foreach($team->trophies as $trophy)
-    <div class="col-md-3" style="position:relative;text-align:center;">
+    <div class="col-xs-6 col-sm-3 col-md-2" style="position:relative;text-align:center;">
         @if($trophy->position <= 3)
         <p>
             @if($trophy->position == 1)
@@ -67,10 +67,11 @@ $(function() {
         @else
         <div style="font-size:25px;height:70px;left:0;line-height:70px;top:15px;width:100%;">{{ $trophy->position }}°</div>
         @endif
-        <a href="{{ route('tournament', $trophy->category->id )}}">{{ $trophy->category->name }}</a>
+        <a href="{{ route('tournament', $trophy->category->id )}}">{!! $trophy->category->name_br !!}</a>
     </div>
     @endforeach
 </div>
+<div class="clear"></div>
 @endif
 <div class="col-md-12">
     <h2>Formación</h2>
@@ -82,9 +83,11 @@ $(function() {
 </div>
 @include('modules.lastmatches')
 <div class="clear"></div>
+@if ($_team->id != $team->id)
 <div class="col-md-6">
     <h2>Contra {{ $_team['name'] }}</h2>
     @include('modules.statsmatches', ['matches' => $matches_versus, 'goals' => $goals_versus])
 </div>
 @include('modules.lastmatches', ['last_matches' => $last_matches_versus])
+@endif
 @endsection

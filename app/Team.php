@@ -268,7 +268,7 @@ class Team extends Model
         $newbie = $this->createPlayer($number, $position, TRUE);
 
         $pos = array_search($player->id, $this->formation);
-        if (!empty($this->formation) && $pos >= 0) {
+        if (!empty($this->formation) && $pos !== FALSE) {
             $formation = $this->formation;
             $formation[$pos] = $newbie->id;
             $this->formation = $formation;
@@ -420,7 +420,13 @@ class Team extends Model
      */
     public function getTrainableAttribute()
     {
-        if ($this->last_trainning && $_SERVER['REQUEST_TIME'] - $this->last_trainning->timestamp < \Config::get('constants.TIME_TO_TRAIN')) {
+        if (
+            (
+                $this->last_trainning &&
+                $_SERVER['REQUEST_TIME'] - $this->last_trainning->timestamp < \Config::get('constants.TIME_TO_TRAIN')
+            ) ||
+            $this->trainer > Carbon::now()
+        ) {
             return FALSE;
         } else {
             return TRUE;

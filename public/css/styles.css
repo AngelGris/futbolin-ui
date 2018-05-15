@@ -464,8 +464,8 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 	text-align: center;
 }
 
-.zebra>div:nth-child(even),
-.zebra li:nth-child(even) {
+.zebra>div:nth-child(even):not(.no-zebra),
+.zebra li:nth-child(even):not(.no-zebra) {
 	background-color: #dfdfdf;
 }
 
@@ -3138,4 +3138,8 @@ a,a:hover,a:link,a:active,a:focus,
 	clear: both;
 	height: 0;
 	width: 100%;
+}
+
+.attribute-upgraded {
+    color:#009900;
 }
