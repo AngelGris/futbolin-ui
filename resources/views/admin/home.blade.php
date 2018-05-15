@@ -121,7 +121,7 @@ $(function(){
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['year']->total or 0 }}</div>
     </div>
     <div class="col-xs-12">
-        <div class="col-xs-8">Total de compras</div>
+        <div class="col-xs-8">Total transacciones</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['total']->count }}</div>
         <div class="col-xs-2" style="text-align:right;">{{ $transactions['total']->total or 0 }}</div>
     </div>
