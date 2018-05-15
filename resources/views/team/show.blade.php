@@ -67,7 +67,7 @@ $(function() {
         @else
         <div style="font-size:25px;height:70px;left:0;line-height:70px;top:15px;width:100%;">{{ $trophy->position }}°</div>
         @endif
-        <a href="{{ route('tournament', $trophy->category->id )}}">{{ $trophy->category->name }}</a>
+        <a href="{{ route('tournament', $trophy->category->id )}}">{!! $trophy->category->name_br !!}</a>
     </div>
     @endforeach
 </div>

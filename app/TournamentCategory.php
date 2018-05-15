@@ -15,6 +15,8 @@ class TournamentCategory extends Model
 
     /**
      * Positions for the category
+     *
+     * @return Collection TournamentPosition
      */
     public function positions()
     {
@@ -23,6 +25,8 @@ class TournamentCategory extends Model
 
     /**
      * Category rounds
+     *
+     * @return Collection TournamentRound
      */
     public function rounds()
     {
@@ -31,6 +35,8 @@ class TournamentCategory extends Model
 
     /**
      * Scorers for category
+     *
+     * @return Collection Scorrer
      */
     public function scorers()
     {
@@ -39,6 +45,8 @@ class TournamentCategory extends Model
 
     /**
      * Category's tournament
+     *
+     * @return Tournament
      */
     public function tournament()
     {
@@ -47,6 +55,8 @@ class TournamentCategory extends Model
 
     /**
      * Category name (A, B, C, ...)
+     *
+     * @return char
      */
     public function getCategoryNameAttribute()
     {
@@ -55,6 +65,8 @@ class TournamentCategory extends Model
 
     /**
      * Get if category is still open
+     *
+     * @return bool
      */
     public function getIsOpenAttribute()
     {
@@ -65,6 +77,8 @@ class TournamentCategory extends Model
 
     /**
      * Category name
+     *
+     * @return string
      */
     public function getNameAttribute()
     {
@@ -72,7 +86,19 @@ class TournamentCategory extends Model
     }
 
     /**
+     * Category name with <br>
+     *
+     * @return string
+     */
+    public function getNameBrAttribute()
+    {
+        return $this->tournament->name . '<br> (Zona ' . $this->zone_name . ' Cat. ' . $this->category_name . ')';
+    }
+
+    /**
      * Zone name (I, II, III, ...)
+     *
+     * @return string
      */
     public function getZoneNameAttribute()
     {
