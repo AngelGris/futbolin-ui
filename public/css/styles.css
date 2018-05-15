@@ -3139,3 +3139,7 @@ a,a:hover,a:link,a:active,a:focus,
 	height: 0;
 	width: 100%;
 }
+
+.attribute-upgraded {
+    color:#009900;
+}
