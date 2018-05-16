@@ -74,6 +74,9 @@ class Kernel extends ConsoleKernel
                 ->daily()
                 ->appendOutputTo('/var/log/futbolin/stamina.log');
 
+        /**
+         * Close opened tournaments
+         */
         $schedule->call(function() {
                     $tournament = Tournament::where('closed', FALSE)->first();
                     if ($tournament && !$tournament->tournamentCategories[0]->isOpen) {
@@ -82,6 +85,13 @@ class Kernel extends ConsoleKernel
                 })
                 ->cron('0 12 * * 6 *')
                 ->appendOutputTo('/var/log/futbolin/tournament.log');
+
+        /**
+         * Delete old matches log files
+         */
+        $schedule->exec('find ' . base_path() . '/python/logs/ -type f -mtime +90 -name \'*.log\' -delete')
+                ->monthly()
+                ->appendOutputTo('/var/log/futbolin/old-logs.log');
     }
 
     /**
