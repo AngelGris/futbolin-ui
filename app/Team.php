@@ -397,14 +397,11 @@ class Team extends Model
          * If $strategy is empty, load it from the DB
          */
         if (empty($strategy)) {
-            for ($i = 1; $i <= 11; $i++) {
-                $player = Player::find($this->formation[$i - 1]);
-                $strategy[] = [
-                    'left' => ($this->strategy->{sprintf('j%02d_start_y', $i)} * 100 / 120 ) * 1.5,
-                    'top' => $this->strategy->{sprintf('j%02d_start_x', $i)} * 100 / 90,
-                    'position' => (!empty($player) ? $player['position'] : ''),
-                    'number' => (!empty($player) ? $player['number'] : ''),
-                ];
+            $strategy = $this->strategy->positionsToPercetages();
+            for ($i = 0; $i < 11; $i++) {
+                $player = Player::find($this->formation[$i]);
+                $strategy[$i]['position'] = (!empty($player) ? $player['position'] : '');
+                $strategy[$i]['number'] = (!empty($player) ? $player['number'] : '');
             }
         } else { // else, cut it to 11 players
             $strategy = array_slice($strategy, 0, 11);

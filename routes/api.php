@@ -30,6 +30,8 @@ Route::group(['middleware' => ['auth.api']], function() {
 
     Route::get('/shopping_items', 'ShoppingController@index');
 
+    Route::get('/strategies', 'StrategyController@index');
+
     Route::group(['prefix' => 'team'], function() {
         Route::post('/', 'TeamController@store');
         Route::patch('/', 'TeamController@update');
