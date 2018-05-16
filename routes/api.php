@@ -18,6 +18,11 @@ Route::group(['middleware' => ['auth.api']], function() {
 
     Route::post('/logout', 'Auth\LoginController@apiLogout');
 
+    Route::group(['prefix' => 'match'], function() {
+        Route::post('/', 'MatchController@play');
+        Route::get('/', 'MatchController@load');
+    });
+
     Route::group(['prefix' => 'me'], function() {
         Route::get('/', 'UserController@index');
         Route::patch('/', 'AccountSettingsController@update');

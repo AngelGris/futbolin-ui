@@ -141,9 +141,31 @@ class MatchController extends Controller
      */
     public function play(Request $request)
     {
+        $this->validate($request, [
+            'rival'         => 'required|integer',
+        ]);
+
+        $api = FALSE;
+        if ($request->expectsJson()) {
+            if (empty(Auth::guard('api')->user())) {
+                $user = Auth::user();
+            } else {
+                $user = Auth::guard('api')->user()->user;
+                $api = TRUE;
+            }
+        } else {
+            $user = Auth::user();
+        }
+
+        if ($request->input('rival') <= 26) {
+            $match_type = 1;
+        } else {
+            $match_type = 2;
+        }
+
         $remaining_time = 0;
-        if ($request->match_type == 2) {
-            $last_match = Matches::loadLastFriendlyMatch(Auth::user()->team->id, $request->rival);
+        if ($match_type == 2) {
+            $last_match = Matches::loadLastFriendlyMatch($user->team->id, $request->input('rival'));
 
             if (!empty($last_match)) {
                 $last_match_time = strtotime($last_match->created_at);
@@ -153,15 +175,49 @@ class MatchController extends Controller
         }
 
         if ($remaining_time > 0) {
-            return json_encode(['file' => $last_match->logfile, 'remaining' => readableTime($remaining_time)]);
+            if ($api) {
+                return response()->json([
+                    'rival'                 => $request->input('rival'),
+                    'log_file'              => $last_match->logfile,
+                    'remaining'             => $remaining_time,
+                    'remaining_readable'    => readableTime($remaining_time)
+                ], 200);
+            } else {
+                return response()->json([
+                    'file'      => $last_match->logfile,
+                    'remaining' => readableTime($remaining_time)
+                ], 200);
+            }
         } else {
-            $file_name = $_SERVER['REQUEST_TIME'] . '-' . Auth::user()->team->id . '-' . $request->rival . '.log';
-            $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' ' . $request->match_type . ' -1 ' . $file_name);
+            $file_name = $_SERVER['REQUEST_TIME'] . '-' . $user->team->id . '-' . $request->input('rival') . '.log';
+            $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . $user->team->id . ' ' . $request->input('rival') . ' ' . $match_type . ' -1 ' . $file_name);
             exec($command, $out, $status);
             if ($status == 0) {
-                return json_encode(['id' => $request->rival, 'file' => $file_name, 'remaining' => readableTime(86400)]);
+                if ($api) {
+                    return response()->json([
+                        'rival'                 => $request->input('rival'),
+                        'log_file'              => $file_name,
+                        'remaining'             => 86400,
+                        'remaining_readable'    => readableTime(86400)
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'id'        => $request->input('rival'),
+                        'file'      => $file_name,
+                        'remaining' => readableTime(86400)
+                    ], 201);
+                }
             } else {
-                return json_encode(['err_no' => $status]);
+                if ($api) {
+                    return response()->json([
+                        'errors' => [
+                            'type'      => 'match_play',
+                            'message'   => 'An error occurred while playing the match'
+                        ]
+                    ], 500);
+                } else {
+                    return response()->json(['err_no' => $status], 500);
+                }
             }
         }
     }
