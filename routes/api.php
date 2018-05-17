@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['middleware' => ['auth.api']], function() {
-    Route::get('/credit_items', 'CreditController@index');
+    Route::get('/credits/items', 'CreditController@index');
 
     Route::post('/logout', 'Auth\LoginController@apiLogout');
 
@@ -33,7 +33,10 @@ Route::group(['middleware' => ['auth.api']], function() {
     Route::get('/players', 'PlayerController@showListing');
     Route::get('/player/{player}', 'PlayerController@index')->where('player', '[0-9]+');
 
-    Route::get('/shopping_items', 'ShoppingController@index');
+    Route::group(['prefix' => 'shopping'], function() {
+        Route::post('/buy', 'ShoppingController@buy');
+        Route::get('/items', 'ShoppingController@index');
+    });
 
     Route::get('/strategies', 'StrategyController@index');
 

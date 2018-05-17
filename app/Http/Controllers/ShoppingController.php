@@ -9,6 +9,7 @@ use App\ShoppingItem;
 use Carbon\Carbon;
 use DB;
 use Session;
+use Validator;
 
 class ShoppingController extends Controller
 {
@@ -44,19 +45,36 @@ class ShoppingController extends Controller
     public function buy(Request $request)
     {
         // Check id in $request
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'id'        => 'required|integer',
-            'player_id' => 'sometimes|required|integer'
         ]);
 
-        $user = Auth::user();
+        $validator->sometimes('player_id', 'required|integer|exists:players,id', function($input) {
+            return $input->id == 4;
+        });
+
+        $validator->validate();
+
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
+
         $shopping_item = ShoppingItem::find($request->input('id'));
 
         // If user doesn't have enough credit for the transaction
         // redirect to shopping with arning message
         if ($user->credits < $shopping_item->price) {
-            Session::flash('flash_danger', 'No tienes suficientes Fúlbos.');
-            return redirect()->route('shopping');
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'type'      => 'credit_insufficient',
+                    'message'   => 'Crédito insuficientes para la transacción'
+                ], 200);
+            } else {
+                Session::flash('flash_danger', 'No tienes suficientes Fúlbos.');
+                return redirect()->route('shopping');
+            }
         }
 
         // Route to go after done
@@ -79,10 +97,22 @@ class ShoppingController extends Controller
                 $success_message = 'El entrenador ha sido contratado hasta el ' . $user->team->trainer->format('d/m/Y H:i:s') . '.';
                 break;
             case 4:
-                $player = Player::find($request->input('player_id'));
-                $player->treat();
-                $success_message = $player->short_name . ' fue tratado por su lesión.';
-                $redirect = redirect()->route('player', $player->id);
+                $player = Player::where('id', $request->input('player_id'))->where('team_id', $user->team->id)->where('recovery', '>', 0)->where('healed', FALSE)->first();
+                $redirect = redirect()->route('player', $request->input('player_id'));
+                if ($player) {
+                    $player->treat();
+                    $success_message = $player->short_name . ' fue tratado por su lesión.';
+                } else {
+                    if ($request->expectsJson()) {
+                        return response()->json([
+                            'type'      => 'player_id',
+                            'message'   => 'id de jugador es inválido.'
+                        ], 400);
+                    } else {
+                        Session::flash('flash_warning', 'id de jugador es inválido.');
+                        return $redirect;
+                    }
+                }
                 break;
             default:
                 Session::flash('flash_danger', 'Item inválido.');
@@ -98,7 +128,13 @@ class ShoppingController extends Controller
             'credits'           => $shopping_item->price
         ]);
 
-        Session::flash('flash_success', $success_message);
-        return $redirect;
+        if ($request->expectsJson()) {
+            return response()->json([
+                'credits'   => $user->credits
+            ], 200);
+        } else {
+            Session::flash('flash_success', $success_message);
+            return $redirect;
+        }
     }
 }

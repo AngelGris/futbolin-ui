@@ -152,7 +152,8 @@ return [
         'new_password'          => 'contraseña nueva',
         'strategy'              => 'estrategia',
         'formation'             => 'formación',
-        'match_type'            => 'tipo de partido'
+        'match_type'            => 'tipo de partido',
+        'player_id'             => 'id de jugador'
     ],
 
 ];
