@@ -51,32 +51,17 @@ class MatchController extends Controller
      */
     public function load(Request $request)
     {
-        $data = getMatchLog($request->file);
+        $this->validate($request, [
+            'file'  => 'required|string',
+        ]);
+
+        $data = getMatchLog($request->input('file'));
 
         $local = Team::find($data['local']['id']);
         $visit = Team::find($data['visit']['id']);
 
-        $scorers = [[],[]];
-        foreach ($data['scorers'] as $scorer) {
-            if ($scorer[1] == 0) {
-                $scorers[0][] = $scorer[2] . ' <span>(' . substr($scorer[0], 0, 2) . '\')</span>';
-            } else {
-                $scorers[1][] = '<span>(' . substr($scorer[0], 0, 2) . '\')</span> ' . $scorer[2];
-            }
-        }
-
         $local_rgb_primary = sscanf($local->primary_color, "#%02x%02x%02x");
         $visit_rgb_primary = sscanf($visit->primary_color, "#%02x%02x%02x");
-
-        $actions = [];
-        foreach ($data['plays'] as $play) {
-            if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
-                if (in_array($play[2], [6, 19, 23, 25, 26])) {
-                    $play[3] = '<strong>' . $play[3] . '</strong>';
-                }
-                $actions[] = [substr($play[0], 0, 2), 'rgba(' . implode(', ', ($play[1] == 0) ? $local_rgb_primary : $visit_rgb_primary) . ', 1);', (($play[1] == 0) ? $local['text_color'] : $visit['text_color']), $play[3]];
-            }
-        }
 
         $match_type = \DB::table('matches')
             ->select('type_id')
@@ -92,48 +77,112 @@ class MatchController extends Controller
             }
         }
 
-        $params = [
-            'show_remaining' => $show_remaining,
-            'remaining_time' => readableTime($remaining_time),
-            'datetime' => date('d/m/Y H:i', $data['timestamp']),
-            'stadium' => $data['stadium'],
-            'local' => [
-                'name' => $local->name,
-                'primary_color' => $local->primary_color,
-                'secondary_color' => $local->secondary_color,
-                'rgb_primary' => $local_rgb_primary,
-                'text_color' => $local->text_color,
-                'shield_file' => $local->shieldFile,
-                'goals' => $data['local']['goals'],
-                'formation' => $data['local']['formation'],
-                'posession' => $data['local']['posessionPer'],
-                'shots' => $data['local']['shots'],
-                'shots_goal' => $data['local']['shotsOnTarget'],
-                'yellow_cards' => (isset($data['local']['yellow_cards']) ? $data['local']['yellow_cards'] : -1),
-                'red_cards' => (isset($data['local']['red_cards']) ? $data['local']['red_cards'] : -1),
-                'substitutions' => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
-            ],
-            'visit' => [
-                'name' => $visit->name,
-                'primary_color' => $visit->primary_color,
-                'secondary_color' => $visit->secondary_color,
-                'rgb_primary' => $visit_rgb_primary,
-                'text_color' => $visit->text_color,
-                'shield_file' => $visit->shieldFile,
-                'goals' => $data['visit']['goals'],
-                'formation' => $data['visit']['formation'],
-                'posession' => $data['visit']['posessionPer'],
-                'shots' => $data['visit']['shots'],
-                'shots_goal' => $data['visit']['shotsOnTarget'],
-                'yellow_cards' => (isset($data['visit']['yellow_cards']) ? $data['visit']['yellow_cards'] : -1),
-                'red_cards' => (isset($data['visit']['red_cards']) ? $data['visit']['red_cards'] : -1),
-                'substitutions' => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
-            ],
-            'scorers' => $scorers,
-            'actions' => $actions,
-        ];
+        if ($request->expectsJson() && !empty(Auth::guard('api')->user())) {
+            $scorers = [
+                'local'     => [],
+                'visit'    => []
+            ];
 
-        return view('match.result', $params);
+            $highlights = [];
+            foreach ($data['plays'] as $play) {
+                if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
+                    $highlights[] = [
+                        'minutes'       => substr($play[0], 0, 2),
+                        'background'    => ($play[1] == 0) ? $local->primary_color : $visit->primary_color,
+                        'color'         => ($play[1] == 0) ? $local->text_color : $visit->text_color,
+                        'highlight'     => $play[3]
+                    ];
+                }
+            }
+
+            foreach ($data['scorers'] as $scorer) {
+                if ($scorer[1] == 0) {
+                    $scorers['local'][] = [
+                        'minutes'   => substr($scorer[0], 0, 2),
+                        'player'    => $scorer[2]
+                    ];
+                } else {
+                    $scorers['visit'][] = [
+                        'minutes'   => substr($scorer[0], 0, 2),
+                        'player'    => $scorer[2]
+                    ];
+                }
+            }
+
+            return response()->json([
+                'show_remaining'        => $show_remaining,
+                'remaining'             => $remaining_time,
+                'remaining_readable'    => readableTime($remaining_time),
+                'datetime'              => date('d/m/Y H:i', $data['timestamp']),
+                'stadium'               => $data['stadium'],
+                'local'                 => $local,
+                'visit'                 => $visit,
+                'scorers'               => $scorers,
+                'highlights'            => $highlights
+            ], 200);
+        } else {
+            $scorers = [[],[]];
+            foreach ($data['scorers'] as $scorer) {
+                if ($scorer[1] == 0) {
+                    $scorers[0][] = $scorer[2] . ' <span>(' . substr($scorer[0], 0, 2) . '\')</span>';
+                } else {
+                    $scorers[1][] = '<span>(' . substr($scorer[0], 0, 2) . '\')</span> ' . $scorer[2];
+                }
+            }
+
+            $actions = [];
+            foreach ($data['plays'] as $play) {
+                if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
+                    if (in_array($play[2], [6, 19, 23, 25, 26])) {
+                        $play[3] = '<strong>' . $play[3] . '</strong>';
+                    }
+                    $actions[] = [substr($play[0], 0, 2), 'rgba(' . implode(', ', ($play[1] == 0) ? $local_rgb_primary : $visit_rgb_primary) . ', 1);', (($play[1] == 0) ? $local['text_color'] : $visit['text_color']), $play[3]];
+                }
+            }
+
+            $params = [
+                'show_remaining' => $show_remaining,
+                'remaining_time' => readableTime($remaining_time),
+                'datetime' => date('d/m/Y H:i', $data['timestamp']),
+                'stadium' => $data['stadium'],
+                'local' => [
+                    'name' => $local->name,
+                    'primary_color' => $local->primary_color,
+                    'secondary_color' => $local->secondary_color,
+                    'rgb_primary' => $local_rgb_primary,
+                    'text_color' => $local->text_color,
+                    'shield_file' => $local->shieldFile,
+                    'goals' => $data['local']['goals'],
+                    'formation' => $data['local']['formation'],
+                    'posession' => $data['local']['posessionPer'],
+                    'shots' => $data['local']['shots'],
+                    'shots_goal' => $data['local']['shotsOnTarget'],
+                    'yellow_cards' => (isset($data['local']['yellow_cards']) ? $data['local']['yellow_cards'] : -1),
+                    'red_cards' => (isset($data['local']['red_cards']) ? $data['local']['red_cards'] : -1),
+                    'substitutions' => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
+                ],
+                'visit' => [
+                    'name' => $visit->name,
+                    'primary_color' => $visit->primary_color,
+                    'secondary_color' => $visit->secondary_color,
+                    'rgb_primary' => $visit_rgb_primary,
+                    'text_color' => $visit->text_color,
+                    'shield_file' => $visit->shieldFile,
+                    'goals' => $data['visit']['goals'],
+                    'formation' => $data['visit']['formation'],
+                    'posession' => $data['visit']['posessionPer'],
+                    'shots' => $data['visit']['shots'],
+                    'shots_goal' => $data['visit']['shotsOnTarget'],
+                    'yellow_cards' => (isset($data['visit']['yellow_cards']) ? $data['visit']['yellow_cards'] : -1),
+                    'red_cards' => (isset($data['visit']['red_cards']) ? $data['visit']['red_cards'] : -1),
+                    'substitutions' => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
+                ],
+                'scorers' => $scorers,
+                'actions' => $actions,
+            ];
+
+            return view('match.result', $params);
+        }
     }
 
     /**
