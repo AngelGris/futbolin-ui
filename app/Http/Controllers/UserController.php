@@ -14,7 +14,9 @@ class UserController extends Controller
     public function index()
     {
         $user = Auth::guard('api')->user()->user;
-        $user->team->makeVisible(['last_trainning', 'trainer', 'trainning_count']);
+        if ($user->team) {
+            $user->team->makeVisible(['last_trainning', 'trainer', 'trainning_count']);
+        }
         return response()->json([
             'user' => $user->makeVisible(['email', 'credits', 'last_activity'])
         ], 200);
