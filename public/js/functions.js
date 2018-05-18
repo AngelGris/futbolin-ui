@@ -82,10 +82,15 @@ function refreshResultModal(data) {
     $('img.svg').each(function(){
         loadSVGintoIMG($(this), $(this).attr('src'));
     });
+
     if ($('#modal-playing')) {
-        $('#modal-playing').modal('hide');
+        $('#modal-playing').on('hidden.bs.modal', function () {
+            $('#modal-match-result').modal('show');
+            //$('#modal-playing').modal('hide');
+        }).modal('hide');
+    } else {
+        $('#modal-match-result').modal('show');
     }
-    $('#modal-match-result').modal('show');
 }
 
 $(function(){
