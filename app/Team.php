@@ -540,9 +540,9 @@ class Team extends Model
             }
             $trainning_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $this->trainning_count);
 
-            DB::table('players')->where('team_id', $this->id)->where('recovery', 0)->increment('experience', $trainning_points);
-            DB::table('players')->where('team_id', $this->id)->where('recovery', 0)->increment('stamina', $trainning_points);
-            DB::table('players')->where('team_id', $this->id)->where('stamina', '>', 100)->update(['stamina' => 100]);
+            DB::table('players')->where('team_id', $this->id)->where('recovery', 0)->whereNull('deleted_at')->increment('experience', $trainning_points);
+            DB::table('players')->where('team_id', $this->id)->where('recovery', 0)->where('stamina', '<', 100)->whereNull('deleted_at')->increment('stamina', $trainning_points);
+            DB::table('players')->where('team_id', $this->id)->where('stamina', '>', 100)->whereNull('deleted_at')->update(['stamina' => 100]);
             $players = $this->players()->where('experience', '>=', 100)->get();
             foreach ($players as $player) {
                 $player->upgrade();
