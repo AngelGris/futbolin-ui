@@ -113,7 +113,7 @@ class MatchController extends Controller
                 'show_remaining'        => $show_remaining,
                 'remaining'             => $remaining_time,
                 'remaining_readable'    => readableTime($remaining_time),
-                'datetime'              => date('d/m/Y H:i', $data['timestamp']),
+                'datetime'              => $data['timestamp'],
                 'stadium'               => $data['stadium'],
                 'local'                 => $local,
                 'visit'                 => $visit,

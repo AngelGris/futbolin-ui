@@ -30,15 +30,16 @@ class PlayerController extends Controller
     public function showListing(Request $request)
     {
         if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
             return response()->json([
-                'players'   => Auth::guard('api')->user()->user->team->players
+                'players'   => (is_null($user->team) ? null : $user->team->players)
             ], 200);
         } else {
             $vars = [
-                'icon' => 'fa fa-group',
-                'title' => 'Jugadores',
-                'subtitle' => 'Los engranajes de la máquina',
-                'players' => Auth::user()->team->players
+                'icon'      => 'fa fa-group',
+                'title'     => 'Jugadores',
+                'subtitle'  => 'Los engranajes de la máquina',
+                'players'   => Auth::user()->team->players
             ];
 
             return view('player.listing', $vars);

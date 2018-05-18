@@ -222,7 +222,12 @@ class TeamController extends Controller
         } else {
             $user = Auth::user();
         }
-        $team_id = $user->team->id;
+
+        if (is_null($user->team)) {
+            $team_id = 0;
+        } else {
+            $team_id = $user->team->id;
+        }
 
         $matches = Matches::whereIn('local_id', [$team_id, $team['id']])
             ->WhereIn('visit_id', [$team_id, $team['id']])
