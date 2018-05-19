@@ -272,23 +272,77 @@ $(function(){
     </div>
 </div>
 <div id="home-last-teams" class="col-md-6 zebra">
+    <h3>Jugadores retirándose</h3>
+    @foreach($players_retiring as $player)
+    <div class="col-xs-12">
+        <div class="col-xs-4">{{ $player->shortName }}</div>
+        <div class="col-xs-2">{{ $player->position }}</div>
+        <div class="col-xs-6">{{ $player->team['name'] }}</div>
+    </div>
+    @endforeach
+    <a href="{{ route('admin.retiring', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
+<div id="home-last-teams" class="col-md-6 zebra">
     <h3>Últimos equipos</h3>
     @foreach($last_teams as $team)
     <div class="col-xs-12">
-        <div class="col-xs-4">{{ date('d/m/Y H:i:s', strtotime($team['created_at'])) }}</div>
-        <div class="col-xs-7">{{ $team['name'] }}</div>
-        <div class="col-xs-1"><a href="{{ route('admin.team', ['domain' => getDomain(), 'id' => $team['id']]) }}"><span class="fa fa-search"></span></a></div>
+        <div class="col-xs-4">{{ date('d/m/Y H:i:s', strtotime($team->created_at)) }}</div>
+        <div class="col-xs-7">{{ $team->name }}</div>
+        <div class="col-xs-1"><a href="{{ route('admin.team', ['domain' => getDomain(), 'id' => $team->id]) }}"><span class="fa fa-search"></span></a></div>
     </div>
     @endforeach
     <a href="{{ route('admin.teams', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>
+</div>
+<div class="col-md-12 zebra">
+    <h3>Estadísticas de partidos</h3>
+    <div class="col-xs-12">
+        <div class="col-xs-1">Tipo</div>
+        <div class="col-xs-2">Total</div>
+        <div class="col-xs-2">Local</div>
+        <div class="col-xs-2">Empate</div>
+        <div class="col-xs-2">Visita</div>
+        <div class="col-xs-1">Gol local</div>
+        <div class="col-xs-1">Gol visita</div>
+        <div class="col-xs-1">Dif.</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-1">Oficiales</div>
+        <div class="col-xs-2">{{ $match_stats['official']['total'] }}</div>
+        <div class="col-xs-2">{{ $match_stats['official']['local'] }} ({{ $match_stats['official']['local_per'] }}%)</div>
+        <div class="col-xs-2">{{ $match_stats['official']['tied'] }} ({{ $match_stats['official']['tied_per'] }}%)</div>
+        <div class="col-xs-2">{{ $match_stats['official']['visit'] }} ({{ $match_stats['official']['visit_per'] }}%)</div>
+        <div class="col-xs-1">{{ $match_stats['official']['goals_local']}}</div>
+        <div class="col-xs-1">{{ $match_stats['official']['goals_visit']}}</div>
+        <div class="col-xs-1">{{ $match_stats['official']['goals_diff']}}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-1">Amistosos</div>
+        <div class="col-xs-2">{{ $match_stats['friendly']['total'] }}</div>
+        <div class="col-xs-2">{{ $match_stats['friendly']['local'] }} ({{ $match_stats['friendly']['local_per'] }}%)</div>
+        <div class="col-xs-2">{{ $match_stats['friendly']['tied'] }} ({{ $match_stats['friendly']['tied_per'] }}%)</div>
+        <div class="col-xs-2">{{ $match_stats['friendly']['visit'] }} ({{ $match_stats['friendly']['visit_per'] }}%)</div>
+        <div class="col-xs-1">{{ $match_stats['friendly']['goals_local']}}</div>
+        <div class="col-xs-1">{{ $match_stats['friendly']['goals_visit']}}</div>
+        <div class="col-xs-1">{{ $match_stats['friendly']['goals_diff']}}</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-1">Total</div>
+        <div class="col-xs-2">{{ $match_stats['total']['total'] }}</div>
+        <div class="col-xs-2">{{ $match_stats['total']['local'] }} ({{ $match_stats['total']['local_per'] }}%)</div>
+        <div class="col-xs-2">{{ $match_stats['total']['tied'] }} ({{ $match_stats['total']['tied_per'] }}%)</div>
+        <div class="col-xs-2">{{ $match_stats['total']['visit'] }} ({{ $match_stats['total']['visit_per'] }}%)</div>
+        <div class="col-xs-1">{{ $match_stats['total']['goals_local']}}</div>
+        <div class="col-xs-1">{{ $match_stats['total']['goals_visit']}}</div>
+        <div class="col-xs-1">{{ $match_stats['total']['goals_diff']}}</div>
+    </div>
 </div>
 <div id="home-last-matches" class="col-md-6 zebra">
     <h3>Últimos partidos</h3>
     @foreach($last_matches as $match)
     <div class="col-xs-12">
-        <div class="col-xs-4">{{ date('d/m/Y H:i:s', strtotime($match['created_at'])) }}</div>
-        <div class="col-xs-7">{{ $match['local']['name'] }} {{ $match['local_goals'] }} - {{ $match['visit_goals'] }} {{ $match['visit']['name'] }}</div>
-        <div class="col-xs-1"><span class="fa fa-search load-match" data-file="{{ $match['logfile'] }}"></span></div>
+        <div class="col-xs-4">{{ date('d/m/Y H:i:s', strtotime($match->created_at)) }}</div>
+        <div class="col-xs-7">{{ $match->local->name }} {{ $match->local_goals }} - {{ $match->visit_goals }} {{ $match->visit->name }}</div>
+        <div class="col-xs-1"><span class="fa fa-search load-match" data-file="{{ $match->logfile }}"></span></div>
     </div>
     @endforeach
     <a href="{{ route('admin.matches', getDomain()) }}" class="btn btn-primary" style="float:right;margin-top:10px;">Ver todos</a>

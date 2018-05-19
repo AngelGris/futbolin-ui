@@ -34,6 +34,13 @@ class PlayerController extends Controller
         return view('admin.player.injuries', ['players' => Player::where('recovery', '>', 0)->orderBy('recovery')->get()]);
     }
 
+    public function retiring()
+    {
+        $players = Player::where('retiring', 1)->orderBy('team_id')->paginate(50);
+
+        return view('admin.player.retiring', ['players' => $players]);
+    }
+
     public function suspensions()
     {
         $players = Player::join('player_cards', 'player_cards.player_id', '=', 'players.id')
@@ -41,8 +48,6 @@ class PlayerController extends Controller
                          ->where('player_cards.suspension', '>', 0)
                          ->orderBy('player_cards.suspension', 'DESC')
                          ->get();
-
-        //dd($players[0]->suspension->name);
 
         return view('admin.player.suspensions', ['players' => $players]);
     }

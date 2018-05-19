@@ -14,37 +14,18 @@
 Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']], function() {
     Route::get('/', ['as' => 'admin', 'uses' => 'Admin\HomeController@showIndex']);
 
-    Route::get('/compras', ['as' => 'admin.payments', 'uses' => 'Admin\PaymentController@index']);
+    Route::get('/categoria/{category}', 'Admin\TournamentCategoryController@index')->where('category', '[0-9]+');
 
     Route::get('/contrasena', ['as' => 'admin.password', 'uses' => 'Admin\HomeController@editPassword']);
     Route::patch('/contrasena', 'Admin\HomeController@updatePassword');
 
+    Route::get('/compras', ['as' => 'admin.payments', 'uses' => 'Admin\PaymentController@index']);
+
     Route::get('/equipos', ['as' => 'admin.teams', 'uses' => 'Admin\TeamController@index']);
     Route::get('/equipo/{team}', ['as' => 'admin.team', 'uses' => 'Admin\TeamController@show'])->where('team', '[0-9]+');
 
-    Route::get('/tarjetas', ['as' => 'admin.cards', 'uses' => 'Admin\PlayerController@cards']);
-    Route::get('/suspensiones', ['as' => 'admin.suspensions', 'uses' => 'Admin\PlayerController@suspensions']);
     Route::get('/lesionados', ['as' => 'admin.injuries', 'uses' => 'Admin\PlayerController@injuries']);
 
-    Route::get('/partidos', ['as' => 'admin.matches', 'uses' => 'Admin\MatchController@index']);
-    Route::get('/partido', ['as' => 'admin.match', 'uses' => 'Admin\MatchController@show']);
-    Route::get('/partido/log/{match}', ['as' => 'admin.match.log', 'uses' => 'Admin\MatchController@showLog'])->where('match', '[0-9]+');
-
-    Route::get('/transacciones', ['as' => 'admin.transactions', 'uses' => 'Admin\TransactionController@index']);
-
-    Route::get('/usuarios', ['as' => 'admin.users', 'uses' => 'Admin\UserController@index']);
-    Route::get('/usuario/{user}', ['as' => 'admin.user', 'uses' => 'Admin\UserController@show'])->where('user', '[0-9]+');
-
-    Route::get('/torneos', ['as' => 'admin.tournaments', 'uses' => 'Admin\TournamentController@index']);
-    Route::group(['prefix' => 'torneo'], function() {
-        Route::get('/{tournament}', ['as' => 'admin.tournament', 'uses' => 'Admin\TournamentController@show'])->where('tournament', '[0-9]+');
-        Route::get('/crear', ['as' => 'admin.tournament.create', 'uses' => 'Admin\TournamentController@create']);
-        Route::post('/', ['as' => 'admin.tournament.store', 'uses' => 'Admin\TournamentController@store']);
-    });
-
-    Route::get('/categoria/{category}', 'Admin\TournamentCategoryController@index')->where('category', '[0-9]+');
-
-    Route::get('/mensajes', ['as' => 'admin.messages', 'uses' => 'Admin\MessageController@index']);
     Route::group(['prefix' => 'mensaje'], function() {
         Route::get('/crear', ['as' => 'admin.message.create', 'uses' => 'Admin\MessageController@create']);
         Route::post('/', ['as' => 'admin.message.store', 'uses' => 'Admin\MessageController@store']);
@@ -53,6 +34,30 @@ Route::group(['domain' => 'admin.{domain}',  'middleware' => ['auth', 'admin']],
         Route::patch('/{message}', ['as' => 'admin.message.save', 'uses' => 'Admin\MessageController@save'])->where('message', '[0-9]+');
         Route::delete('/{message}', ['as' => 'admin.message.delete', 'uses' => 'Admin\MessageController@delete'])->where('message', '[0-9]+');
     });
+    Route::get('/mensajes', ['as' => 'admin.messages', 'uses' => 'Admin\MessageController@index']);
+
+    Route::group(['prefix' => 'partido'], function() {
+        Route::get('/', ['as' => 'admin.match', 'uses' => 'Admin\MatchController@show']);
+        Route::get('/log/{match}', ['as' => 'admin.match.log', 'uses' => 'Admin\MatchController@showLog'])->where('match', '[0-9]+');
+    });
+    Route::get('/partidos', ['as' => 'admin.matches', 'uses' => 'Admin\MatchController@index']);
+
+    Route::get('/retirandose', ['as' => 'admin.retiring', 'uses' => 'Admin\PlayerController@retiring']);
+
+    Route::get('/suspensiones', ['as' => 'admin.suspensions', 'uses' => 'Admin\PlayerController@suspensions']);
+    Route::get('/tarjetas', ['as' => 'admin.cards', 'uses' => 'Admin\PlayerController@cards']);
+
+    Route::group(['prefix' => 'torneo'], function() {
+        Route::get('/{tournament}', ['as' => 'admin.tournament', 'uses' => 'Admin\TournamentController@show'])->where('tournament', '[0-9]+');
+        Route::get('/crear', ['as' => 'admin.tournament.create', 'uses' => 'Admin\TournamentController@create']);
+        Route::post('/', ['as' => 'admin.tournament.store', 'uses' => 'Admin\TournamentController@store']);
+    });
+    Route::get('/torneos', ['as' => 'admin.tournaments', 'uses' => 'Admin\TournamentController@index']);
+
+    Route::get('/transacciones', ['as' => 'admin.transactions', 'uses' => 'Admin\TransactionController@index']);
+
+    Route::get('/usuarios', ['as' => 'admin.users', 'uses' => 'Admin\UserController@index']);
+    Route::get('/usuario/{user}', ['as' => 'admin.user', 'uses' => 'Admin\UserController@show'])->where('user', '[0-9]+');
 });
 
 Auth::routes();
