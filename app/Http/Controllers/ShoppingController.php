@@ -70,6 +70,7 @@ class ShoppingController extends Controller
             case 3:
                 $user->team->trainer = Carbon::now()->addWeeks(1);
                 $user->team->save();
+                $user->team->train();
                 $success_message = 'El entrenador ha sido contratado hasta el ' . $user->team->trainer->format('d/m/Y H:i:s') . '.';
                 break;
             case 4:
