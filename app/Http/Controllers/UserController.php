@@ -16,6 +16,16 @@ class UserController extends Controller
         $user = Auth::guard('api')->user()->user;
         if ($user->team) {
             $user->team->makeVisible(['last_trainning', 'trainer', 'trainning_count']);
+            $formation = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+            foreach($user->team->players as $player) {
+                $pos = array_search($player->id, $user->team->formation);
+                if ($pos !== FALSE) {
+                    $formation[$pos] = $player;
+                } else {
+                    $formation[] = $player;
+                }
+            }
+            $user->team->formation = $formation;
         }
         return response()->json([
             'user' => $user->makeVisible(['email', 'credits', 'last_activity'])
