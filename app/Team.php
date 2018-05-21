@@ -23,6 +23,7 @@ class Team extends Model
      */
     protected $casts = [
         'formation' => 'array',
+        'playable'  => 'boolean'
     ];
 
     /**
