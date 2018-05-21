@@ -83,10 +83,9 @@ function refreshResultModal(data) {
         loadSVGintoIMG($(this), $(this).attr('src'));
     });
 
-    if ($('#modal-playing')) {
+    if ($('#modal-playing').is(':visible')) {
         $('#modal-playing').on('hidden.bs.modal', function () {
             $('#modal-match-result').modal('show');
-            //$('#modal-playing').modal('hide');
         }).modal('hide');
     } else {
         $('#modal-match-result').modal('show');
