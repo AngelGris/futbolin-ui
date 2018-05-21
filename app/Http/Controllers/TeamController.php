@@ -605,14 +605,19 @@ class TeamController extends Controller
         ]);
 
         if ($request->expectsJson()) {
-            $team = Auth::guard('api')->user()->user->team;
+            if (empty(Auth::guard('api')->user())) {
+                $team = Auth::user()->team;
+            } else {
+                $team = Auth::guard('api')->user()->user->team;
+                $api = TRUE;
+            }
         } else {
             $team = Auth::user()->team;
         }
         $team->strategy_id = $request->strategy;
         $team->save();
 
-        if ($request->expectsJson()) {
+        if ($api) {
             return response()->json([
                 'team' => $team
             ], 200);
