@@ -2,13 +2,17 @@
 
 namespace App\Console;
 
+use App\MatchesRound;
+use App\Team;
+use App\TeamFundMovement;
+use App\Tournament;
+use App\TournamentPosition;
+use App\TournamentRound;
+use App\Player;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Team;
-use App\Tournament;
-use App\Player;
 
 class Kernel extends ConsoleKernel
 {
@@ -35,7 +39,37 @@ class Kernel extends ConsoleKernel
         $schedule->exec('python3 ' . base_path() . '/python/cron.py')
                 ->cron('0 20 * * 1,3,5 *')
                 ->appendOutputTo('/var/log/futbolin/matches.log')
+                ->before(function() {
+                    /**
+                     * Calculate match incomes
+                     */
+                    $rounds = TournamentRound::whereBetween('datetime', [Carbon::now()->startOfDay()->getTimestamp(), Carbon::now()->endOfDay()->getTimestamp()])->get();
+                    foreach ($rounds as $round) {
+                        $top_points = TournamentPosition::where('category_id', $round['category_id'])->where('position', 1)->first();
+                        $matches = MatchesRound::where('round_id', $round['id'])->get();
+                        foreach ($matches as $match) {
+                            $local = TournamentPosition::where('category_id', $round['category_id'])->where('team_id', $match->local_id)->first();
+                            $visit = TournamentPosition::where('category_id', $round['category_id'])->where('team_id', $match->visit_id)->first();
+                            $local_assistance = max(0.1, (100 - ((int)(($top_points->points - $local->points) * 2))) / 100);
+                            $visit_assistance = max(0.1, (100 - ((int)(($top_points->points - $visit->points) * 2))) / 100);
+                            $total_assistance = (0.6 * $local_assistance) + (0.4 * (($local_assistance + $visit_assistance) / 2));
+
+                            $match->assistance = (int)(\Config::get('constants.STADIUM_SIZE') * $total_assistance);
+                            $match->incomes = $match->assistance * \Config::get('constants.TICKET_VALUE');
+                            $match->save();
+
+                            $incomes = (int)($match->incomes / 2);
+                            $local = Team::find($match->local_id);
+                            $local->moneyMovement($incomes, 'Ingresos por venta de entradas');
+                            $visit = Team::find($match->visit_id);
+                            $visit->moneyMovement($incomes, 'Ingresos por venta de entradas');
+                        }
+                    }
+                })
                 ->after(function() {
+                    /**
+                     * Upgrade players
+                     */
                     $players = Player::where('experience', '>=', 100)->get();
                     foreach($players as $player) {
                         $player->upgrade();
@@ -85,6 +119,18 @@ class Kernel extends ConsoleKernel
                 })
                 ->cron('0 12 * * 6 *')
                 ->appendOutputTo('/var/log/futbolin/tournament.log');
+
+        /**
+         * Run weekly team maintenance
+         */
+        $schedule->call(function() {
+                    $teams = Team::where('id', '>=', 27)->get();
+                    foreach ($teams as $team) {
+                        $team->paySalaries();
+                    }
+                })
+                ->cron('0 20 * * 7 *')
+                ->appendOutputTo('/var/log/futbolin/weekly_maintenance.log');
 
         /**
          * Delete old matches log files

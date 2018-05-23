@@ -97,6 +97,8 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
         Route::post('/entrenar', 'TeamController@train');
     });
 
+    Route::get('/finanzas', ['as' => 'finances', 'uses' => 'TeamFundMovementController@index']);
+
     Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showListing']);
 
     Route::get('/jugador/{player}', ['as' => 'player', 'uses' => 'PlayerController@index'])->where('player', '[0-9]+');

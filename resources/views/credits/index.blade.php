@@ -28,6 +28,9 @@
 
 @section('content-inner')
 <div>
+    <div class="col-sm-12" style="margin-bottom:20px;">
+        <h4 style="text-align: right;">Fúlbos: {{ $_user->credits }}</h4>
+    </div>
     @foreach($items as $item)
     <div class="col-sm-4">
         <div class="shopping-item-wrapper" data-id="{{ $item->id }}">

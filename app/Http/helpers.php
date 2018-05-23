@@ -1,10 +1,40 @@
 <?php
-function getDomain() {
+/**
+ * Format number into currency
+ *
+ * @param float $value
+ * @param integer $decimals
+ * @return String
+ */
+function formatCurrency($value, $decimals = 0)
+{
+    $funds = number_format($value, $decimals) . ' $';
+    if ($value < 0) {
+        $funds = '<span style="color:#f00;">' . $funds . '</span>';
+    }
+
+    return $funds;
+}
+
+/**
+ * Get current domain
+ *
+ * @return String
+ */
+function getDomain()
+{
     $host = parse_url(\Request::server('HTTP_HOST'));
     return str_replace('admin.', '', (!empty($host['host']) ? $host['host'] : $host['path']));
 }
 
-function getMatchLog($file) {
+/**
+ * Get match log from file
+ *
+ * @param String $file
+ * @return Array String
+ */
+function getMatchLog($file)
+{
     $file_name = base_path() . '/python/logs/' . $file;
 
     $data = [];
@@ -16,7 +46,15 @@ function getMatchLog($file) {
     return $data;
 }
 
-function lumdiff($color1, $color2) {
+/**
+ * Calculate colors luminosity difference
+ *
+ * @param Array integer $color1
+ * @param Array integer $color2
+ * @return float
+ */
+function lumdiff($color1, $color2)
+{
     $L1 = 0.2126 * pow($color1[0]/255, 2.2) +
           0.7152 * pow($color1[1]/255, 2.2) +
           0.0722 * pow($color1[2]/255, 2.2);
@@ -32,7 +70,17 @@ function lumdiff($color1, $color2) {
     }
 }
 
-function randomGauss($min, $max, $std_deviation, $step=1) {
+/**
+ * Calculate random Gauss number
+ *
+ * @param float $min
+ * @param float $max
+ * @param float $std_deviation
+ * @param integer #step
+ * @return float
+ */
+function randomGauss($min, $max, $std_deviation, $step=1)
+{
     $rand1 = (float)mt_rand()/(float)mt_getrandmax();
     $rand2 = (float)mt_rand()/(float)mt_getrandmax();
     $gaussian_number = sqrt(-2 * log($rand1)) * cos(2 * M_PI * $rand2);
@@ -46,7 +94,15 @@ function randomGauss($min, $max, $std_deviation, $step=1) {
     return $random_number;
 }
 
-function readableTime($seconds, $short = FALSE) {
+/**
+ * Format time in a readable string
+ *
+ * @param integer $seconds
+ * @param boolean $short
+ * @return String
+ */
+function readableTime($seconds, $short = FALSE)
+{
     if ($short) {
         $hours_label = ['h', 'h'];
         $minutes_label = ['m', 'm'];
@@ -65,7 +121,15 @@ function readableTime($seconds, $short = FALSE) {
     return $output;
 }
 
-function textColor($bgColor, $optColor) {
+/**
+ * Calculate text color based on the background color
+ *
+ * @param Array integer $bgColor
+ * @param Array integer $optColor
+ * @return String
+ */
+function textColor($bgColor, $optColor)
+{
     if (lumdiff($bgColor, $optColor) >= 5) {
         return '#' . sprintf('%02s', dechex($optColor[0])) . sprintf('%02s', dechex($optColor[1])) . sprintf('%02s', dechex($optColor[2]));
     } else if (lumdiff($bgColor, [0, 0, 0]) >= 5) {

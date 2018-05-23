@@ -2,7 +2,10 @@
     @if ($show_remaining)
     <div class="alert alert-danger" role="alert">En {{ $remaining_time }} podrás jugar un nuevo amistoso contra éste equipo</div>
     @endif
-    <h4 style="margin-bottom:20px;">{{ $stadium }} ({{ $datetime }})</h4>
+    <h4>{{ $stadium }} ({{ $datetime }})</h4>
+    @if ($assistance > 0)
+    <p>{{ number_format($assistance) }} espectadores - {{ number_format($incomes) }} $</p>
+    @endif
     <div class="col-xs-4">
         <img class="svg" id="shield-local-res" src="{{ $local['shield_file'] }}"  data-color-primary="{{ $local['primary_color'] }}" data-color-secondary="{{ $local['secondary_color'] }}" style="height:70px;">
         <h4>{{ $local['name'] }}</h4>

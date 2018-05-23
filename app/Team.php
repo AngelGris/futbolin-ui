@@ -2,10 +2,11 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Faker;
+use App\TeamFundMovement;
 use Carbon\Carbon;
 use DB;
+use Faker;
+use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
@@ -33,7 +34,7 @@ class Team extends Model
     /**
      * Attribute limits for newly created players
      *
-     * @var arrau
+     * @var array
      */
     private $limits = [
         'ARQ' => [
@@ -87,7 +88,17 @@ class Team extends Model
     ];
 
     /**
+     * Get team funds movements
+     */
+    public function fundMovements()
+    {
+        return $this->hasMany(TeamFundMovement::class)->orderBy('created_at', 'DESC');
+    }
+
+    /**
      * Get the players associated with the team
+     *
+     * @return Collection Player
      */
     public function players()
     {
@@ -96,6 +107,8 @@ class Team extends Model
 
     /**
      * Get the team's positions
+     *
+     * @return Collection TournamentPosition
      */
     public function positions()
     {
@@ -104,6 +117,8 @@ class Team extends Model
 
     /**
      * Get the team's strategy
+     *
+     * @return Strategy
      */
     public function strategy()
     {
@@ -112,6 +127,8 @@ class Team extends Model
 
     /**
      * Get the user associated with the team
+     *
+     * @return User
      */
     public function user()
     {
@@ -120,6 +137,8 @@ class Team extends Model
 
     /**
      * Create new player in the team
+     *
+     * @return Player
      */
     public function createPlayer($number, $position, $max_age = FALSE)
     {
@@ -156,7 +175,24 @@ class Team extends Model
     }
 
     /**
+     * Funds with HTML format
+     *
+     * @return String
+     */
+    public function getFormattedFundsAttribute()
+    {
+        $funds = number_format($this->funds, 0) . ' $';
+        if ($this->funds < 0) {
+            $funds = '<span style="color:#f00;">' . $funds . '</span>';
+        }
+
+        return $funds;
+    }
+
+    /**
      * Injured players in the team
+     *
+     * @return Collection Player
      */
     public function getInjuredPlayersAttribute()
     {
@@ -165,6 +201,8 @@ class Team extends Model
 
     /**
      * Get live match for team
+     *
+     * @return Matches
      */
     public function getLiveMatchAttribute()
     {
@@ -178,6 +216,9 @@ class Team extends Model
 
     /**
      * Replace player with a new one
+     *
+     * @param $player_id integer
+     * @return void
      */
     public function replacePlayer($player_id)
     {
@@ -257,6 +298,8 @@ class Team extends Model
 
     /**
      * Update if the team meats the requirements to play a match
+     *
+     * @return void
      */
     public function updatePlayable()
     {
@@ -282,6 +325,8 @@ class Team extends Model
 
     /**
      * Get team's average attribute
+     *
+     * @return integer
      */
     public function getAverageAttribute()
     {
@@ -317,6 +362,8 @@ class Team extends Model
 
     /**
      * Check if team can train
+     *
+     * @return boolean
      */
     public function getTrainableAttribute()
     {
@@ -335,6 +382,8 @@ class Team extends Model
 
     /**
      * Get remaining time for the trainer
+     *
+     * @return String
      */
     public function getTrainerRemainingAttribute()
     {
@@ -367,6 +416,8 @@ class Team extends Model
 
     /**
      * Check if team is in train spam
+     *
+     * @return boolean
      */
     public function getInTrainningSpamAttribute()
     {
@@ -379,6 +430,8 @@ class Team extends Model
 
     /**
      * Remaining time to become trainable
+     *
+     * @return integer
      */
     public function getTrainableRemainingAttribute()
     {
@@ -393,6 +446,8 @@ class Team extends Model
 
     /**
      * Get the team's trophies
+     *
+     * @return Array TournamentPosition
      */
     public function getTrophiesAttribute()
     {
@@ -409,6 +464,8 @@ class Team extends Model
 
     /**
      * Get SVG file for the team shield
+     *
+     * @return String
      */
     public function getShieldFileAttribute()
     {
@@ -418,9 +475,42 @@ class Team extends Model
     }
 
     /**
-     * Train the team
-     * @param boolean $force Force trainning (used for personal trainer)
+     * Process money income
      *
+     * @param integer $incomes
+     * @param String $description
+     * @return integer
+     */
+    public function moneyMovement($amount, $description)
+    {
+        // Limit the funds in the team
+        $amount = min($amount, \Config::get('constants.MAX_TEAM_FUNDS') - $this->funds);
+
+        $this->funds += $amount;
+        $this->save();
+        TeamFundMovement::create([
+            'team_id'       => $this->id,
+            'amount'        => $amount,
+            'balance'       => $this->funds,
+            'description'   => $description
+        ]);
+    }
+
+    /**
+     * Pay salaries
+     *
+     * @return void
+     */
+    public function paySalaries()
+    {
+        $salaries = (int)($this->players()->sum('value') * \Config::get('constants.PLAYERS_SALARY'));
+        $this->moneyMovement(-$salaries, 'Pago de salarios');
+    }
+
+    /**
+     * Train the team
+     *
+     * @param boolean $force Force trainning (used for personal trainer)
      * @return boolean Team trained
      */
     public function train($force = FALSE)

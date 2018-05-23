@@ -304,8 +304,8 @@
                 @if (empty($header_team) || $header_team->id == $_team->id)
                 <img class="svg shield" src="{{ asset($_team['shield_file']) }}" data-color-primary="{{ $_team['primary_color'] }}" data-color-secondary="{{ $_team['secondary_color'] }}">
                 <div>
-                    <h2>{{ $_team['name'] }}</h2>
-                    <h4>Fúlbos: {{ $_user->credits }} <a href="{{ route('shopping.credits') }}" class="btn btn-xs btn-primary">Comprar Fúlbos</a></h4>
+                    <h2>{{ $_team->name }}</h2>
+                    <h4>{!! $_team->formatted_funds !!}</h4>
                 </div>
                 @else
                 <img class="svg shield" src="{{ asset($header_team['shield_file']) }}" data-color-primary="{{ $header_team['primary_color'] }}" data-color-secondary="{{ $header_team['secondary_color'] }}">

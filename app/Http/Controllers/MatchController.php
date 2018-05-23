@@ -52,7 +52,6 @@ class MatchController extends Controller
     public function load(Request $request)
     {
         $data = getMatchLog($request->file);
-
         $local = Team::find($data['local']['id']);
         $visit = Team::find($data['visit']['id']);
 
@@ -93,6 +92,8 @@ class MatchController extends Controller
         }
 
         $params = [
+            'assistance' => empty($data['assistance']) ? 0 : $data['assistance'],
+            'incomes' => empty($data['incomes']) ? 0 : $data['incomes'],
             'show_remaining' => $show_remaining,
             'remaining_time' => readableTime($remaining_time),
             'datetime' => date('d/m/Y H:i', $data['timestamp']),

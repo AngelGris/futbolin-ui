@@ -39,6 +39,7 @@ class ComposerServiceProvider extends ServiceProvider
                     $navigation = [
                         ['url' => 'vestuario', 'icon' => 'fa fa-home', 'name' => 'Vestuario'],
                         ['url' => 'equipo', 'icon' => 'fa fa-shield', 'name' => 'Equipo'],
+                        ['url' => 'finanzas', 'icon' => 'fa fa-money', 'name' => 'Finanzas'],
                         ['url' => 'jugadores', 'icon' => 'fa fa-group', 'name' => 'Jugadores'],
                         ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estrategia'],
                         ['url' => 'amistosos', 'icon' => 'fa fa-handshake-o', 'name' => 'Amistosos'],
