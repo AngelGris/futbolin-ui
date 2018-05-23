@@ -1,7 +1,7 @@
 @extends('layouts.inner')
 
 @section('content-inner')
-@if (empty($movements))
+@if (count($movements) == 0)
 <h3>No hay movimientos</h3>
 @else
 {{ $movements->links() }}
