@@ -588,6 +588,8 @@ class TeamController extends Controller
         $team->save();
         $team->updatePlayable();
 
+        $team->formation = $team->formationObjects;
+
         if ($request->expectsJson()) {
             return response()->json([
                 'team' => $team
@@ -616,6 +618,8 @@ class TeamController extends Controller
         }
         $team->strategy_id = $request->strategy;
         $team->save();
+
+        $team->formation = $team->formationObjects;
 
         if ($api) {
             return response()->json([

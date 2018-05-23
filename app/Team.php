@@ -179,6 +179,26 @@ class Team extends Model
     }
 
     /**
+     * Get formation with Player objects
+     *
+     * @return Array Player
+     */
+    public function getFormationObjectsAttribute()
+    {
+        $formation = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+        foreach($this->players as $player) {
+            $pos = array_search($player->id, $this->formation);
+            if ($pos !== FALSE) {
+                $formation[$pos] = $player;
+            } else {
+                $formation[] = $player;
+            }
+        }
+
+        return $formation;
+    }
+
+    /**
      * Injured players in the team
      *
      * @return Collection Player
