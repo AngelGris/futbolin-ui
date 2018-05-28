@@ -151,8 +151,8 @@ function loadResult(fileName) {
                 </td>
                 <td align="center">
                     @if ($playable && $team['playable'] && $team['id'] != $_team['id'])
-                    <a href="#" id="btn-play-{{ $team['id'] }}" class="play" data-id="{{ $team['id'] }}"{!! !empty($played[$team['id']]) ? ' style="display:none;"' : '' !!}><span class="fa fa-handshake-o" title="Amistoso"></span></a>
-                    <span id="span-play-{{ $team['id'] }}" data-id="{{ $team['id'] }}" {!! empty($played[$team['id']]) ? ' style="display:none;"' : '' !!}>{{ !empty($played[$team['id']]) ? $played[$team['id']] : '24 h' }}</span>
+                    <a href="#" id="btn-play-{{ $team['id'] }}" class="play" data-id="{{ $team['id'] }}"{!! !empty($team->played) ? ' style="display:none;"' : '' !!}><span class="fa fa-handshake-o" title="Amistoso"></span></a>
+                    <span id="span-play-{{ $team['id'] }}" data-id="{{ $team['id'] }}" {!! empty($team->played) ? ' style="display:none;"' : '' !!}>{{ !empty($team->played) ? $team->played : '24 h' }}</span>
                     @endif
                 </td>
             </tr>

@@ -15,6 +15,15 @@ class Tournament extends Model
     protected $guarded = ['id'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'closed', 'created_at', 'updated_at'
+    ];
+
+    /**
      * Tournament's categories
      */
     public function tournamentCategories()

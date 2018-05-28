@@ -48,6 +48,9 @@ Route::group(['middleware' => ['auth.api']], function() {
         Route::patch('/strategy', 'TeamController@updateStrategy');
         Route::post('/train', 'TeamController@train');
     });
+    Route::get('/teams', 'TeamController@showAll');
+
+    Route::get('/tournament/{tournament?}', 'TournamentController@index')->where('tournament', '[0-9]+');
 
     Route::get('/user/{user}', 'UserController@show')->where('user', '[0-9]+');
 });

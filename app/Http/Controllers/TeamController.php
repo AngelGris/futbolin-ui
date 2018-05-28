@@ -633,7 +633,11 @@ class TeamController extends Controller
      */
     public function showAll(Request $request)
     {
-        $user = Auth::user();
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
         $matches = Matches::where('local_id', '=', $user->team->id)->where('type_id', '=', 2)->where('created_at', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'] - 86400))->get();
 
         $played = [];
@@ -641,16 +645,30 @@ class TeamController extends Controller
             $played[$match['visit_id']] = readableTime(86400 - ($_SERVER['REQUEST_TIME'] - strtotime($match['created_at'])), TRUE);
         }
 
-        $vars = [
-            'icon' => 'fa fa-handshake-o',
-            'title' => 'Amistosos',
-            'subtitle' => 'Hora de ponernos a prueba',
-            'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
-            'teams' => Team::where('user_id', '>', 1)->get(),
-            'played' => $played,
-            'playable' => $user->team->playable,
-        ];
+        $teams = Team::where('user_id', '>', 1)->get();
+        foreach ($teams as &$team) {
+            if (empty($played[$team->id])) {
+                $team->played = NULL;
+            } else {
+                $team->played = $played[$team->id];
+            }
+        }
 
-        return view('team.listing', $vars);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'teams'     => $teams,
+            ], 200);
+        } else {
+            $vars = [
+                'icon' => 'fa fa-handshake-o',
+                'title' => 'Amistosos',
+                'subtitle' => 'Hora de ponernos a prueba',
+                'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
+                'teams' => $teams,
+                'playable' => $user->team->playable,
+            ];
+
+            return view('team.listing', $vars);
+        }
     }
 }

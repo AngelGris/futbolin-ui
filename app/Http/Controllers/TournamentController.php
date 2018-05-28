@@ -9,7 +9,7 @@ use App\TournamentCategory;
 
 class TournamentController extends Controller
 {
-    public function index($category_id = NULL)
+    public function index(Request $request, $category_id = NULL)
     {
         $vars = [
             'icon' => 'fa fa-trophy',
@@ -17,10 +17,16 @@ class TournamentController extends Controller
             'subtitle' => 'A demostrar quién manda'
         ];
 
+        if ($request->expectsJson()) {
+            $team = Auth::guard('api')->user()->user->team;
+        } else {
+            $team = Auth::user()->team;
+        }
+
         if (is_null($category_id)) {
             $category_id =  \DB::table('tournament_categories')
                             ->join('tournament_positions', 'tournament_positions.category_id', '=', 'tournament_categories.id')
-                            ->where('tournament_positions.team_id', '=', Auth::user()->team->id)
+                            ->where('tournament_positions.team_id', '=', $team->id)
                             ->max('tournament_categories.id');
         }
 
@@ -62,6 +68,13 @@ class TournamentController extends Controller
 
         $vars['categories'] = TournamentCategory::where('tournament_id', '=', $tournament->id)->get();
 
-        return view('tournament.index', $vars);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'tournament'    => $tournament,
+                'category'      => $category
+            ], 200);
+        } else {
+            return view('tournament.index', $vars);
+        }
     }
 }
