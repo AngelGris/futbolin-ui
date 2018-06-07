@@ -183,23 +183,7 @@ $(function() {
             var old_id = parseInt($(this).data('player-id'));
 
             $(this).data('player-id', id);
-            var content = players[id]['number'] + '<div class="status">';
-            if (players[id]['retiring']) {
-                content += '<span class="fa fa-user-times" style="color:#f00;"></span>';
-            }
-            if (players[id]['cards_count'] >= {{ config('constants.YELLOW_CARDS_SUSPENSION') - 1}}) {
-                content += '<span class="fa fa-square" style="color:#ff0;"></span>';
-            }
-            if (players[id]['suspended']) {
-                content += '<span class="fa fa-square" style="color:#f00;"></span>';
-            }
-            if (players[id]['recovery']) {
-                content += '<span class="fa fa-medkit" style="color:#f00;"></span>';
-            }
-            if (players[id]['stamina'] < 50) {
-                content += '<span class="fa fa-arrow-down" style="color:#f00;"></span>';
-            }
-            content += '<div>';
+            content = playerHandler(id);
             $(this).html(content);
             $(this).removeClass('arq');
             $(this).removeClass('def');
@@ -213,23 +197,7 @@ $(function() {
                 ui.draggable.removeClass('med');
                 ui.draggable.removeClass('ata');
                 if (old_id > 0) {
-                    var content = players[old_id]['number'] + '<div class="status">';
-                    if (players[old_id]['retiring']) {
-                        content += '<span class="fa fa-user-times" style="color:#f00;"></span>'
-                    }
-                    if (players[old_id]['cards_count'] >= {{ config('constants.YELLOW_CARDS_SUSPENSION') - 1 }}) {
-                        content += '<span class="fa fa-square" style="color:#ff0;"></span>';
-                    }
-                    if (players[old_id]['suspended']) {
-                        content += '<span class="fa fa-square" style="color:#f00;"></span>';
-                    }
-                    if (players[old_id]['recovery']) {
-                        content += '<span class="fa fa-medkit" style="color:#f00;"></span>';
-                    }
-                    if (players[old_id]['stamina'] < 50) {
-                        content += '<span class="fa fa-arrow-down" style="color:#f00;"></span>';
-                    }
-                    content += '</div>';
+                    var content = playerHandler(old_id);
                     ui.draggable.html(content);
                     ui.draggable.addClass(players[old_id]['position'].toLowerCase());
                 } else {
@@ -252,6 +220,46 @@ $(function() {
             });
         }
     });
+
+    function playerHandler(index) {
+        var content = players[index]['number'] + '<div class="status">';
+        var count = 0;
+        if (players[index]['retiring'] && count < 3) {
+            content += '<span class="fa fa-user-times" style="color:#f00;"></span>';
+            count++;
+        }
+        if (players[index]['cards_count'] >= {{ config('constants.YELLOW_CARDS_SUSPENSION') - 1}} && count < 3) {
+            content += '<span class="fa fa-square" style="color:#ff0;"></span>';
+            count++;
+        }
+        if (players[index]['suspended'] && count < 3) {
+            content += '<span class="fa fa-square" style="color:#f00;"></span>';
+            count++;
+        }
+        if (players[index]['recovery'] && count < 3) {
+            content += '<span class="fa fa-medkit" style="color:#f00;"></span>';
+            count++;
+        }
+        if (players[index]['healed'] && count < 3) {
+            content += '<span class="fa fa-plus-circle" style="color:#0a0;"></span>';
+            count++;
+        }
+        if (players[index]['upgraded'] && count < 3) {
+            content += '<span class="fa fa-arrow-circle-up" style="color:#0a0;"></span>';
+            count++;
+        }
+        if (players[index]['stamina'] < 50 && count < 3) {
+            content += '<span class="fa fa-arrow-down" style="color:#f00;"></span>';
+            count++;
+        }
+        if (players[index]['transferable'] && count < 3) {
+            content += '<span class="fa fa-share-square-o" style="color:#0a0;"></span>';
+            count++;
+        }
+        content += '<div>';
+
+        return content;
+    }
 });
 </script>
 @endsection
@@ -277,28 +285,12 @@ $(function() {
                 <img src="{{ asset('img/field-large-3d.png') }}">
                 <div class="strategy-players-container">
                     @for ($i = 1; $i <= 11; $i++)
-                        @if (empty($formation[$i - 1]))
+                        @if (empty($players[$formation[$i - 1]]))
                         <div id="player-{{ sprintf('%02d', $i) }}" data-player-id="0" class="player-container player-draggable player-droppable rollover-player" style="left:{{ $strategies[$strategy][$i]['left'] }}%;top:{{ $strategies[$strategy][$i]['top'] }}%;"></div>
                         @else
                         <div id="player-{{ sprintf('%02d', $i) }}" data-player-id="{{ isset($formation[$i - 1]) ? $formation[$i - 1] : 0 }}" class="player-container player-draggable player-droppable rollover-player {{ strtolower($players[$formation[$i - 1]]['position']) }}" style="left:{{ $strategies[$strategy][$i]['left'] }}%;top:{{ $strategies[$strategy][$i]['top'] }}%;">
                             {{ $players[$formation[$i - 1]]['number'] }}
-                            <div class="status">
-                                @if ($players[$formation[$i - 1]]['retiring'])
-                                <span class="fa fa-user-times" style="color:#f00;"></span>
-                                @endif
-                                @if ($players[$formation[$i - 1]]['cards']['cards'] >= (config('constants.YELLOW_CARDS_SUSPENSION') - 1))
-                                <span class="fa fa-square" style="color:#ff0;"></span>
-                                @endif
-                                @if ($players[$formation[$i - 1]]['cards']['suspension'])
-                                <span class="fa fa-square" style="color:#f00;"></span>
-                                @endif
-                                @if ($players[$formation[$i - 1]]['recovery'])
-                                <span class="fa fa-medkit" style="color:#f00;"></span>
-                                @endif
-                                @if ($players[$formation[$i - 1]]['stamina'] < 50)
-                                <span class="fa fa-arrow-down" style="color:#f00;"></span>
-                                @endif
-                            </div>
+                            {!! $players[$formation[$i - 1]]->bladeHandlerIcons !!}
                         </div>
                         @endif
                     @endfor
@@ -306,28 +298,12 @@ $(function() {
             </div>
             <h3 style="font-weight:bold;margin-top:20px;">Suplentes</h3>
             @for ($i = 12; $i <= 18; $i++)
-                @if (empty($formation[$i - 1]))
+                @if (empty($players[$formation[$i - 1]]))
                 <div id="player-{{ $i }}" data-player-id="0" class="player-container player-draggable player-droppable rollover-player"></div>
                 @else
                 <div id="player-{{ $i }}" data-player-id="{{ $formation[$i - 1] }}" class="player-container player-draggable player-droppable rollover-player {{ strtolower($players[$formation[$i - 1]]['position']) }}">
                     {{ $players[$formation[$i - 1]]['number'] }}
-                    <div class="status">
-                        @if ($players[$formation[$i - 1]]['retiring'])
-                        <span class="fa fa-user-times" style="color:#f00;"></span>
-                        @endif
-                        @if ($players[$formation[$i - 1]]['cards']['cards'] > 3)
-                        <span class="fa fa-square" style="color:#ff0;"></span>
-                        @endif
-                        @if ($players[$formation[$i - 1]]['cards']['suspension'])
-                        <span class="fa fa-square" style="color:#f00;"></span>
-                        @endif
-                        @if ($players[$formation[$i - 1]]['recovery'])
-                        <span class="fa fa-medkit" style="color:#f00;"></span>
-                        @endif
-                        @if ($players[$formation[$i - 1]]['stamina'] < 50)
-                        <span class="fa fa-arrow-down" style="color:#f00;"></span>
-                        @endif
-                    </div>
+                    {!! $players[$formation[$i - 1]]->bladeHandlerIcons !!}
                 </div>
                 @endif
             @endfor
@@ -362,8 +338,17 @@ $(function() {
                     @if ($player->recovery)
                     <span class="fa fa-medkit" style="color:#f00;"></span>
                     @endif
+                    @if ($player->healed)
+                    <span class="fa fa-plus-circle" style="color:#0a0;"></span>
+                    @endif
+                    @if ($player->upgraded)
+                    <span class="fa fa-arrow-circle-up" style="color:#0a0;"></span>
+                    @endif
                     @if ($player->stamina < 50)
                     <span class="fa fa-arrow-down" style="color:#f00;"></span>
+                    @endif
+                    @if ($player->transferable)
+                    <span class="fa fa-share-square-o" style="color:#0a0;"></span>
                     @endif
                 </td>
                 <td align="center" class="player-position"><span data-placement="top" data-toggle="tooltip" data-original-title="{{ $player['position_long'] }}">{{ $player['position'] }}</span></td>
@@ -372,12 +357,7 @@ $(function() {
             @endforeach
         </tbody>
     </table>
-    <span class="fa fa-user-times" style="color:#f00;"></span> = jugadores que se retiran al final de la temporada<br>
-    <span class="fa fa-square" style="color:#ff0;"></span> = jugadores con {{ config('constants.YELLOW_CARDS_SUSPENSION') - 1 }} tarjetas amarillas<br>
-    <span class="fa fa-square" style="color:#f00;"></span> = jugadores suspendido<br>
-    <span class="fa fa-medkit" style="color:#f00;"></span> = jugadores lesionados<br>
-    <span class="fa fa-arrow-circle-up" style="color:#080;"></span> = jugadores mejorados después del último partido<br>
-    <span class="fa fa-arrow-down" style="color:#f00;"></span> = jugadores con poca energía<br>
+    @include('modules.playerslegends')
 </div>
 <div class="col-md-3">
     <div id="player-info" class="widgetbox col-md-12" style="display:none;">

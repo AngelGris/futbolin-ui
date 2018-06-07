@@ -101,7 +101,13 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
 
     Route::get('/jugadores', ['as' => 'players', 'uses' => 'PlayerController@showListing']);
 
-    Route::get('/jugador/{player}', ['as' => 'player', 'uses' => 'PlayerController@index'])->where('player', '[0-9]+');
+    Route::group(['prefix' => 'jugador'], function() {
+        Route::post('/ofertar', ['as' => 'player.offer', 'uses' => 'PlayerController@offer']);
+        Route::get('/{player}', ['as' => 'player', 'uses' => 'PlayerController@index'])->where('player', '[0-9]+');
+        Route::post('/{player}/liberar', ['as' => 'player.free', 'uses' => 'PlayerController@free'])->where('player', '[0-9]+');
+        Route::post('/{player}/transferible', ['as' => 'player.selling', 'uses' => 'PlayerController@startSelling'])->where('player', '[0-9]+');
+        Route::post('/{player}/value', ['as' => 'player.value', 'uses' => 'PlayerController@updateValue'])->where('player', '[0-9]+');
+    });
 
     Route::get('/estrategia', ['as' => 'strategy', 'uses' => 'TeamController@showStrategy']);
 
@@ -119,6 +125,8 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
     Route::get('/torneos', ['as' => 'tournaments', 'uses' => 'TournamentController@index']);
     Route::get('/torneo/{category}', ['as' => 'tournament', 'uses' => 'TournamentController@index'])->where('tournament', '[0-9]+');
 
+    Route::get('/mercado', ['as' => 'market', 'uses' => 'MarketController@index']);
+
     Route::group(['prefix' => 'shopping'], function() {
         Route::get('/', ['as' => 'shopping', 'uses' => 'ShoppingController@index']);
         Route::get('/creditos', ['as' => 'shopping.credits', 'uses' => 'CreditController@index']);
@@ -128,7 +136,6 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
     Route::group(['prefix' => 'payment'], function() {
         Route::post('/', ['as' => 'payment.checkout', 'uses' => 'PaymentController@checkout']);
         Route::get('/paypal/process', ['as' => 'payment.paypal.process', 'uses' => 'PaymentController@processPaypal']);
-        Route::post('/mercadopago/ipn', 'PaymentController@processMercadopago');
     });
 
     Route::get('/mensaje-admin/{message}', 'Admin\MessageController@showPublic')->where('message', '[0-9]+');
