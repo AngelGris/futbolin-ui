@@ -46,7 +46,11 @@ class Tournament extends Model
                       ->whereNull('deleted_at')
                       ->get();
         foreach ($players as $player) {
-            Team::find($player->team_id)->replacePlayer($player->id);
+            if ($player->team_id) {
+                Team::find($player->team_id)->replacePlayer($player->id);
+            } else {
+                $player->delete();
+            }
         }
 
         /**

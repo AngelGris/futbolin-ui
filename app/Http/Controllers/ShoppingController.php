@@ -74,9 +74,26 @@ class ShoppingController extends Controller
                 $success_message = 'El entrenador ha sido contratado hasta el ' . $user->team->trainer->format('d/m/Y H:i:s') . '.';
                 break;
             case 4:
+            case 5:
                 $player = Player::find($request->input('player_id'));
-                $player->treat();
-                $success_message = $player->short_name . ' fue tratado por su lesión.';
+                if ($player->team->id != $user->team->id) {
+                    Session::flash('flash_warning', $player->short_name . ' no es de tu equipo.');
+                    return redirect()->route('player', $player->id);
+                }
+
+                if ($shopping_item->id == 4) {
+                    $player->treat();
+                    $success_message = $player->short_name . ' fue tratado por su lesión.';
+                } else {
+                    $sellable_count = $player->team->sellabel_count;
+                    if ($sellable_count < 1) {
+                        Session::flash('flash_warning', 'Ha alcanzado el mínimo de jugadores en su equipo.');
+                        return redirect()->route('player', $player->id);
+                    }
+                    $player->setFree();
+                    $success_message = $player->short_name . ' ha sido liberado.';
+                }
+
                 $redirect = redirect()->route('player', $player->id);
                 break;
             default:
