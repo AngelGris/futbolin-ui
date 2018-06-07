@@ -118,20 +118,25 @@ class TournamentController extends Controller
 
                 $max_category = tournamentCategory::orderBy('tournament_id', 'DESC')->orderBy('category', 'DESC')->first();
                 $teams[$category->category] = [
-                    'active'    => [],
-                    'inactive'  => [],
-                    'degraded'  => 0
+                    'upgrading'    => [],
+                    'downgrading'  => [],
                 ];
                 foreach ($positions as $position) {
                     $team = Team::find($position->team_id);
                     if ($team->user_id > 1) {
                         $teams_listing[] = $team->id;
                         if (!is_null($team->user->last_activity) and (Carbon::now()->timestamp - $team->user->last_activity->timestamp) < \Config::get('constants.USER_INACTIVE')) {
-                            $teams[$category->category]['active'][] = $team;
+                            $teams[$category->category]['upgrading'][] = $team;
                         } else {
-                            $teams[$category->category]['inactive'][] = $team;
+                            $teams[$category->category]['downgrading'][] = $team;
                         }
                     }
+                }
+
+                if (count($teams[$category->category]['downgrading']) < \Config::get('constants.DEGRADES_PER_CATEGORY')) {
+                    $diff = \Config::get('constants.DEGRADES_PER_CATEGORY') - count($teams[$category->category]['downgrading']);
+                    $teams[$category->category]['downgrading'] = array_merge(array_slice($teams[$category->category]['upgrading'], -$diff), $teams[$category->category]['downgrading']);
+                    $teams[$category->category]['upgrading'] = array_slice(($teams[$category->category]['upgrading']), 0, -$diff);
                 }
             }
 
@@ -141,9 +146,9 @@ class TournamentController extends Controller
             $new_teams = Team::where('user_id', '>', 1)->whereNotIn('id', $teams_listing)->where('playable', '=', 1)->get();
             foreach ($new_teams as $team) {
                 if (!is_null($team->user->last_activity) and (Carbon::now()->timestamp - $team->user->last_activity->timestamp) < \Config::get('constants.USER_INACTIVE')) {
-                    $teams[$categories]['active'][] = $team;
+                    $teams[$categories]['upgrading'][] = $team;
                 } else {
-                    $teams[$categories]['inactive'][] = $team;
+                    $teams[$categories]['downgrading'][] = $team;
                 }
             }
 
@@ -152,48 +157,20 @@ class TournamentController extends Controller
              * always prioritize active players
              */
             for ($i = $categories; $i > 1; $i--) {
-                if (count($teams[$i]['active']) > 0 and count($teams[$i - 1]['inactive'])) {
-                    $moving = min(count($teams[$i]['active']), count($teams[$i - 1]['inactive']));
-                    $teams[$i - 1]['active'] = array_merge($teams[$i - 1]['active'], array_slice($teams[$i]['active'], 0, $moving));
-                    $teams[$i]['active'] = array_slice(($teams[$i]['active']), $moving);
+                $moving = min(count($teams[$i]['upgrading']), count($teams[$i - 1]['downgrading']));
+                $teams[$i - 1]['upgrading'] = array_merge($teams[$i - 1]['upgrading'], array_slice($teams[$i]['upgrading'], 0, $moving));
+                $teams[$i]['upgrading'] = array_slice(($teams[$i]['upgrading']), $moving);
 
-                    $teams[$i]['inactive'] = array_merge($teams[$i]['inactive'], array_slice($teams[$i - 1]['inactive'], 0, $moving));
-                    $teams[$i - 1]['inactive'] = array_slice(($teams[$i - 1]['inactive']), $moving);
-
-                    $teams[$i - 1]['degraded'] = $moving;
-                }
+                $teams[$i]['downgrading'] = array_merge(array_slice($teams[$i - 1]['downgrading'], -$moving), $teams[$i]['downgrading']);
+                $teams[$i - 1]['downgrading'] = array_slice(($teams[$i - 1]['downgrading']), 0, -$moving);
             }
 
             /**
-             * Complete downgrade from top to bottom
-             */
-            for ($i = 1; $i < $categories; $i++) {
-                if (
-                    $teams[$i]['degraded'] < \Config::get('constants.DEGRADES_PER_CATEGORY') and
-                    count($teams[$i + 1]['active']) > 0
-                ) {
-                    $moving = min(\Config::get('constants.DEGRADES_PER_CATEGORY') - $teams[$i]['degraded'], count($teams[$i + 1]['active']));
-                    $teams[$i]['active'] = array_merge(array_slice($teams[$i + 1]['active'], 0, $moving), $teams[$i]['active']);
-                    $teams[$i + 1]['active'] = array_slice(($teams[$i + 1]['active']), $moving);
-
-                    while($moving > 0) {
-                        if (!empty($teams[$i]['inactive'])) {
-                            array_unshift($teams[$i + 1]['inactive'], array_pop($teams[$i]['inactive']));
-                        } else {
-                            array_unshift($teams[$i + 1]['active'], array_pop($teams[$i]['active']));
-                        }
-                        $moving--;
-                        $teams[$i]['degraded']++;
-                    }
-                }
-            }
-
-            /**
-             * Merge active and inactive keeping the order
-             * first active and then inactive
+             * Merge upgrades and downgrades keeping the order
+             * first upgrades and then downgrades
              */
             for ($i = 1; $i <= $categories; $i++) {
-                $teams[$i] = array_merge($teams[$i]['active'], $teams[$i]['inactive']);
+                $teams[$i] = array_merge($teams[$i]['upgrading'], $teams[$i]['downgrading']);
             }
 
             for ($i = 1; $i < $categories; $i++) {

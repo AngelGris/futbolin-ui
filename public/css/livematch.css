@@ -8,7 +8,6 @@ body {
 
 h1 {
     font-size: 28px;
-    margin-bottom: 20px;
     text-align: center;
 }
 
@@ -16,6 +15,11 @@ h2 {
     font-size: 24px;
     margin-bottom: 10px;
     margin-top: 20px;
+    text-align: center;
+}
+
+h4.assistance {
+    margin-bottom: 20px;
     text-align: center;
 }
 

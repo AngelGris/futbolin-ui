@@ -337,13 +337,14 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .teamname h2 {
 	line-height: 40px;
     margin-top: 5px;
-    min-width: 280px;
+    min-width: 220px;
 	padding-left: 90px;
 	width: auto;
 }
 
 .teamname h4 {
     margin: 0;
+    text-align: right;
 }
 
 .teamname .primarycolor {
@@ -532,7 +533,7 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
 .player-container .status {
 	bottom: -10px;
-	font-size: 10px;
+	font-size: 8px;
 	position: absolute;
 	text-align: center;
 	width: 100%;

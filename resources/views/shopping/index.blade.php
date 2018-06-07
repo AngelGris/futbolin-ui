@@ -20,6 +20,9 @@
 
 @section('content-inner')
 <div>
+    <div class="col-sm-12" style="margin-bottom:20px;">
+        <h4 style="text-align: right;">Fúlbos: {{ $_user->credits }} <a href="{{ route('shopping.credits') }}" class="btn btn-xs btn-primary">Comprar Fúlbos</a></h4>
+    </div>
     @foreach($items as $item)
     <div class="col-sm-4">
         @if ($item->id == 3 && $_team->trainer >= \Carbon\Carbon::now())

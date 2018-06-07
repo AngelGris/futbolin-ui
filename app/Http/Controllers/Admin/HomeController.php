@@ -118,6 +118,48 @@ class HomeController extends Controller
             $teams_energy[] = [$k, $v];
         }
 
+        $match_stats = [
+            'friendly' => [
+                'total'         => Matches::where('type_id', 2)->count(),
+                'local'         => Matches::where('type_id', 2)->where('winner', 1)->count(),
+                'tied'          => Matches::where('type_id', 2)->where('winner', 0)->count(),
+                'visit'         => Matches::where('type_id', 2)->where('winner', 2)->count(),
+                'goals_local'   => Matches::where('type_id', 2)->where('winner', 1)->sum('local_goals'),
+                'goals_visit'   => Matches::where('type_id', 2)->where('winner', 1)->sum('visit_goals'),
+            ],
+            'official' => [
+                'total'         => Matches::where('type_id', 1)->count(),
+                'local'         => Matches::where('type_id', 1)->where('winner', 1)->count(),
+                'tied'          => Matches::where('type_id', 1)->where('winner', 0)->count(),
+                'visit'         => Matches::where('type_id', 1)->where('winner', 2)->count(),
+                'goals_local'   => Matches::where('type_id', 1)->where('winner', 1)->sum('local_goals'),
+                'goals_visit'   => Matches::where('type_id', 1)->where('winner', 1)->sum('visit_goals')
+            ]
+        ];
+
+        $match_stats['friendly']['local_per'] = number_format($match_stats['friendly']['local'] * 100 / $match_stats['friendly']['total'], 2);
+        $match_stats['friendly']['tied_per'] = number_format($match_stats['friendly']['tied'] * 100 / $match_stats['friendly']['total'], 2);
+        $match_stats['friendly']['visit_per'] = number_format($match_stats['friendly']['visit'] * 100 / $match_stats['friendly']['total'], 2);
+        $match_stats['friendly']['goals_diff'] = $match_stats['friendly']['goals_local'] - $match_stats['friendly']['goals_visit'];
+        $match_stats['official']['local_per'] = number_format($match_stats['official']['local'] * 100 / $match_stats['official']['total'], 2);
+        $match_stats['official']['tied_per'] = number_format($match_stats['official']['tied'] * 100 / $match_stats['official']['total'], 2);
+        $match_stats['official']['visit_per'] = number_format($match_stats['official']['visit'] * 100 / $match_stats['official']['total'], 2);
+        $match_stats['official']['goals_diff'] = $match_stats['official']['goals_local'] - $match_stats['official']['goals_visit'];
+
+        $match_stats['total'] = [
+            'total'         => $match_stats['friendly']['total'] + $match_stats['official']['total'],
+            'local'         => $match_stats['friendly']['local'] + $match_stats['official']['local'],
+            'tied'          => $match_stats['friendly']['tied'] + $match_stats['official']['tied'],
+            'visit'         => $match_stats['friendly']['visit'] + $match_stats['official']['visit'],
+            'goals_local'   => $match_stats['friendly']['goals_local'] + $match_stats['official']['goals_local'],
+            'goals_visit'   => $match_stats['friendly']['goals_visit'] + $match_stats['official']['goals_visit']
+        ];
+
+        $match_stats['total']['local_per'] = number_format($match_stats['total']['local'] * 100 / $match_stats['total']['total'], 2);
+        $match_stats['total']['tied_per'] = number_format($match_stats['total']['tied'] * 100 / $match_stats['total']['total'], 2);
+        $match_stats['total']['visit_per'] = number_format($match_stats['total']['visit'] * 100 / $match_stats['total']['total'], 2);
+        $match_stats['total']['goals_diff'] = $match_stats['total']['goals_local'] - $match_stats['total']['goals_visit'];
+
         $vars = [
             'payments' => $payments,
             'transactions' => $transactions,
@@ -133,7 +175,9 @@ class HomeController extends Controller
             'injured_players' => Player::where('recovery', '>', 0)->orderBy('recovery')->limit(10)->get(),
             'injury_types' => $injury_types,
             'players_energy' => json_encode($players_energy),
+            'players_retiring' => Player::where('retiring', 1)->limit(10)->get(),
             'teams_energy' => json_encode($teams_energy),
+            'match_stats' => $match_stats
         ];
 
         return view('admin.home', $vars);

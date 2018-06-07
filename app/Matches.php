@@ -8,6 +8,8 @@ class Matches extends Model
 {
     /**
      * Get local team
+     *
+     * @return Team
      */
     public function local()
     {
@@ -16,6 +18,8 @@ class Matches extends Model
 
     /**
      * Get visit team
+     *
+     * @return Team
      */
     public function visit()
     {
@@ -23,7 +27,24 @@ class Matches extends Model
     }
 
     /**
+     * Get match assistance
+     *
+     * @return integer
+     */
+    public function getAssistanceAttribute()
+    {
+        $assistance = MatchesRound::select('assistance')->where('match_id', $this->id)->first();
+        if (is_null($assistance)) {
+            return 0;
+        } else {
+            return $assistance->assistance;
+        }
+    }
+
+    /**
      * Match's category
+     *
+     * @return TournamentCategory
      */
     public function getCategoryAttribute()
     {
@@ -36,7 +57,24 @@ class Matches extends Model
     }
 
     /**
+     * Get match incomes
+     *
+     * @return integer
+     */
+    public function getIncomesAttribute()
+    {
+        $incomes = MatchesRound::select('incomes')->where('match_id', $this->id)->first();
+        if (is_null($incomes)) {
+            return 0;
+        } else {
+            return $incomes->incomes;
+        }
+    }
+
+    /**
      * Match's round
+     *
+     * @return TournamentRound
      */
     public function getRoundAttribute()
     {
@@ -48,9 +86,14 @@ class Matches extends Model
     }
 
     /**
-     * Load last friendly match between 2 teams (fixed local/visit)
+     * Load last friendly match between 2 teams (fixed local/visit)*
+     *
+     * @param integer $local_id
+     * @param integer $visit_id
+     * @return Matches
      */
-    public static function loadLastFriendlyMatch($local_id, $visit_id) {
+    public static function loadLastFriendlyMatch($local_id, $visit_id)
+    {
         $match = \DB::table('matches')
             ->select('id', 'logfile', 'created_at')
             ->where('type_id', '<=', 2)
@@ -64,8 +107,13 @@ class Matches extends Model
 
     /**
      * Load last match for team
+     *
+     * @param integer $team_id
+     * @param integer $limit
+     * @return Collection Matches
      */
-    public static function loadLastMatches($team_id, $limit = 10) {
+    public static function loadLastMatches($team_id, $limit = 10)
+    {
         $matches = \DB::table('matches')
             ->select('*')
             ->where('local_id', '=', $team_id)

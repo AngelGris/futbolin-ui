@@ -49,7 +49,11 @@
                         @if (count($_notifications) or count($_messages))
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                                @if ($_messagesCount > 0)
+                                <span class="count count-alert">{{ $_messagesCount }}</span>
+                                @else
                                 <span class="count">{{ $_messagesCount }}</span>
+                                @endif
                                 <span class="head-icon head-message"></span>
                             </a>
                             <ul class="dropdown-menu">
@@ -165,7 +169,11 @@
                         @if (count($_notifications) or count($_messages))
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                                @if ($_messagesCount > 0)
+                                <span class="count count-alert">{{ $_messagesCount }}</span>
+                                @else
                                 <span class="count">{{ $_messagesCount }}</span>
+                                @endif
                                 <span class="head-icon head-message"></span>
                                 <span class="headmenu-label">Mensajes</span>
                             </a>
@@ -200,6 +208,22 @@
                             <span class="headmenu-label">Jugadores</span>
                             </a>
                             <ul class="dropdown-menu newusers">
+                                @if (count($_transferables) > 0)
+                                <li class="nav-header">Jugadores transferibles</li>
+                                @foreach ($_transferables as $player)
+                                <li>
+                                    <a href="{{ route('player', $player->id) }}">
+                                        <strong>{{ $player->number }} {{ $player->first_name }} {{ $player->last_name }}</strong>
+                                        <small>{{ $player->position }}</small><br>
+                                        @if ($player->best_offer_value)
+                                        <span>Mejor oferta: {{ formatCurrency($player->best_offer_value) }}</span>
+                                        @else
+                                        <span>SIN OFERTAS</span>
+                                        @endif
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
                                 @if (count($_suspensions) > 0)
                                 <li class="nav-header">Jugadores suspendidos</li>
                                 @foreach ($_suspensions as $player)
@@ -304,8 +328,8 @@
                 @if (empty($header_team) || $header_team->id == $_team->id)
                 <img class="svg shield" src="{{ asset($_team['shield_file']) }}" data-color-primary="{{ $_team['primary_color'] }}" data-color-secondary="{{ $_team['secondary_color'] }}">
                 <div>
-                    <h2>{{ $_team['name'] }}</h2>
-                    <h4>Fúlbos: {{ $_user->credits }} <a href="{{ route('shopping.credits') }}" class="btn btn-xs btn-primary">Comprar Fúlbos</a></h4>
+                    <h2>{{ $_team->name }}</h2>
+                    <h4>{!! $_team->formatted_funds !!}</h4>
                 </div>
                 @else
                 <img class="svg shield" src="{{ asset($header_team['shield_file']) }}" data-color-primary="{{ $header_team['primary_color'] }}" data-color-secondary="{{ $header_team['secondary_color'] }}">

@@ -20,7 +20,13 @@ var match_duration = {{ config('constants.LIVE_MATCH_DURATION') * 60 }};
 <div id="jplayer-goal"></div>
 <div id="jplayer-whistle"></div>
 <div class="col-sm-8 main-window">
-    <div class="col-xs-12"><h1>{{ $match->category->name }}<br>Fecha {{ $match->round->number }}</h1></div>
+    <div class="col-xs-12">
+        <h1>
+            {{ $match->category->name }}<br>
+            Fecha {{ $match->round->number }}
+        </h1>
+        <h4 class="assistance">{{ number_format($match->assistance) }} espectadores - recaudación: {{ formatCurrency($match->incomes) }}</h4>
+    </div>
     <div class="col-xs-4 col-sm-5 title-local">
         <span class="title-local-name">{{ $match->local->name }}</span>
         <span class="title-local-shortname">{{ $match->local->short_name }}</span>

@@ -70,7 +70,7 @@ class ShoppingController extends Controller
                 return response()->json([
                     'type'      => 'credit_insufficient',
                     'message'   => 'Crédito insuficientes para la transacción'
-                ], 200);
+                ], 400);
             } else {
                 Session::flash('flash_danger', 'No tienes suficientes Fúlbos.');
                 return redirect()->route('shopping');
@@ -92,27 +92,47 @@ class ShoppingController extends Controller
                 $success_message = 'Tus jugadores han recuperado TODA su energía.';
                 break;
             case 3:
+                $user->team->train();
                 $user->team->trainer = Carbon::now()->addWeeks(1);
                 $user->team->save();
                 $success_message = 'El entrenador ha sido contratado hasta el ' . $user->team->trainer->format('d/m/Y H:i:s') . '.';
                 break;
             case 4:
-                $player = Player::where('id', $request->input('player_id'))->where('team_id', $user->team->id)->where('recovery', '>', 0)->where('healed', FALSE)->first();
-                $redirect = redirect()->route('player', $request->input('player_id'));
-                if ($player) {
+            case 5:
+                $player = Player::find($request->input('player_id'));
+                if ($player->team->id != $user->team->id) {
+                    if ($request->expectsJson()) {
+                        return response()->json([
+                            'type'      => 'player_owner',
+                            'message'   => $player->short_name . ' no es de tu equipo'
+                        ], 400);
+                    } else {
+                        Session::flash('flash_warning', $player->short_name . ' no es de tu equipo.');
+                        return redirect()->route('player', $player->id);
+                    }
+                }
+
+                if ($shopping_item->id == 4) {
                     $player->treat();
                     $success_message = $player->short_name . ' fue tratado por su lesión.';
                 } else {
-                    if ($request->expectsJson()) {
-                        return response()->json([
-                            'type'      => 'player_id',
-                            'message'   => 'id de jugador es inválido.'
-                        ], 400);
-                    } else {
-                        Session::flash('flash_warning', 'id de jugador es inválido.');
-                        return $redirect;
+                    $sellable_count = $player->team->sellabel_count;
+                    if ($sellable_count < 1) {
+                        if ($request->expectsJson()) {
+                            return response()->json([
+                                'type'      => 'players_limit',
+                                'message'   => 'Ha alcanzado el mínimo de jugadores en su equipo'
+                            ], 400);
+                        } else {
+                            Session::flash('flash_warning', 'Ha alcanzado el mínimo de jugadores en su equipo.');
+                            return redirect()->route('player', $player->id);
+                        }
                     }
+                    $player->setFree();
+                    $success_message = $player->short_name . ' ha sido liberado.';
                 }
+
+                $redirect = redirect()->route('player', $player->id);
                 break;
             default:
                 Session::flash('flash_danger', 'Item inválido.');

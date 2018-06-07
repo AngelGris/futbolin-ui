@@ -141,6 +141,8 @@ class MatchController extends Controller
             }
 
             $params = [
+                'assistance' => empty($data['assistance']) ? 0 : $data['assistance'],
+                'incomes' => empty($data['incomes']) ? 0 : $data['incomes'],
                 'show_remaining' => $show_remaining,
                 'remaining_time' => readableTime($remaining_time),
                 'datetime' => date('d/m/Y H:i', $data['timestamp']),

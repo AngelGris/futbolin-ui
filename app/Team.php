@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Faker;
+use App\TeamFundMovement;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
@@ -41,60 +41,14 @@ class Team extends Model
     ];
 
     /**
-     * Attribute limits for newly created players
+     * Get team funds movements
      *
-     * @var array
+     * @return Collection TeamFundMovement
      */
-    private $limits = [
-        'ARQ' => [
-            'goalkeeping' => [60, 100, 10],
-            'defending' => [10, 70, 10],
-            'dribbling' => [0, 30, 5],
-            'heading' => [0, 30, 5],
-            'jumping' => [0, 50, 10],
-            'passing' => [20, 80, 10],
-            'precision' => [0, 50, 10],
-            'speed' => [30, 70, 5],
-            'strength' => [10, 60, 10],
-            'tackling' => [20, 50, 10]
-        ],
-        'DEF' => [
-            'goalkeeping' => [0, 40, 10],
-            'defending' => [60, 100, 10],
-            'dribbling' => [20, 40, 5],
-            'heading' => [60, 100, 10],
-            'jumping' => [60, 100, 10],
-            'passing' => [40, 80, 10],
-            'precision' => [30, 80, 20],
-            'speed' => [40, 80, 10],
-            'strength' => [40, 80, 10],
-            'tackling' => [60, 100, 10]
-        ],
-        'MED' => [
-            'goalkeeping' => [0, 30, 10],
-            'defending' => [40, 80, 10],
-            'dribbling' => [60, 100, 10],
-            'heading' => [40, 100, 10],
-            'jumping' => [40, 100, 10],
-            'passing' => [60, 100, 10],
-            'precision' => [40, 100, 10],
-            'speed' => [60, 100, 10],
-            'strength' => [50, 90, 10],
-            'tackling' => [40, 80, 10]
-        ],
-        'ATA' => [
-            'goalkeeping' => [0, 20, 5],
-            'defending' => [20, 60, 10],
-            'dribbling' => [60, 90, 10],
-            'heading' => [60, 100, 10],
-            'jumping' => [60, 100, 10],
-            'passing' => [40, 60, 10],
-            'precision' => [60, 100, 10],
-            'speed' => [40, 100, 20],
-            'strength' => [60, 100, 10],
-            'tackling' => [30, 70, 10]
-        ]
-    ];
+    public function fundMovements()
+    {
+        return $this->hasMany(TeamFundMovement::class)->orderBy('created_at', 'DESC');
+    }
 
     /**
      * Get the players associated with the team
@@ -137,45 +91,112 @@ class Team extends Model
     }
 
     /**
+     * Calculate team's spending margin
+     *
+     * @param integer $value
+     * @param boolean $funds
+     * @return integer
+     */
+    public function calculateSpendingMargin($value = 0, $funds = TRUE)
+    {
+        $values = [
+            \Config::get('constants.MAX_PLAYER_VALUE'),
+            \Config::get('constants.MAX_TEAM_VALUE') - $this->value + $value
+        ];
+        if ($funds) {
+            $values[] = $this->funds - PlayerSelling::where('best_offer_team', '=', $this->id)->sum('best_offer_value');
+        }
+
+        return max(0, min($values));
+    }
+
+    /**
      * Create new player in the team
      *
-     * @param int $number
-     * @param string $position
-     * @param boolean $max_age
      * @return Player
      */
     public function createPlayer($number, $position, $max_age = FALSE)
     {
-        $faker = Faker\Factory::create('es_AR');
+        return Player::create($this->id, $number, $positon, $max_age);
+    }
 
-        $position = strtoupper($position);
-
-        if ($max_age) {
-            $age = randomGauss(17, 20, 1);
-        } else {
-            $age = randomGauss(17, 32, 5);
+    /**
+     * Get a free number for a player
+     *
+     * @return integer
+     */
+    public function freeNumber()
+    {
+        $numbers = [];
+        for ($i = 1; $i <= 99; $i++) {
+            $numbers[$i] = 1;
         }
-        $age_diff = 32 - $age;
+        foreach ($this->players as $p) {
+            unset($numbers[$p['number']]);
+        }
+        return array_rand($numbers);
+    }
 
-        return $this->players()->create([
-            'first_name' => $faker->firstName('male'),
-            'last_name' => $faker->lastName('male'),
-            'position' => $position,
-            'age' => $age,
-            'goalkeeping' => randomGauss(max(0, $this->limits[$position]['goalkeeping'][0] - $age_diff), max(0, $this->limits[$position]['goalkeeping'][1] - $age_diff), $this->limits[$position]['goalkeeping'][2]),
-            'defending' => randomGauss(max(0, $this->limits[$position]['defending'][0] - $age_diff), max(0, $this->limits[$position]['defending'][1] - $age_diff), $this->limits[$position]['defending'][2]),
-            'dribbling' => randomGauss(max(0, $this->limits[$position]['dribbling'][0] - $age_diff), max(0, $this->limits[$position]['dribbling'][1] - $age_diff), $this->limits[$position]['dribbling'][2]),
-            'heading' => randomGauss(max(0, $this->limits[$position]['heading'][0] - $age_diff), max(0, $this->limits[$position]['heading'][1] - $age_diff), $this->limits[$position]['heading'][2]),
-            'jumping' => randomGauss(max(0, $this->limits[$position]['jumping'][0] - $age_diff), max(0, $this->limits[$position]['jumping'][1] - $age_diff), $this->limits[$position]['jumping'][2]),
-            'passing' => randomGauss(max(0, $this->limits[$position]['passing'][0] - $age_diff), max(0, $this->limits[$position]['passing'][1] - $age_diff), $this->limits[$position]['passing'][2]),
-            'precision' => randomGauss(max(0, $this->limits[$position]['precision'][0] - $age_diff), max(0, $this->limits[$position]['precision'][1] - $age_diff), $this->limits[$position]['precision'][2]),
-            'speed' => randomGauss(max(0, $this->limits[$position]['speed'][0] - $age_diff), max(0, $this->limits[$position]['speed'][1] - $age_diff), $this->limits[$position]['speed'][2]),
-            'strength' => randomGauss(max(0, $this->limits[$position]['strength'][0] - $age_diff), max(0, $this->limits[$position]['strength'][1] - $age_diff), $this->limits[$position]['strength'][2]),
-            'tackling' => randomGauss(max(0, $this->limits[$position]['tackling'][0] - $age_diff), max(0, $this->limits[$position]['tackling'][1] - $age_diff), $this->limits[$position]['tackling'][2]),
-            'condition' => min(100, randomGauss(80, 100, 10)),
-            'last_upgrade' => '',
-            'number' => $number,
-        ]);
+    /**
+     * Get team's average attribute
+     *
+     * @return integer
+     */
+    public function getAverageAttribute()
+    {
+        if (count($this->formation) == 0) {
+            return 0;
+        } else {
+            $lineup = array_slice($this->formation, 0, 11);
+            $total = $count = 0;
+            if ($this->user_id > 1) {
+                foreach ($this->players as $player) {
+                    if (in_array($player->id, $lineup))
+                    {
+                        $count++;
+                        $total += $player->average;
+                    }
+                }
+            } else {
+                foreach ($lineup as $p) {
+                    if ($p > 0) {
+                        $count++;
+                        $player = Player::find($p);
+                        $total += $player->average;
+                    }
+                }
+            }
+            if ($count > 0) {
+                return (int)($total / $count);
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    /**
+     * Get if a team can hire new players
+     *
+     * @return boolean
+     */
+    public function getCanHireAttribute()
+    {
+        return (\Config::get('constants.MAX_TEAM_PLAYERS') - $this->players()->leftJoin('player_sellings', 'players.id', '=', 'player_sellings.player_id')->whereNull('player_sellings.id')->count()) > 0;
+    }
+
+    /**
+     * Funds with HTML format
+     *
+     * @return String
+     */
+    public function getFormattedFundsAttribute()
+    {
+        $funds = number_format($this->funds, 0) . ' $';
+        if ($this->funds < 0) {
+            $funds = '<span style="color:#f00;">' . $funds . '</span>';
+        }
+
+        return $funds;
     }
 
     /**
@@ -209,9 +230,23 @@ class Team extends Model
     }
 
     /**
+     * Check if team is in train spam
+     *
+     * @return boolean
+     */
+    public function getInTrainningSpamAttribute()
+    {
+        if (is_null($this->last_trainning) || $this->last_trainning->timestamp < $_SERVER['REQUEST_TIME'] - \Config::get('constants.TIME_TO_TRAIN') - \Config::get('constants.TRAIN_TIME_SPAM')) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+
+    /**
      * Get live match for team
      *
-     * @return Collection Match
+     * @return Matches
      */
     public function getLiveMatchAttribute()
     {
@@ -224,149 +259,25 @@ class Team extends Model
     }
 
     /**
-     * Replace player with a new one
+     * Get number of players that can be sold
      *
-     * @param int $player_id
-     * @return void
+     * @return integer
      */
-    public function replacePlayer($player_id)
+    public function getSellabelCountAttribute()
     {
-        $player = $this->players->find($player_id);
-        $arqs = $this->players->where('position', '=', 'ARQ')->count();
-        $defs = $this->players->where('position', '=', 'DEF')->count();
-        $meds = $this->players->where('position', '=', 'MED')->count();
-        $atas = $this->players->where('position', '=', 'ATA')->count();
-        $numbers = [];
-        for ($i = 1; $i <= 99; $i++) {
-            $numbers[$i] = 1;
-        }
-        foreach ($this->players as $p) {
-            unset($numbers[$p['number']]);
-        }
-        $number = array_rand($numbers);
-        unset($numbers);
-        $position = FALSE;
-        switch ($player->position) {
-            case 'ARQ':
-                if ($arqs <= 2) {
-                    $position = 'ARQ';
-                }
-                break;
-            case 'DEF':
-                if ($defs <= 5) {
-                    $position = 'DEF';
-                }
-                break;
-            case 'MED':
-                if ($meds <= 5) {
-                    $position = 'MED';
-                }
-                break;
-            case 'ATA':
-                if ($atas <= 3) {
-                    $position = 'ATA';
-                }
-                break;
-        }
-
-        if (!$position) {
-            $probs = [];
-            if ($arqs < 3) {
-                $probs[] = 'ARQ';
-            }
-            if ($defs < 10) {
-                $probs[] = 'DEF';
-            }
-            if ($meds < 10) {
-                $probs[] = 'MED';
-            }
-            if ($atas < 6) {
-                $probs[] = 'ATA';
-            }
-            $position = $probs[array_rand($probs)];
-        }
-
-        $newbie = $this->createPlayer($number, $position, TRUE);
-
-        $pos = array_search($player->id, $this->formation);
-        if (!empty($this->formation) && $pos !== FALSE) {
-            $formation = $this->formation;
-            $formation[$pos] = $newbie->id;
-            $this->formation = $formation;
-            $this->save();
-        }
-
-        Notification::create([
-            'user_id' => $this->user->id,
-            'title' => $player->first_name . ' ' . $player->last_name . ' se ha retirado',
-            'message' => $player->first_name . ' ' . $player->last_name . ' ha decidido dejar las canchas y <a href="/jugador/' . $newbie->id . '/">' . $newbie->first_name . ' ' . $newbie->last_name . '</a> ha sido incorporado al equipo.',
-        ]);
-
-        $player->delete();
+        return $this->players()->leftJoin('player_sellings', 'players.id', '=', 'player_sellings.player_id')->whereNull('player_sellings.id')->count() - \Config::get('constants.MIN_TEAM_PLAYERS');
     }
 
     /**
-     * Update if the team meats the requirements to play a match
+     * Get SVG file for the team shield
      *
-     * @return void
+     * @return String
      */
-    public function updatePlayable()
+    public function getShieldFileAttribute()
     {
-        $playable = FALSE;
+        $file = '/img/shield/shield-' . sprintf('%02d', $this->shield) . '.svg';
 
-        if (count($this->formation) >= 11) {
-            $lineup = array_slice($this->formation, 0, 11);
-            $count = 0;
-            foreach ($lineup as $player) {
-                if ($player != 0) {
-                    $count++;
-                }
-            }
-
-            if ($count == 11) {
-                $playable = TRUE;
-            }
-        }
-
-        $this->playable = $playable;
-        $this->save();
-    }
-
-    /**
-     * Get team's average attribute
-     *
-     * @return int
-     */
-    public function getAverageAttribute()
-    {
-        if (count($this->formation) == 0) {
-            return 0;
-        } else {
-            $lineup = array_slice($this->formation, 0, 11);
-            $total = $count = 0;
-            if ($this->user_id > 1) {
-                foreach ($this->players as $player) {
-                    if (in_array($player->id, $lineup))
-                    {
-                        $count++;
-                        $total += $player->average;
-                    }
-                }
-            } else {
-                foreach ($lineup as $p) {
-                    if ($p > 0) {
-                        $count++;
-                        $player = Player::find($p);
-                        $total += $player->average;
-                    }
-                }
-            }
-            if ($count > 0) {
-                return (int)($total / $count);
-            } else {
-                return 0;
-            }
-        }
+        return $file;
     }
 
     /**
@@ -454,7 +365,7 @@ class Team extends Model
     /**
      * Get remaining time for the trainer
      *
-     * @return void
+     * @return String
      */
     public function getTrainerRemainingAttribute()
     {
@@ -482,27 +393,12 @@ class Team extends Model
         if ($diff > 0) {
             return $diff . ' segundos';
         }
-
-    }
-
-    /**
-     * Check if team is in train spam
-     *
-     * @return boolean
-     */
-    public function getInTrainningSpamAttribute()
-    {
-        if (is_null($this->last_trainning) || $this->last_trainning->timestamp < $_SERVER['REQUEST_TIME'] - \Config::get('constants.TIME_TO_TRAIN') - \Config::get('constants.TRAIN_TIME_SPAM')) {
-            return FALSE;
-        } else {
-            return TRUE;
-        }
     }
 
     /**
      * Remaining time to become trainable
      *
-     * @return int
+     * @return integer
      */
     public function getTrainableRemainingAttribute()
     {
@@ -518,7 +414,7 @@ class Team extends Model
     /**
      * Get the team's trophies
      *
-     * @return Array int
+     * @return Array TournamentPosition
      */
     public function getTrophiesAttribute()
     {
@@ -534,21 +430,145 @@ class Team extends Model
     }
 
     /**
-     * Get SVG file for the team shield
+     * Get team's value
      *
-     * @return URI
+     * @return integer
      */
-    public function getShieldFileAttribute()
+    public function getValueAttribute()
     {
-        $file = '/img/shield/shield-' . sprintf('%02d', $this->shield) . '.svg';
+        return $this->players()->sum('value');
+    }
 
-        return $file;
+    /**
+     * Process money income
+     *
+     * @param integer $incomes
+     * @param String $description
+     * @return integer
+     */
+    public function moneyMovement($amount, $description)
+    {
+        // Limit the funds in the team
+        $amount = min($amount, \Config::get('constants.MAX_TEAM_FUNDS') - $this->funds);
+
+        $this->funds += $amount;
+        $this->save();
+        TeamFundMovement::create([
+            'team_id'       => $this->id,
+            'amount'        => $amount,
+            'balance'       => $this->funds,
+            'description'   => $description
+        ]);
+    }
+
+    /**
+     * Pay salaries
+     *
+     * @return void
+     */
+    public function paySalaries()
+    {
+        $salaries = (int)($this->players()->sum('value') * \Config::get('constants.PLAYERS_SALARY'));
+        $this->moneyMovement(-$salaries, 'Pago de salarios');
+    }
+
+    /**
+     * Replace player with a new one
+     *
+     * @param $player_id integer
+     * @return void
+     */
+    public function replacePlayer($player_id)
+    {
+        $player = $this->players->find($player_id);
+
+        if ($this->players->count() <= \Config::get('constants.MAX_PLAYERS_REPLACE')) {
+            $arqs = $this->players->where('position', '=', 'ARQ')->count();
+            $defs = $this->players->where('position', '=', 'DEF')->count();
+            $meds = $this->players->where('position', '=', 'MED')->count();
+            $atas = $this->players->where('position', '=', 'ATA')->count();
+            $number = $this->freeNumber();
+
+            $position = FALSE;
+            switch ($player->position) {
+                case 'ARQ':
+                    if ($arqs <= 2) {
+                        $position = 'ARQ';
+                    }
+                    break;
+                case 'DEF':
+                    if ($defs <= 5) {
+                        $position = 'DEF';
+                    }
+                    break;
+                case 'MED':
+                    if ($meds <= 5) {
+                        $position = 'MED';
+                    }
+                    break;
+                case 'ATA':
+                    if ($atas <= 3) {
+                        $position = 'ATA';
+                    }
+                    break;
+            }
+
+            if (!$position) {
+                $probs = [];
+                if ($arqs < 3) {
+                    $probs[] = 'ARQ';
+                }
+                if ($defs < 10) {
+                    $probs[] = 'DEF';
+                }
+                if ($meds < 10) {
+                    $probs[] = 'MED';
+                }
+                if ($atas < 6) {
+                    $probs[] = 'ATA';
+                }
+                $position = $probs[array_rand($probs)];
+            }
+
+            $newbie = $this->createPlayer($number, $position, TRUE);
+
+            $pos = array_search($player->id, $this->formation);
+            if (!empty($this->formation) && $pos !== FALSE) {
+                $formation = $this->formation;
+                $formation[$pos] = $newbie->id;
+                $this->formation = $formation;
+                $this->save();
+            }
+
+            Notification::create([
+                'user_id' => $this->user->id,
+                'title' => $player->first_name . ' ' . $player->last_name . ' se ha retirado',
+                'message' => $player->first_name . ' ' . $player->last_name . ' ha decidido dejar las canchas y <a href="/jugador/' . $newbie->id . '/">' . $newbie->first_name . ' ' . $newbie->last_name . '</a> ha sido incorporado al equipo.',
+            ]);
+        } else {
+            $pos = array_search($player->id, $this->formation);
+            if (!empty($this->formation) && $pos !== FALSE) {
+                $replacement = $this->players->whereNotIn('id', $this->formation)->random(1);
+                $formation = $this->formation;
+                $formation[$pos] = $replacement[0]->id;
+                $this->formation = $formation;
+                $this->save();
+            }
+
+            Notification::create([
+                'user_id' => $this->user->id,
+                'title' => $player->first_name . ' ' . $player->last_name . ' se ha retirado',
+                'message' => $player->first_name . ' ' . $player->last_name . ' ha decidido dejar las canchas con ' . $player->age . ' años.',
+            ]);
+        }
+
+        $player->delete();
     }
 
     /**
      * Train the team
-     * @param boolean $force Force trainning (used for personal trainer)
      *
+     * @param boolean $force Force trainning (used for personal trainer)
      * @return boolean Team trained
      */
     public function train($force = FALSE)
@@ -576,5 +596,32 @@ class Team extends Model
         } else {
             return FALSE;
         }
+    }
+
+    /**
+     * Update if the team meats the requirements to play a match
+     *
+     * @return void
+     */
+    public function updatePlayable()
+    {
+        $playable = FALSE;
+
+        if (count($this->formation) >= 11) {
+            $lineup = array_slice($this->formation, 0, 11);
+            $count = 0;
+            foreach ($lineup as $player) {
+                if ($player != 0) {
+                    $count++;
+                }
+            }
+
+            if ($count == 11) {
+                $playable = TRUE;
+            }
+        }
+
+        $this->playable = $playable;
+        $this->save();
     }
 }

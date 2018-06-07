@@ -2,13 +2,19 @@
 
 namespace App\Console;
 
+use App\MatchesRound;
+use App\PlayerSelling;
+use App\Team;
+use App\TeamFundMovement;
+use App\Tournament;
+use App\TournamentPosition;
+use App\TournamentRound;
+use App\Notification;
+use App\Player;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Team;
-use App\Tournament;
-use App\Player;
 
 class Kernel extends ConsoleKernel
 {
@@ -35,7 +41,41 @@ class Kernel extends ConsoleKernel
         $schedule->exec('python3 ' . base_path() . '/python/cron.py')
                 ->cron('0 20 * * 1,3,5 *')
                 ->appendOutputTo('/var/log/futbolin/matches.log')
+                ->before(function() {
+                    /**
+                     * Calculate match incomes
+                     */
+                    $rounds = TournamentRound::whereBetween('datetime', [Carbon::now()->startOfDay()->getTimestamp(), Carbon::now()->endOfDay()->getTimestamp()])->get();
+                    foreach ($rounds as $round) {
+                        $top_points = TournamentPosition::where('category_id', $round['category_id'])->where('position', 1)->first();
+                        $matches = MatchesRound::where('round_id', $round['id'])->get();
+                        foreach ($matches as $match) {
+                            $local = TournamentPosition::where('category_id', $round['category_id'])->where('team_id', $match->local_id)->first();
+                            $visit = TournamentPosition::where('category_id', $round['category_id'])->where('team_id', $match->visit_id)->first();
+                            $local_assistance = max(0.1, (100 - ((int)(($top_points->points - $local->points) * 2))) / 100);
+                            $visit_assistance = max(0.1, (100 - ((int)(($top_points->points - $visit->points) * 2))) / 100);
+                            $total_assistance = (0.6 * $local_assistance) + (0.4 * (($local_assistance + $visit_assistance) / 2));
+
+                            $match->assistance = (int)(\Config::get('constants.STADIUM_SIZE') * $total_assistance);
+                            $match->incomes = $match->assistance * \Config::get('constants.TICKET_VALUE');
+                            $match->save();
+
+                            $incomes = (int)($match->incomes / 2);
+                            if ($match->local_id >= 27) {
+                                $local = Team::find($match->local_id);
+                                $local->moneyMovement($incomes, 'Ingresos por venta de entradas');
+                            }
+                            if ($match->visit_id >= 27) {
+                                $visit = Team::find($match->visit_id);
+                                $visit->moneyMovement($incomes, 'Ingresos por venta de entradas');
+                            }
+                        }
+                    }
+                })
                 ->after(function() {
+                    /**
+                     * Upgrade players
+                     */
                     $players = Player::where('experience', '>=', 100)->get();
                     foreach($players as $player) {
                         $player->upgrade();
@@ -63,11 +103,21 @@ class Kernel extends ConsoleKernel
          *  Increase player's stamina by 10 points
          */
         $schedule->call(function() {
+                    // Pesonal trainers
                     $teams = Team::where('trainer', '>=', Carbon::now())->get();
                     foreach ($teams as $team) {
                         $team->train(TRUE);
                     }
 
+                    // Train free players
+                    $players = Player::whereNull('team_id')->get();
+                    DB::table('players')->whereNull('team_id')->where('recovery', 0)->whereNull('deleted_at')->increment('experience', 10);
+                    $players = Player::where('experience', '>=', 100)->get();
+                    foreach ($players as $player) {
+                        $player->upgrade();
+                    }
+
+                    // recover stamina
                     DB::table('players')->where('stamina', '>=', 90)->update(['stamina' => 100]);
                     DB::table('players')->where('stamina', '<', 90)->increment('stamina', 10);
                 })
@@ -87,11 +137,98 @@ class Kernel extends ConsoleKernel
                 ->appendOutputTo('/var/log/futbolin/tournament.log');
 
         /**
+         * Run weekly team maintenance
+         */
+        $schedule->call(function() {
+                    // Pay salaries
+                    $teams = Team::where('id', '>=', 27)->get();
+                    foreach ($teams as $team) {
+                        $team->paySalaries();
+                    }
+
+                    // Generate free players
+                    $freePlayers = Player::whereNull('team_id')->count();
+                    $diff = $teams->count() - $freePlayers;
+                    if ($diff > 0) {
+                        for ($i = 0; $i < \Config::get('constants.FREE_PLAYERS_GENERATE'); $i++) {
+                            $value = mt_rand(1, 10);
+                            switch ($value) {
+                                case 1:
+                                    $position = 'ARQ';
+                                    break;
+                                case 2:
+                                case 3:
+                                case 4:
+                                    $position = 'DEF';
+                                    break;
+                                case 5:
+                                case 6:
+                                case 7:
+                                    $position = 'MED';
+                                    break;
+                                default:
+                                    $position = 'ATA';
+                                    break;
+                            }
+                            $player = Player::create(NULL, $value, $position);
+
+                            PlayerSelling::create([
+                                'player_id' => $player->id,
+                                'value'     => $player->value,
+                                'closes_at' => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
+                            ]);
+                        }
+                    }
+                })
+                ->cron('0 20 * * 7 *')
+                ->appendOutputTo('/var/log/futbolin/weekly_maintenance.log');
+
+        /**
          * Delete old matches log files
          */
         $schedule->exec('find ' . base_path() . '/python/logs/ -type f -mtime +90 -name \'*.log\' -delete')
                 ->monthly()
                 ->appendOutputTo('/var/log/futbolin/old-logs.log');
+
+        /**
+         * Every minute tasks
+         */
+        $schedule->call(function() {
+            // Transfer players
+            $sellings = PlayerSelling::where('closes_at', '<', Carbon::now())->get();
+            foreach ($sellings as $selling) {
+                // If the player has a good offer complete teh transaction
+                // Else if player has team, just finish transferable period
+                // Else (free agent) renew transferable period if it has been free for less than 4 weeks
+                // Otherwise delete it
+                if ($selling->best_offer_value > $selling->value) {
+                    $selling_team = $selling->player->team;
+                    if ($selling->player->transfer($selling->offeringTeam, $selling->best_offer_value)) {
+                        if ($selling_team) {
+                            $selling_team->moneyMovement($selling->best_offer_value, 'Venta de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+                        }
+                        $selling->offeringTeam->moneyMovement(-$selling->best_offer_value, 'Compra de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+                    }
+                    $selling->delete();
+                } elseif ($selling->player->team) {
+                    // Notify selling team
+                    Notification::create([
+                        'user_id' => $selling->player->team->user->id,
+                        'title' => 'No hubo ninguna oferta por ' . $selling->player->first_name . ' ' . $selling->player->last_name,
+                        'message' => 'No has podido vender a <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->first_name . ' ' . $selling->player->last_name . '</a> y continua a disposición de tu cuerpo técnico.',
+                    ]);
+                    $selling->delete();
+                } elseif ($selling->created_at > Carbon::now()->subWeeks(4)) {
+                    $selling->closes_at = Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'));
+                    $selling->save();
+                } else {
+                    $selling->player->delete();
+                    $selling->delete();
+                }
+            }
+            exit;
+        })
+        ->appendOutputTo('/var/log/futbolin/every_minute.log');
     }
 
     /**

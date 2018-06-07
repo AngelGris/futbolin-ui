@@ -1,0 +1,7 @@
+table.table-transferables td {
+    line-height: 25px !important;
+}
+
+table.table-transferables td button {
+    line-height: 10px;
+}
