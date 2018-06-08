@@ -645,8 +645,9 @@ class TeamController extends Controller
             $played[$match['visit_id']] = readableTime(86400 - ($_SERVER['REQUEST_TIME'] - strtotime($match['created_at'])), TRUE);
         }
 
-        $teams = Team::where('user_id', '>', 1)->get();
+        $teams = Team::where('user_id', '>', 1)->orderBy('name')->get();
         foreach ($teams as &$team) {
+            $team->user_name = $team->user->name;
             if (empty($played[$team->id])) {
                 $team->played = NULL;
             } else {

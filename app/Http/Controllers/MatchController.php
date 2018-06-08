@@ -87,6 +87,7 @@ class MatchController extends Controller
             foreach ($data['plays'] as $play) {
                 if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
                     $highlights[] = [
+                        'type'          => $play[2],
                         'minutes'       => substr($play[0], 0, 2),
                         'background'    => ($play[1] == 0) ? $local->primary_color : $visit->primary_color,
                         'color'         => ($play[1] == 0) ? $local->text_color : $visit->text_color,
@@ -110,13 +111,45 @@ class MatchController extends Controller
             }
 
             return response()->json([
+                'assistance' => empty($data['assistance']) ? 0 : $data['assistance'],
+                'incomes' => empty($data['incomes']) ? 0 : $data['incomes'],
                 'show_remaining'        => $show_remaining,
                 'remaining'             => $remaining_time,
                 'remaining_readable'    => readableTime($remaining_time),
                 'datetime'              => $data['timestamp'],
                 'stadium'               => $data['stadium'],
-                'local'                 => $local,
-                'visit'                 => $visit,
+                'local' => [
+                    'name' => $local->name,
+                    'primary_color' => $local->primary_color,
+                    'secondary_color' => $local->secondary_color,
+                    'rgb_primary' => $local_rgb_primary,
+                    'text_color' => $local->text_color,
+                    'shield_file' => $local->shieldFile,
+                    'goals' => $data['local']['goals'],
+                    'formation' => $data['local']['formation'],
+                    'posession' => $data['local']['posessionPer'],
+                    'shots' => $data['local']['shots'],
+                    'shots_goal' => $data['local']['shotsOnTarget'],
+                    'yellow_cards' => (isset($data['local']['yellow_cards']) ? $data['local']['yellow_cards'] : -1),
+                    'red_cards' => (isset($data['local']['red_cards']) ? $data['local']['red_cards'] : -1),
+                    'substitutions' => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
+                ],
+                'visit' => [
+                    'name' => $visit->name,
+                    'primary_color' => $visit->primary_color,
+                    'secondary_color' => $visit->secondary_color,
+                    'rgb_primary' => $visit_rgb_primary,
+                    'text_color' => $visit->text_color,
+                    'shield_file' => $visit->shieldFile,
+                    'goals' => $data['visit']['goals'],
+                    'formation' => $data['visit']['formation'],
+                    'posession' => $data['visit']['posessionPer'],
+                    'shots' => $data['visit']['shots'],
+                    'shots_goal' => $data['visit']['shotsOnTarget'],
+                    'yellow_cards' => (isset($data['visit']['yellow_cards']) ? $data['visit']['yellow_cards'] : -1),
+                    'red_cards' => (isset($data['visit']['red_cards']) ? $data['visit']['red_cards'] : -1),
+                    'substitutions' => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
+                ],
                 'scorers'               => $scorers,
                 'highlights'            => $highlights
             ], 200);

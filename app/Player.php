@@ -43,14 +43,18 @@ class Player extends Model
      *
      * @var array
      */
-    protected $appends = ['name', 'short_name', 'average', 'cards_count', 'suspended', 'upgraded', 'transferable', 'bladeHandlerIcons'];
+    protected $appends = [
+        'name', 'short_name', 'average', 'cards_count', 'suspended', 'upgraded', 'transferable', 'bladeHandlerIcons'
+    ];
 
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $dates = ['last_upgraded', 'deleted_at'];
+    protected $dates = [
+        'last_upgraded', 'deleted_at'
+    ];
 
     /**
      * Attribute limits for newly created players

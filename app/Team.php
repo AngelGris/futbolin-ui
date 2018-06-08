@@ -14,7 +14,9 @@ class Team extends Model
      *
      * @var array
      */
-    protected $guarded = ['id', 'user_id'];
+    protected $guarded = [
+        'id', 'user_id'
+    ];
 
     /**
      * The attributes that should be casted to native types.
@@ -29,7 +31,9 @@ class Team extends Model
     /**
      * Carbon instance fields
      */
-    protected $dates = ['last_trainning', 'trainer', 'created_at', 'updated_at'];
+    protected $dates = [
+        'last_trainning', 'trainer', 'created_at', 'updated_at'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -37,7 +41,16 @@ class Team extends Model
      * @var array
      */
     protected $hidden = [
-        'players', 'strategy', 'last_trainning', 'trainer', 'trainning_count', 'created_at', 'updated_at'
+        'user', 'players', 'strategy', 'last_trainning', 'trainer', 'trainning_count', 'created_at', 'updated_at'
+    ];
+
+    /**
+     * Attributes to be append to arrays.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'average'
     ];
 
     /**
