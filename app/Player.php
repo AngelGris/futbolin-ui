@@ -24,7 +24,6 @@ class Player extends Model
      * @var array
      */
     protected $casts = [
-        'last_upgrade'  => 'array',
         'retiring'      => 'boolean',
         'healed'        => 'boolean'
     ];
@@ -265,6 +264,19 @@ class Player extends Model
     public function getFreeValueAttribute()
     {
         return max(100000, (int)($this->value / 2));
+    }
+
+    /**
+     *
+     */
+    public function getLastUpgradeAttribute($value)
+    {
+        $value = json_decode($value);
+        if (!empty($value)) {
+            return $value;
+        } else {
+            return [];
+        }
     }
 
     /**
