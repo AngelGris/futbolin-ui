@@ -648,6 +648,7 @@ class TeamController extends Controller
         $teams = Team::where('user_id', '>', 1)->orderBy('name')->get();
         foreach ($teams as &$team) {
             $team->user_name = $team->user->name;
+
             if (empty($played[$team->id])) {
                 $team->played = NULL;
             } else {

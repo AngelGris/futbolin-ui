@@ -443,6 +443,16 @@ class Team extends Model
     }
 
     /**
+     * Get team's user name
+     *
+     * @return String
+     */
+    public function getUserNameAttribute()
+    {
+        return $this->user->name;
+    }
+
+    /**
      * Get team's value
      *
      * @return integer
