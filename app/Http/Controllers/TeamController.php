@@ -194,7 +194,7 @@ class TeamController extends Controller
                 }
 
                 $last_matches[] = [
-                    'date' => date('d/m/y', strtotime($match->created_at)),
+                    'date' => $match->created_at->format('d/m/y'),
                     'local_id' => $match->local_id,
                     'local' => $match->local->short_name,
                     'local_goals' => $match->local_goals,

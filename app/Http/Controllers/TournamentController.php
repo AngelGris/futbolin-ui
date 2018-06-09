@@ -105,10 +105,14 @@ class TournamentController extends Controller
             foreach ($result as $match) {
                 $match = Matches::find($match->match_id);
                 $last_matches[] = [
-                    'datetime'  => $match->created_at->timestamp,
-                    'stadium'   => $match->stadium,
-                    'local'     => $match->local,
-                    'visit'     => $match->visit
+                    'date' => $match->created_at->format('d/m/y'),
+                    'local_id' => $match->local_id,
+                    'local' => $match->local->short_name,
+                    'local_goals' => $match->local_goals,
+                    'visit_id' => $match->visit_id,
+                    'visit' => $match->visit->short_name,
+                    'visit_goals' => $match->visit_goals,
+                    'log_file' => $match->logfile,
                 ];
             }
 
