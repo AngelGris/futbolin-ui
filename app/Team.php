@@ -130,7 +130,7 @@ class Team extends Model
      */
     public function createPlayer($number, $position, $max_age = FALSE)
     {
-        return Player::create($this->id, $number, $positon, $max_age);
+        return Player::create($this->id, $number, $position, $max_age);
     }
 
     /**
