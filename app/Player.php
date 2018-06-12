@@ -93,6 +93,17 @@ class Player extends Model
     ];
 
     /**
+     * Boot model
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::deleting(function($player) {
+             $player->selling()->delete();
+        });
+    }
+
+    /**
      * Player's cards
      */
     public function cards()
