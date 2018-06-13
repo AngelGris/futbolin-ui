@@ -24,6 +24,7 @@ class Player extends Model
      * @var array
      */
     protected $casts = [
+        'last_upgrade'  => 'array',
         'retiring'      => 'boolean',
         'healed'        => 'boolean'
     ];
