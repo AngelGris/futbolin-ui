@@ -241,6 +241,15 @@ class MatchController extends Controller
             $user = Auth::user();
         }
 
+        if ($request->input('rival') == $user->team->id) {
+            return response()->json([
+                'errors' => [
+                    'type'      => 'match_play',
+                    'message'   => 'Can\'t play against your own team'
+                ]
+            ], 500);
+        }
+
         if ($request->input('rival') <= 26) {
             $match_type = 1;
         } else {
