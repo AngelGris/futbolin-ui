@@ -14,6 +14,24 @@ class MatchesRound extends Model
     protected $guarded = ['id', 'match_id'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'id', 'round_id', 'local_id', 'visit_id', 'match_id', 'created_at', 'updated_at'
+    ];
+
+    /**
+     * The relationships that should be included in arrays.
+     *
+     * @var array
+     */
+    protected $with = [
+        'match'
+    ];
+
+    /**
      * Local
      */
     public function local()

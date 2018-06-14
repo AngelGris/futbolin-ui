@@ -37,7 +37,7 @@ class TournamentCategory extends Model
      * @var array
      */
     protected $with = [
-        'positions'
+        'rounds', 'positions', 'scorers'
     ];
 
     /**
