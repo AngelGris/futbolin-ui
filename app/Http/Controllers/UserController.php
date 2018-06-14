@@ -16,7 +16,7 @@ class UserController extends Controller
         $user = Auth::guard('api')->user()->user;
         if ($user->team) {
             $user->team->makeVisible(['last_trainning', 'trainer', 'trainning_count']);
-            $user->team->formation = $user->team->formationObjects;
+            $user->team->append(['formation_objects']);
         }
         return response()->json([
             'user' => $user->makeVisible(['email', 'credits', 'last_activity'])
