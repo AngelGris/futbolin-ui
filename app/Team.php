@@ -212,6 +212,16 @@ class Team extends Model
         return $funds;
     }
 
+    public function getFormationAttribute($value)
+    {
+        $value = json_decode($value);
+        if (!empty($value)) {
+            return array_map('intval', $value);
+        } else {
+            return [];
+        }
+    }
+
     /**
      * Get formation with Player objects
      *
