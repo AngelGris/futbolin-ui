@@ -658,6 +658,7 @@ class TeamController extends Controller
 
         if ($request->expectsJson()) {
             return response()->json([
+                'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
                 'teams'     => $teams,
             ], 200);
         } else {
