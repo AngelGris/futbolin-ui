@@ -68,8 +68,8 @@ Mostrar:
             <td align="right"><strong>{{ $player['average'] }}</strong></td>
             @foreach (['goalkeeping', 'defending', 'dribbling', 'heading', 'jumping', 'passing', 'precision', 'speed', 'strength', 'tackling'] as $attr)
             <td align="right">
-                @if ($player['upgraded'] && !empty($player['last_upgrade'][$attr]))
-                <span class="attribute-upgraded" data-upgraded="{{ $player['last_upgrade'][$attr] }}">{{ $player[$attr] }}</span>
+                @if ($player['upgraded'] && !empty($player['last_upgrade']->{$attr}))
+                <span class="attribute-upgraded" data-upgraded="{{ $player['last_upgrade']->{$attr} }}">{{ $player[$attr] }}</span>
                 @else
                 {{ $player[$attr] }}
                 @endif
