@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\CreditItem;
-use MercadoPago\SDK as MercadoPago;
-use MercadoPago\Payment as MercadoPago_Payment;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Amount;
@@ -54,11 +52,7 @@ class PaymentController extends Controller
 
         $package = CreditItem::find($request->input('id'));
 
-        if ($request->input('method') == 'PP') {
-            return $this->checkoutPaypal($package->id, $package->name, \config('constants.CURRENCY'), $package->price);
-        } else {
-            return $this->checkoutMercadopago($package->id, $package->name, \config('constants.CURRENCY'), $package->price);
-        }
+        return $this->checkoutPaypal($package->id, $package->name, \config('constants.CURRENCY'), $package->price);
     }
 
     private function checkoutPaypal($item_id, $title, $currency, $total_amount, $quantity = 1)
@@ -117,11 +111,6 @@ class PaymentController extends Controller
         $approvalUrl = $payment->getApprovalLink();
 
         return redirect($approvalUrl);
-    }
-
-    public function processMercadopago(Request $request)
-    {
-        // TODO
     }
 
     public function processPaypal(Request $request)
