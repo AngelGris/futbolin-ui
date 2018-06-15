@@ -15,7 +15,7 @@ class LiveMatch
      */
     public function handle($request, Closure $next)
     {
-        if ($request->expectsJson()) {
+        if ($request->expectsJson() && !empty(\Auth::guard('api')->user())) {
             $team = \Auth::guard('api')->user()->user->team;
 
             if ($team && $team->live_match) {
