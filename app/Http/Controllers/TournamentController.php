@@ -80,7 +80,7 @@ class TournamentController extends Controller
                         })->whereNull('match_id')
                         ->orderBy('number', 'ASC')
                         ->first();
-            $next_match = new stdClass();
+            $next_match = new \stdClass();
             if ($result) {
                 $local = Team::find($result->local_id);
                 $visit = Team::find($result->visit_id);
