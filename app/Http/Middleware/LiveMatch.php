@@ -16,12 +16,16 @@ class LiveMatch
     public function handle($request, Closure $next)
     {
         if ($request->expectsJson()) {
-            return response()->json([
-                'errors' => [
-                    'type'      => 'live_match',
-                    'message'   => 'Broadcasting live match'
-                ]
-            ], 400);
+            $team = \Auth::guard('api')->user()->user->team;
+
+            if ($team && $team->live_match) {
+                return response()->json([
+                    'errors' => [
+                        'type'      => 'live_match',
+                        'message'   => 'Broadcasting live match'
+                    ]
+                ], 400);
+            }
         } else {
             if (\Auth::check()) {
                 $team = \Auth::user()->team;
