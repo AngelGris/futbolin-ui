@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => ['auth.api']], function() {
+Route::group(['middleware' => ['auth.api', 'liveMatch']], function() {
     Route::get('/credits/items', 'CreditController@index');
 
     Route::post('/logout', 'Auth\LoginController@apiLogout');
@@ -57,3 +57,4 @@ Route::group(['middleware' => ['auth.api']], function() {
 
 Route::post('/register', 'Auth\RegisterController@apiRegister');
 Route::post('/login', 'Auth\LoginController@apiLogin');
+Route::get('/match/live', 'MatchController@showLiveApi');
