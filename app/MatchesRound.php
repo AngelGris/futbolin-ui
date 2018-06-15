@@ -19,7 +19,7 @@ class MatchesRound extends Model
      * @var array
      */
     protected $hidden = [
-        'id', 'round_id', 'local_id', 'visit_id', 'match_id', 'created_at', 'updated_at'
+        'id', 'round_id', 'match_id', 'created_at', 'updated_at'
     ];
 
     /**
@@ -29,6 +29,15 @@ class MatchesRound extends Model
      */
     protected $with = [
         'match'
+    ];
+
+    /**
+     * Attributes to be append to arrays.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'local_name', 'visit_name'
     ];
 
     /**
@@ -67,6 +76,14 @@ class MatchesRound extends Model
     }
 
     /**
+     * Local team name
+     */
+    public function getLocalNameAttribute()
+    {
+        return $this->local->name;
+    }
+
+    /**
      * Match logfile
      */
     public function getLogfileAttribute()
@@ -84,5 +101,13 @@ class MatchesRound extends Model
         } else {
             return '-';
         }
+    }
+
+    /**
+     * Visit name
+     */
+    public function getVisitNameAttribute()
+    {
+        return $this->visit->name;
     }
 }
