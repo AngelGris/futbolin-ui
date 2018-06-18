@@ -402,6 +402,19 @@ class MatchController extends Controller
                 }
             }
 
+            $plays = [];
+            foreach ($data['plays'] as $play) {
+                if (in_array($play[2], [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 14, 17, 18, 19, 21, 22, 23, 24, 25, 26])) {
+                    $plays[] = [
+                        'type'          => $play[2],
+                        'minutes'       => substr($play[0], 0, 2),
+                        'background'    => ($play[1] == 0) ? $local->primary_color : $visit->primary_color,
+                        'color'         => ($play[1] == 0) ? $local->text_color : $visit->text_color,
+                        'highlight'     => $play[3]
+                    ];
+                }
+            }
+
             $output['matches'][] = [
                 'assistance'            => empty($data['assistance']) ? 0 : $data['assistance'],
                 'incomes'               => empty($data['incomes']) ? 0 : $data['incomes'],
@@ -440,7 +453,7 @@ class MatchController extends Controller
                     'substitutions'     => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
                 ],
                 'scorers'               => $scorers,
-                'plays'                 => $data['plays']
+                'plays'                 => $plays
             ];
         }
 
