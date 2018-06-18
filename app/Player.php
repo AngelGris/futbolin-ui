@@ -152,7 +152,10 @@ class Player extends Model
      */
     public function selling()
     {
-        return $this->hasOne(PlayerSelling::class);
+        return $this->hasOne(PlayerSelling::class)
+                    ->withDefault(function () {
+                        return new \stdClass();
+                    });
     }
 
     /**
@@ -389,7 +392,7 @@ class Player extends Model
      */
     public function getTransferableAttribute()
     {
-        return !is_null($this->selling);
+        return !empty($this->selling->id);
     }
 
     /**
@@ -464,7 +467,7 @@ class Player extends Model
         if ($this->tired && count($output) < $limit) {
             $output[] = '<span class="fa fa-arrow-down" style="color:#f00;"' . ($short ? '' : ' data-toggle="tooltip" title="Pocas energías"') . '></span>';
         }
-        if ($this->selling && count($output) < $limit) {
+        if ($this->transferable && count($output) < $limit) {
             $output[] = '<span class="fa fa-share-square-o" style="color:#0a0;"' . ($short ? '' : ' data-toggle="tooltip" title="Transferible"') . '></span>';
         }
 
@@ -488,6 +491,8 @@ class Player extends Model
             'value'     => $this->value,
             'closes_at' => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
         ]);
+
+        return $this;
     }
 
     /**

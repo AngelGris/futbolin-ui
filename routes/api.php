@@ -30,8 +30,14 @@ Route::group(['middleware' => ['auth.api', 'liveMatch']], function() {
 
     Route::patch('/password', 'AccountSettingsController@updatePassword');
 
+    Route::group(['prefix' => 'player'], function() {
+        Route::post('/offer', 'PlayerController@offer');
+        Route::get('/{player}', 'PlayerController@index')->where('player', '[0-9]+');
+        Route::post('/{player}/free', 'PlayerController@free')->where('player', '[0-9]+');
+        Route::post('/{player}/transferable', 'PlayerController@startSelling')->where('player', '[0-9]+');
+        Route::patch('/{player}/value', 'PlayerController@updateValue')->where('player', '[0-9]+');
+    });
     Route::get('/players', 'PlayerController@showListing');
-    Route::get('/player/{player}', 'PlayerController@index')->where('player', '[0-9]+');
 
     Route::group(['prefix' => 'shopping'], function() {
         Route::post('/buy', 'ShoppingController@buy');
