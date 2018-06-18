@@ -402,7 +402,7 @@ class MatchController extends Controller
                 }
             }
 
-            $output['matches'] = [
+            $output['matches'][] = [
                 'assistance'            => empty($data['assistance']) ? 0 : $data['assistance'],
                 'incomes'               => empty($data['incomes']) ? 0 : $data['incomes'],
                 'datetime'              => $data['timestamp'],
