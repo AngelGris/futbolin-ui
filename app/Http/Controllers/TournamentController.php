@@ -116,8 +116,17 @@ class TournamentController extends Controller
                 ];
             }
 
+            $categories = [];
+            foreach ($vars['categories'] as $cat) {
+                $categories[] = [
+                    'id'    => $cat->id,
+                    'name'  => $cat->name
+                ];
+            }
+
             return response()->json([
                 'tournament'    => $tournament,
+                'categories'    => $categories,
                 'category'      => $category,
                 'next_match'    => $next_match,
                 'last_matches'  => $last_matches
