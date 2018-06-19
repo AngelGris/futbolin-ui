@@ -23,6 +23,24 @@ class PlayerSelling extends Model
     protected $dates = ['closes_at'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'id', 'created_at', 'updated_at'
+    ];
+
+    /**
+     * Attributes to be append to arrays.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'player_name'
+    ];
+
+    /**
      * Get player been sold
      *
      * @return Player
@@ -54,5 +72,15 @@ class PlayerSelling extends Model
         } else {
             return $this->value;
         }
+    }
+
+    /**
+     * Get player name
+     *
+     * @return String
+     */
+    public function getPlayerNameAttribute()
+    {
+        return $this->player->first_name . ' ' . $this->player->last_name;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Player;
 use App\PlayerSelling;
 
 class MarketController extends Controller
@@ -29,5 +30,33 @@ class MarketController extends Controller
         ];
 
         return view('market.index', $vars);
+    }
+
+    /**
+     * List all players in market
+     */
+    public function listing(Request $request)
+    {
+        $market = [];
+        $players = PlayerSelling::orderBy('updated_at', 'DESC')->get();
+        foreach ($players as $player) {
+            $pla = Player::find($player->player_id);
+            $market[] = [
+                'player'    => [
+                    'id'        => $pla->id,
+                    'name'      => $pla->short_name,
+                    'team_id'   => $pla->team_id,
+                    'team'      => is_null($pla->team_id) ? '' : $pla->team->name
+                ],
+                'value'         => $player->value,
+                'offer_value'   => $player->best_offer_value,
+                'offer_team'    => $player->best_offer_team,
+                'closes_at'     => $player->closes_at->timestamp,
+            ];
+        }
+
+        return response()->json([
+            'market'   => $market
+        ], 200);
     }
 }
