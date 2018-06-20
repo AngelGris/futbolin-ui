@@ -374,9 +374,12 @@ class MatchController extends Controller
         }
 
         $matches = DB::table('matches_rounds')->join('matches', 'matches.id', 'matches_rounds.match_id')->where('round_id', $match->round->round_id)->where('matches.id', '!=', $match->id)->pluck('matches.logfile')->all();
-        $matches[] = $match->logfile;
+        array_unshift($matches, $match->logfile);
 
-        $output = [];
+        $output = [
+            'category_name' => $match->category->name,
+            'round_number'  => $match->round->number
+        ];
         foreach ($matches as $logfile) {
             $data = getMatchLog($logfile);
 
