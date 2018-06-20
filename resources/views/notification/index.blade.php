@@ -14,6 +14,9 @@ $(function() {
             'dataType': 'json'
         }).done(function(data) {
             $('.unread-count').text(data.unread);
+            if (parseInt(data.unread) == 0) {
+                $('.unread-count').removeClass('count-alert');
+            }
             $('#reader-title').text(data.title);
             $('#reader-message').html(data.message);
         });
