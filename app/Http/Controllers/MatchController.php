@@ -391,6 +391,7 @@ class MatchController extends Controller
             $local_rgb_primary = sscanf($local->primary_color, "#%02x%02x%02x");
             $visit_rgb_primary = sscanf($visit->primary_color, "#%02x%02x%02x");
 
+            $scorers = [];
             foreach ($data['scorers'] as $scorer) {
                 if ($scorer[1] == 0) {
                     $scorers['local'][] = [
@@ -410,6 +411,7 @@ class MatchController extends Controller
                 if (in_array($play[2], [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 14, 17, 18, 19, 21, 22, 23, 24, 25, 26])) {
                     $plays[] = [
                         'type'          => $play[2],
+                        'team'          => $play[1],
                         'minutes'       => $play[0],
                         'background'    => ($play[1] == 0) ? $local->primary_color : $visit->primary_color,
                         'color'         => ($play[1] == 0) ? $local->text_color : $visit->text_color,
