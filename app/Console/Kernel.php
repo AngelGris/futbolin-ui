@@ -35,6 +35,46 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         /**
+         * Every minute tasks
+         */
+        $schedule->call(function() {
+            // Transfer players
+            $sellings = PlayerSelling::where('closes_at', '<', Carbon::now())->get();
+            foreach ($sellings as $selling) {
+                // If the player has a good offer complete teh transaction
+                // Else if player has team, just finish transferable period
+                // Else (free agent) renew transferable period if it has been free for less than 4 weeks
+                // Otherwise delete it
+                if ($selling->best_offer_value > $selling->value) {
+                    $selling_team = $selling->player->team;
+                    if ($selling->player->transfer($selling->offeringTeam, $selling->best_offer_value)) {
+                        if ($selling_team) {
+                            $selling_team->moneyMovement($selling->best_offer_value, 'Venta de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+                        }
+                        $selling->offeringTeam->moneyMovement(-$selling->best_offer_value, 'Compra de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+                    }
+                    $selling->delete();
+                } elseif ($selling->player->team) {
+                    // Notify selling team
+                    Notification::create([
+                        'user_id' => $selling->player->team->user->id,
+                        'title' => 'No hubo ninguna oferta por ' . $selling->player->first_name . ' ' . $selling->player->last_name,
+                        'message' => 'No has podido vender a <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->first_name . ' ' . $selling->player->last_name . '</a> y continua a disposición de tu cuerpo técnico.',
+                    ]);
+                    $selling->delete();
+                } elseif ($selling->created_at > Carbon::now()->subWeeks(4)) {
+                    $selling->closes_at = Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))->subMinute();
+                    $selling->save();
+                } else {
+                    $selling->player->delete();
+                    $selling->delete();
+                }
+            }
+            exit;
+        })
+        ->appendOutputTo('/var/log/futbolin/every_minute.log');
+
+        /**
          *  Run cron to play matches
          *  Monday, Wednesday and Friday at 8pm
          */
@@ -189,46 +229,6 @@ class Kernel extends ConsoleKernel
         $schedule->exec('find ' . base_path() . '/python/logs/ -type f -mtime +90 -name \'*.log\' -delete')
                 ->monthly()
                 ->appendOutputTo('/var/log/futbolin/old-logs.log');
-
-        /**
-         * Every minute tasks
-         */
-        $schedule->call(function() {
-            // Transfer players
-            $sellings = PlayerSelling::where('closes_at', '<', Carbon::now())->get();
-            foreach ($sellings as $selling) {
-                // If the player has a good offer complete teh transaction
-                // Else if player has team, just finish transferable period
-                // Else (free agent) renew transferable period if it has been free for less than 4 weeks
-                // Otherwise delete it
-                if ($selling->best_offer_value > $selling->value) {
-                    $selling_team = $selling->player->team;
-                    if ($selling->player->transfer($selling->offeringTeam, $selling->best_offer_value)) {
-                        if ($selling_team) {
-                            $selling_team->moneyMovement($selling->best_offer_value, 'Venta de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
-                        }
-                        $selling->offeringTeam->moneyMovement(-$selling->best_offer_value, 'Compra de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
-                    }
-                    $selling->delete();
-                } elseif ($selling->player->team) {
-                    // Notify selling team
-                    Notification::create([
-                        'user_id' => $selling->player->team->user->id,
-                        'title' => 'No hubo ninguna oferta por ' . $selling->player->first_name . ' ' . $selling->player->last_name,
-                        'message' => 'No has podido vender a <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->first_name . ' ' . $selling->player->last_name . '</a> y continua a disposición de tu cuerpo técnico.',
-                    ]);
-                    $selling->delete();
-                } elseif ($selling->created_at > Carbon::now()->subWeeks(4)) {
-                    $selling->closes_at = Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'));
-                    $selling->save();
-                } else {
-                    $selling->player->delete();
-                    $selling->delete();
-                }
-            }
-            exit;
-        })
-        ->appendOutputTo('/var/log/futbolin/every_minute.log');
     }
 
     /**
