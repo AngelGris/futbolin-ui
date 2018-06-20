@@ -50,7 +50,7 @@
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                                 @if ($_messagesCount > 0)
-                                <span class="count count-alert">{{ $_messagesCount }}</span>
+                                <span class="count unread-count count-alert">{{ $_messagesCount }}</span>
                                 @else
                                 <span class="count">{{ $_messagesCount }}</span>
                                 @endif
@@ -60,7 +60,7 @@
                                 @if (count($_notifications))
                                 <li class="nav-header">Notificaciones</li>
                                 @foreach ($_notifications as $notification)
-                                <li><a href="#" class="admin-messages" onclick="loadNotification({{ $notification['id'] }});">{{ $notification['title'] }}<small class="muted"> - {{ $notification['published'] }}</small></a></li>
+                                <li><a href="#" class="admin-messages open-notification{{ is_null($notification->read_on) ? ' unread' : '' }}" data-id="{{ $notification['id'] }}">{{ $notification['title'] }}<small class="muted"> - {{ $notification['published'] }}</small></a></li>
                                 @endforeach
                                 <li class="viewmore">
                                     <a href="{{ route('notifications') }}">Ver todas las notificaciones</a>
@@ -170,7 +170,7 @@
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                                 @if ($_messagesCount > 0)
-                                <span class="count count-alert">{{ $_messagesCount }}</span>
+                                <span class="count unread-count count-alert">{{ $_messagesCount }}</span>
                                 @else
                                 <span class="count">{{ $_messagesCount }}</span>
                                 @endif
@@ -181,7 +181,7 @@
                                 @if (count($_notifications))
                                 <li class="nav-header">Notificaciones</li>
                                 @foreach ($_notifications as $notification)
-                                <li><a href="#" class="admin-messages" onclick="loadNotification({{ $notification['id'] }});">{{ $notification['title'] }}<small class="muted"> - {{ $notification['published'] }}</small></a></li>
+                                <li><a href="#" class="admin-messages open-notification{{ is_null($notification->read_on) ? ' unread' : '' }}" data-id="{{ $notification['id'] }}">{{ $notification['title'] }}<small class="muted"> - {{ $notification['published'] }}</small></a></li>
                                 @endforeach
                                 <li class="viewmore">
                                     <a href="{{ route('notifications') }}">Ver todas las notificaciones</a>
