@@ -24,7 +24,11 @@
         @foreach ($transactions as $transaction)
         <tr class="{{ strtolower($transaction->player->position) }}">
             <td>{{ $transaction->created_at->format('d/m/Y H:i') }}</td>
+            @if (is_null($transaction->player->deleted_at))
             <td><a href="{{ route('player', $transaction->player->id) }}">{{ $transaction->player->first_name . ' ' . $transaction->player->last_name  }}</a></td>
+            @else
+            <td>{!! $transaction->player->name !!}</td>
+            @endif
             <td align="center"><span data-placement="top" data-toggle="tooltip" data-original-title="{{ $transaction->player->position_long }}">{{ $transaction->player->position }}</span></td>
             <td>
                 @if ($transaction->seller)
