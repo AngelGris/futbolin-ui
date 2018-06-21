@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\MarketTransaction;
 use App\MatchesRound;
 use App\PlayerSelling;
 use App\Team;
@@ -52,6 +53,14 @@ class Kernel extends ConsoleKernel
                             $selling_team->moneyMovement($selling->best_offer_value, 'Venta de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
                         }
                         $selling->offeringTeam->moneyMovement(-$selling->best_offer_value, 'Compra de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+
+                        MarketTransaction::create([
+                            'player_id'     => $selling->player->id,
+                            'seller_id'     => $selling_team ? $selling_team->id : NULL,
+                            'buyer_id'      => $selling->offeringTeam->id,
+                            'value'         => $selling->best_offer_value,
+                            'created_at'    => Carbon::now()
+                        ]);
                     }
                     $selling->delete();
                 } elseif ($selling->player->team) {
