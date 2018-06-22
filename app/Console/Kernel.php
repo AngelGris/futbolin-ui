@@ -79,7 +79,6 @@ class Kernel extends ConsoleKernel
                     $selling->delete();
                 }
             }
-            exit;
         })
         ->appendOutputTo('/var/log/futbolin/every_minute.log');
 
