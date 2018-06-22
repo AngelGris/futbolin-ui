@@ -32,15 +32,6 @@ class PlayerSelling extends Model
     ];
 
     /**
-     * Attributes to be append to arrays.
-     *
-     * @var array
-     */
-    protected $appends = [
-        'player_name'
-    ];
-
-    /**
      * Get player been sold
      *
      * @return Player

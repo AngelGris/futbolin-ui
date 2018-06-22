@@ -26,11 +26,11 @@ function updateSalary() {
 <h4>{{ $player->position }} - {{ $player->age }} años</h4>
 <h4>
     Valor: {!! formatCurrency($player->value) !!}
-@if ($player->team && $player->team->id == $_team->id && !$player->selling)
+@if ($player->team && $player->team->id == $_team->id && empty($player->selling->id))
     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-value">Mejorar contrato</button>
     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-selling">Declarar transferible</button>
     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-free">Dejar libre</button>
-@elseif ($player->selling)
+@elseif (!empty($player->selling->id))
     <br>
     @if ($player->selling->best_offer_value > 0)
     Mejor oferta: {{ formatCurrency($player->selling->best_offer_value) }} ({{ $player->selling->offeringTeam->name }})
@@ -66,7 +66,7 @@ function updateSalary() {
     </div>
 </div>
 @if ($player->team && $player->team->id == $_team->id)
-@if (!$player->selling)
+@if (empty($player->selling->id))
 <div class="modal fade" id="modal-value" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -191,7 +191,7 @@ function updateSalary() {
 </div>
 @endif
 @endif
-@if ($player->selling && (!$player->team || $player->team->id != $_team->id))
+@if (!empty($player->selling->id) && (!$player->team || $player->team->id != $_team->id))
 <div class="modal fade" id="modal-make-offer" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
