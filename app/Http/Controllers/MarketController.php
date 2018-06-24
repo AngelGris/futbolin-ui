@@ -45,6 +45,10 @@ class MarketController extends Controller
                 'player'    => [
                     'id'        => $pla->id,
                     'name'      => $pla->short_name,
+                    'position'  => $pla->position,
+                    'age'       => $pla->age,
+                    'average'   => $pla->average,
+                    'icon'      => $pla->icons,
                     'team_id'   => $pla->team_id,
                     'team'      => is_null($pla->team_id) ? '' : $pla->team->name
                 ],

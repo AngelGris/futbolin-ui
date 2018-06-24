@@ -235,25 +235,6 @@ class Player extends Model
      */
     public function getBladeHandlerIconsAttribute()
     {
-        $output = '<div class="status">';
-        if ($this->retiring) {
-            $output .= '<span class="fa fa-user-times" style="color:#f00;"></span>';
-        }
-        if ($this->cards) {
-            if ($this->cards->cards >= (\Config::get('constants.YELLOW_CARDS_SUSPENSION') - 1)) {
-                $output .= '<span class="fa fa-square" style="color:#ff0;"></span>';
-            }
-            if ($this->cards->suspension) {
-                $output .= '<span class="fa fa-square" style="color:#f00;"></span>';
-            }
-        }
-        if ($this->recovery) {
-            $output .= '<span class="fa fa-medkit" style="color:#f00;"></span>';
-        }
-        if ($this->stamina < 50) {
-            $output .= '<span class="fa fa-arrow-down" style="color:#f00;"></span>';
-        }
-        $output .= '</div>';
         return '<div class="status">' . $this->iconsHtml(3, TRUE) . '</div>';
     }
 
@@ -284,13 +265,49 @@ class Player extends Model
     /**
      *
      */
+    public function getIconsAttribute()
+    {
+        $icons = [];
+        if ($this->retiring) {
+            $icons[] = 'retiring';
+        }
+        if ($this->cards) {
+            if ($this->cards->cards >= \Config::get('constants.YELLOW_CARDS_SUSPENSION') - 1) {
+                $icons[] = 'yellow_cards';
+            }
+            if ($this->cards->suspension > 0) {
+                $icons[] = 'red_card';
+            }
+        }
+        if ($this->recovery) {
+            $icons[] = 'injured';
+        }
+        if ($this->healed) {
+            $icons[] = 'healed';
+        }
+        if ($this->upgraded) {
+            $icons[] = 'upgraded';
+        }
+        if ($this->tired) {
+            $icons[] = 'tired';
+        }
+        if ($this->transferable) {
+            $icons[] = 'transferable';
+        }
+
+        return $icons;
+    }
+
+    /**
+     *
+     */
     public function getLastUpgradeAttribute($value)
     {
         $value = json_decode($value);
         if (!empty($value)) {
             return $value;
         } else {
-            return [];
+            return NULL;
         }
     }
 
@@ -443,32 +460,26 @@ class Player extends Model
      */
     public function iconsHtml($limit = 10, $short = FALSE)
     {
+        $icons = array_slice($this->icons, 0, $limit);
         $output = [];
-        if ($this->retiring && count($output) < $limit) {
-            $output[] = '<span class="fa fa-user-times" style="color:#f00;"' . ($short ? '' : ' data-toggle="tooltip" title="Se retira"') . '></span>';
-        }
-        if ($this->cards) {
-            if ($this->cards->cards >= \Config::get('constants.YELLOW_CARDS_SUSPENSION') - 1 && count($output) < $limit) {
+        foreach ($icons as $icon) {
+            if ($icon == 'retiring') {
+                $output[] = '<span class="fa fa-user-times" style="color:#f00;"' . ($short ? '' : ' data-toggle="tooltip" title="Se retira"') . '></span>';
+            } elseif ($icon == 'yellow_cards') {
                 $output[] = '<span class="fa fa-square" style="color:#ff0;"' . ($short ? '' : ' data-toggle="tooltip" title="Tiene ' . (\Config::get('constants.YELLOW_CARDS_SUSPENSION') - 1) . ' amarillas"') . '></span>';
-            }
-            if ($this->cards->suspension > 0 && count($output) < $limit) {
+            } elseif ($icon == 'red_card') {
                 $output[] = '<span class="fa fa-square" style="color:#f00;"' . ($short ? '' : ' data-toggle="tooltip" title="Suspendido"') . '></span>';
+            } elseif ($icon == 'injured') {
+                $output[] = '<span class="fa fa-medkit" style="color:#f00;"' . ($short ? '' : ' data-toggle="tooltip" title="Lesionado"') . '>' . ($short ? '' : ' ' . $this->recovery) . '</span>';
+            } elseif ($icon == 'healed') {
+                $output[] = '<span class="fa fa-plus-circle" style="color:#0a0;"' . ($short ? '' : ' data-toggle="tooltip" title="Tratado"') . '></span>';
+            } elseif ($icon == 'upgraded') {
+                $output[] = '<span class="fa fa-arrow-circle-up" style="color:#0a0;"' . ($short ? '' : ' data-toggle="tooltip" title="Subió de nivel"') . '></span>';
+            } elseif ($icon == 'tired') {
+                $output[] = '<span class="fa fa-arrow-down" style="color:#f00;"' . ($short ? '' : ' data-toggle="tooltip" title="Pocas energías"') . '></span>';
+            } elseif ($icon == 'transferable') {
+                $output[] = '<span class="fa fa-share-square-o" style="color:#0a0;"' . ($short ? '' : ' data-toggle="tooltip" title="Transferible"') . '></span>';
             }
-        }
-        if ($this->recovery && count($output) < $limit) {
-            $output[] = '<span class="fa fa-medkit" style="color:#f00;"' . ($short ? '' : ' data-toggle="tooltip" title="Lesionado"') . '>' . ($short ? '' : ' ' . $this->recovery) . '</span>';
-        }
-        if ($this->healed && count($output) < $limit) {
-            $output[] = '<span class="fa fa-plus-circle" style="color:#0a0;"' . ($short ? '' : ' data-toggle="tooltip" title="Tratado"') . '></span>';
-        }
-        if ($this->upgraded && count($output) < $limit) {
-            $output[] = '<span class="fa fa-arrow-circle-up" style="color:#0a0;"' . ($short ? '' : ' data-toggle="tooltip" title="Subió de nivel"') . '></span>';
-        }
-        if ($this->tired && count($output) < $limit) {
-            $output[] = '<span class="fa fa-arrow-down" style="color:#f00;"' . ($short ? '' : ' data-toggle="tooltip" title="Pocas energías"') . '></span>';
-        }
-        if ($this->transferable && count($output) < $limit) {
-            $output[] = '<span class="fa fa-share-square-o" style="color:#0a0;"' . ($short ? '' : ' data-toggle="tooltip" title="Transferible"') . '></span>';
         }
 
         $glue = ($short ? '' : ' ');
