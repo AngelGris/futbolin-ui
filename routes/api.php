@@ -18,7 +18,10 @@ Route::group(['middleware' => ['auth.api', 'liveMatch']], function() {
 
     Route::post('/logout', 'Auth\LoginController@apiLogout');
 
-    Route::get('/market', 'MarketController@listing');
+    Route::group(['prefix' => 'market'], function() {
+        Route::get('/', 'MarketController@listing');
+        Route::get('/transactions', 'MarketController@transactions');
+    });
 
     Route::group(['prefix' => 'match'], function() {
         Route::post('/', 'MatchController@play');

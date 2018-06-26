@@ -68,17 +68,22 @@ class MarketController extends Controller
     /*
      * Show previous transactions
      */
-    public function transactions()
+    public function transactions(Request $request)
     {
         $transactions = MarketTransaction::OrderBy('created_at', 'DESC')->paginate(30);
 
-        $vars = [
-            'icon'          => 'fa fa-retweet',
-            'title'         => 'Transacciones finalizadas',
-            'subtitle'      => 'Compras y ventas',
-            'transactions'  => $transactions,
-        ];
 
-        return view('market.transactions', $vars);
+        if ($request->expectsJson()) {
+            return response()->json($transactions, 200);
+        } else {
+            $vars = [
+                'icon'          => 'fa fa-retweet',
+                'title'         => 'Transacciones finalizadas',
+                'subtitle'      => 'Compras y ventas',
+                'transactions'  => $transactions,
+            ];
+
+            return view('market.transactions', $vars);
+        }
     }
 }
