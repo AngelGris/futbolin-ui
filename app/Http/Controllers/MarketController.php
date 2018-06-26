@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Player;
 use App\PlayerSelling;
+use App\MarketTransaction;
+use Illuminate\Http\Request;
 
 class MarketController extends Controller
 {
@@ -48,7 +49,7 @@ class MarketController extends Controller
                     'position'  => $pla->position,
                     'age'       => $pla->age,
                     'average'   => $pla->average,
-                    'icon'      => $pla->icons,
+                    'icons'     => $pla->icons,
                     'team_id'   => $pla->team_id,
                     'team'      => is_null($pla->team_id) ? '' : $pla->team->name
                 ],
@@ -62,5 +63,22 @@ class MarketController extends Controller
         return response()->json([
             'market'   => $market
         ], 200);
+    }
+
+    /*
+     * Show previous transactions
+     */
+    public function transactions()
+    {
+        $transactions = MarketTransaction::OrderBy('created_at', 'DESC')->paginate(30);
+
+        $vars = [
+            'icon'          => 'fa fa-retweet',
+            'title'         => 'Transacciones finalizadas',
+            'subtitle'      => 'Compras y ventas',
+            'transactions'  => $transactions,
+        ];
+
+        return view('market.transactions', $vars);
     }
 }

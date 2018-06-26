@@ -2313,6 +2313,10 @@ label.error {
 	display: none;
 }
 
+.admin-messages.unread {
+    background-color: #faa;
+}
+
 .label {
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;

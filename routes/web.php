@@ -125,7 +125,10 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
     Route::get('/torneos', ['as' => 'tournaments', 'uses' => 'TournamentController@index']);
     Route::get('/torneo/{category}', ['as' => 'tournament', 'uses' => 'TournamentController@index'])->where('tournament', '[0-9]+');
 
-    Route::get('/mercado', ['as' => 'market', 'uses' => 'MarketController@index']);
+    Route::group(['prefix' => 'mercado'], function() {
+        Route::get('/', ['as' => 'market', 'uses' => 'MarketController@index']);
+        Route::get('/transacciones', ['as' => 'market.transactions', 'uses' => 'MarketController@transactions']);
+    });
 
     Route::group(['prefix' => 'shopping'], function() {
         Route::get('/', ['as' => 'shopping', 'uses' => 'ShoppingController@index']);

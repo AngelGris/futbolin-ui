@@ -10,17 +10,6 @@ function changeShield(id) {
     return false;
 };
 
-function loadNotification(id) {
-    $.ajax({
-        'method': 'GET',
-        'url': '/notificacion/' + id,
-        'dataType': 'json'
-    }).done(function(data) {
-        $('.unread-count').text(data.unread);
-        showAdminMessage(data.title, data.message);
-    });
-}
-
 function loadAdminMessage(id) {
     $.ajax({
         'method': 'GET',
@@ -138,6 +127,22 @@ $(function(){
     $('#shield-select').click(function(event) {
         event.preventDefault();
         $('#modal-shield-select').modal('show');
+    });
+
+    $('.open-notification').click(function(event) {
+        event.preventDefault();
+        $(this).removeClass('unread');
+        $.ajax({
+            'method': 'GET',
+            'url': '/notificacion/' + $(this).data('id'),
+            'dataType': 'json'
+        }).done(function(data) {
+            $('.unread-count').text(data.unread);
+            if (parseInt(data.unread) == 0) {
+                $('.unread-count').removeClass('count-alert');
+            }
+            showAdminMessage(data.title, data.message);
+        });
     });
 
     $('.trainning-button').click(function(event) {

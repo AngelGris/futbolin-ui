@@ -47,18 +47,23 @@ function updateSalary() {
 @endsection
 
 @section('content-inner')
-Mostrar:
-<select id="players-filtering">
-    <option value="">Todos</option>
-    @foreach(['arq' => 'Arqueros', 'def' => 'Defensores', 'med' => 'Mediocampistas', 'ata' => 'Atacantes'] as $k => $v)
-    @if ($k == $filter)
-    <option value="{{ $k }}" selected>{{ $v }}</option>
-    @else
-    <option value="{{ $k }}">{{ $v }}</option>
-    @endif
-    @endforeach
-</select>
-<div style="float:right;">
+<div class="col-sm-4">
+    Mostrar:
+    <select id="players-filtering">
+        <option value="">Todos</option>
+        @foreach(['arq' => 'Arqueros', 'def' => 'Defensores', 'med' => 'Mediocampistas', 'ata' => 'Atacantes'] as $k => $v)
+        @if ($k == $filter)
+        <option value="{{ $k }}" selected>{{ $v }}</option>
+        @else
+        <option value="{{ $k }}">{{ $v }}</option>
+        @endif
+        @endforeach
+    </select>
+</div>
+<div class="col-sm-4" style="text-align:center;">
+    <a class="btn btn-sm btn-primary" href="{{ route('market.transactions') }}">Transacciones finalizadas</a>
+</div>
+<div class="col-sm-4" style="text-align:right;">
     Oferta máxima: {{ formatCurrency($_team->calculateSpendingMargin()) }}
 </div>
 <div class="col-sm-12">

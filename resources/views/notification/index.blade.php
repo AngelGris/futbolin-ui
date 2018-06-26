@@ -14,6 +14,9 @@ $(function() {
             'dataType': 'json'
         }).done(function(data) {
             $('.unread-count').text(data.unread);
+            if (parseInt(data.unread) == 0) {
+                $('.unread-count').removeClass('count-alert');
+            }
             $('#reader-title').text(data.title);
             $('#reader-message').html(data.message);
         });
@@ -27,7 +30,7 @@ $(function() {
     <div class="messagecontent">
         <div class="messageleft">
             <ul class="msglist">
-                @foreach($_notifications as $notification)
+                @foreach($_user->notifications as $notification)
                 <li class="notification{{ ($notification['read_on'] == NULL) ? ' unread' : '' }}" data-id="{{ $notification['id'] }}">
                     <div class="summary">
                         <h4>{{ $notification['title'] }}</h4>
