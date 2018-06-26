@@ -22,11 +22,21 @@ class UserController extends Controller
             $user->team->makeVisible(['last_trainning', 'trainer', 'trainning_count']);
             $user->team->append(['formation_objects']);
 
+            $retiring = [];
+            $players = $user->team->players->where('retiring', '=', 1);
+            foreach ($players as $player) {
+                $retiring[] = $player;
+            }
+
             $last_match = TournamentRound::where('datetime', '<', time())->orderBy('datetime', 'DESC')->first();
             $upgraded = [];
             if ($last_match) {
-                $upgraded = $user->team->players->where('last_upgraded', '>', date('Y-m-d H:i:s', $last_match['datetime']))->sortByDesc('last_upgraded');
+                $players = $user->team->players->where('last_upgraded', '>', date('Y-m-d H:i:s', $last_match['datetime']))->sortByDesc('last_upgraded');
+                foreach ($players as $player) {
+                    $upgraded[] = $player;
+                }
             }
+
 
             $request_time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
             $notifications = [
@@ -36,7 +46,7 @@ class UserController extends Controller
                 'transferables' => $user->team->players()->select('players.*', 'player_sellings.best_offer_value')->join('player_sellings', 'player_sellings.player_id', '=', 'players.id')->get(),
                 'suspensions'   => $user->team->players()->join('player_cards', 'player_cards.player_id', '=', 'players.id')->where('player_cards.suspension', '>', 0)->get(),
                 'injuries'      => $user->team->players()->where('recovery', '>', 0)->get(),
-                'retiring'      => $user->team->players->where('retiring', '=', 1),
+                'retiring'      => $retiring,
                 'upgraded'      => $upgraded
             ];
         }
