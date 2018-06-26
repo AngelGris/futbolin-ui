@@ -28,6 +28,8 @@ Route::group(['middleware' => ['auth.api', 'liveMatch']], function() {
     Route::group(['prefix' => 'me'], function() {
         Route::get('/', 'UserController@index');
         Route::patch('/', 'AccountSettingsController@update');
+        Route::get('/notifications', 'NotificationController@index');
+        Route::get('/notification/{notification}', 'NotificationController@show')->where('notification', '[0-9]+');
     });
 
     Route::patch('/password', 'AccountSettingsController@updatePassword');
