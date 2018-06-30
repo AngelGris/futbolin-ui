@@ -106,7 +106,7 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
         Route::get('/{player}', ['as' => 'player', 'uses' => 'PlayerController@index'])->where('player', '[0-9]+');
         Route::post('/{player}/liberar', ['as' => 'player.free', 'uses' => 'PlayerController@free'])->where('player', '[0-9]+');
         Route::post('/{player}/transferible', ['as' => 'player.selling', 'uses' => 'PlayerController@startSelling'])->where('player', '[0-9]+');
-        Route::post('/{player}/value', ['as' => 'player.value', 'uses' => 'PlayerController@updateValue'])->where('player', '[0-9]+');
+        Route::post('/{player}/valor', ['as' => 'player.value', 'uses' => 'PlayerController@updateValue'])->where('player', '[0-9]+');
     });
 
     Route::get('/estrategia', ['as' => 'strategy', 'uses' => 'TeamController@showStrategy']);

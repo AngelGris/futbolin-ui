@@ -13,6 +13,15 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * Attributes that should be mutated to dates
+     *
+     * @var array
+     */
+    protected $dates = [
+        'last_activity'
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -27,29 +36,32 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'email', 'credits', 'last_activity', 'notifications', 'is_administrator', 'created_at', 'updated_at'
     ];
 
     /**
-     * Attributes that should be mutated to dates
-     */
-    protected $dates = [
-        'last_activity'
-    ];
-
-    /**
-     * Send the password reset notification.
+     * The relationships that should be included in arrays.
      *
-     * @param  string  $token
-     * @return void
+     * @var array
      */
-    public function sendPasswordResetNotification($token)
+    protected $with = [
+        'team'
+    ];
+
+    /**
+     * Get all API tokens
+     *
+     * @return Collection ApiToken
+     */
+    public function apiTokens()
     {
-        $this->notify(new ResetPasswordNotification($token, $this));
+        return $this->hasMany(ApiToken::class);
     }
 
     /**
      * Get the team associated with the user
+     *
+     * @return Team
      */
     public function team()
     {
@@ -58,6 +70,8 @@ class User extends Authenticatable
 
     /**
      * Get user's transactions
+     *
+     * @return Collection Transaction
      */
     public function transactions()
     {
@@ -66,6 +80,8 @@ class User extends Authenticatable
 
     /**
      * Get user's messages
+     *
+     * @return Collection Notification
      */
     public function notifications()
     {
@@ -88,6 +104,8 @@ class User extends Authenticatable
 
     /**
      * Create a new team for the user
+     *
+     * @return Team
      */
     public function createTeam($request)
     {
@@ -99,7 +117,31 @@ class User extends Authenticatable
     }
 
     /**
+     * Generate API token for user in a given device
+     *
+     * @param string $deviceId
+     * @param string $deviceName
+     * @return string
+     */
+    public function generateToken($deviceId, $deviceName)
+    {
+        ApiToken::where('device_id', $deviceId)->delete();
+
+        $apiToken = new ApiToken;
+        $apiToken->user_id = $this->id;
+        $apiToken->device_id = $deviceId;
+        $apiToken->device_name = $deviceName;
+        $apiToken->used_on = date('Y-m-d H:i:s');
+        $apiToken->api_token = str_random(60);
+        $apiToken->save();
+
+        return $apiToken->api_token;
+    }
+
+    /**
      * Get user's admin privileges
+     *
+     * @return bool
      */
     public function getIsAdminAttribute()
     {
@@ -108,6 +150,8 @@ class User extends Authenticatable
 
     /**
      * Get user's complete name
+     *
+     * @return string
      */
     public function getNameAttribute()
     {
@@ -116,6 +160,8 @@ class User extends Authenticatable
 
     /**
      * Unread messages count
+     *
+     * @return Notification
      */
     public function getUnreadMessagesAttribute()
     {
@@ -123,10 +169,23 @@ class User extends Authenticatable
     }
 
     /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token, $this));
+    }
+
+    /**
      * Update user's team
+     *
+     * @return Team
      */
     public function updateTeam($request)
     {
-        return $this->team()->update($request->only(['name', 'stadium_name', 'primary_color', 'secondary_color', 'text_color']));
+        return $this->team()->update($request->only(['name', 'short_name', 'stadium_name', 'primary_color', 'secondary_color', 'text_color', 'shield']));
     }
 }

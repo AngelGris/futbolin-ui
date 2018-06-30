@@ -150,6 +150,10 @@ return [
         'secondary_color'       => 'color secundario',
         'old_password'          => 'contraseña actual',
         'new_password'          => 'contraseña nueva',
+        'strategy'              => 'estrategia',
+        'formation'             => 'formación',
+        'match_type'            => 'tipo de partido',
+        'player_id'             => 'id de jugador'
     ],
 
 ];

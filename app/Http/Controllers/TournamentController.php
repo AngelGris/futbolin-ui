@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Matches;
+use App\Team;
 use App\Tournament;
 use App\TournamentCategory;
 
 class TournamentController extends Controller
 {
-    public function index($category_id = NULL)
+    public function index(Request $request, $category_id = NULL)
     {
         $vars = [
             'icon' => 'fa fa-trophy',
@@ -17,10 +19,16 @@ class TournamentController extends Controller
             'subtitle' => 'A demostrar quién manda'
         ];
 
+        if ($request->expectsJson()) {
+            $team = Auth::guard('api')->user()->user->team;
+        } else {
+            $team = Auth::user()->team;
+        }
+
         if (is_null($category_id)) {
             $category_id =  \DB::table('tournament_categories')
                             ->join('tournament_positions', 'tournament_positions.category_id', '=', 'tournament_categories.id')
-                            ->where('tournament_positions.team_id', '=', Auth::user()->team->id)
+                            ->where('tournament_positions.team_id', '=', $team->id)
                             ->max('tournament_categories.id');
         }
 
@@ -62,6 +70,69 @@ class TournamentController extends Controller
 
         $vars['categories'] = TournamentCategory::where('tournament_id', '=', $tournament->id)->get();
 
-        return view('tournament.index', $vars);
+        if ($request->expectsJson()) {
+            $result =   \DB::table('matches_rounds')
+                        ->select('local_id', 'visit_id', 'datetime')
+                        ->leftJoin('tournament_rounds', 'tournament_rounds.id', '=', 'matches_rounds.round_id')
+                        ->where(function($query) use ($team) {
+                            $query->where('local_id', '=', $team->id)
+                                  ->orWhere('visit_id', '=', $team->id);
+                        })->whereNull('match_id')
+                        ->orderBy('number', 'ASC')
+                        ->first();
+            $next_match = new \stdClass();
+            if ($result) {
+                $local = Team::find($result->local_id);
+                $visit = Team::find($result->visit_id);
+                $next_match = [
+                    'datetime'  => $result->datetime,
+                    'stadium'   => $local->stadium_name,
+                    'local'     => $local,
+                    'visit'     => $visit
+                ];
+            }
+
+            $result =   \DB::table('matches_rounds')
+                        ->select('match_id')
+                        ->where(function($query) use ($team) {
+                            $query->where('local_id', '=', $team->id)
+                                  ->orWhere('visit_id', '=', $team->id);
+                        })->whereNotNull('match_id')
+                        ->orderBy('match_id', 'DESC')
+                        ->limit(3)
+                        ->get();
+            $last_matches = [];
+            foreach ($result as $match) {
+                $match = Matches::find($match->match_id);
+                $last_matches[] = [
+                    'date' => $match->created_at->format('d/m/y'),
+                    'local_id' => $match->local_id,
+                    'local' => $match->local->short_name,
+                    'local_goals' => $match->local_goals,
+                    'visit_id' => $match->visit_id,
+                    'visit' => $match->visit->short_name,
+                    'visit_goals' => $match->visit_goals,
+                    'log_file' => $match->logfile,
+                ];
+            }
+
+            $categories = [];
+            foreach ($vars['categories'] as $cat) {
+                $categories[] = [
+                    'id'    => $cat->id,
+                    'name'  => $cat->name
+                ];
+            }
+
+            return response()->json([
+                'tournament'    => $tournament,
+                'categories'    => $categories,
+                'category'      => $category,
+                'next_match'    => $next_match,
+                'last_matches'  => $last_matches
+            ], 200);
+        } else {
+            return view('tournament.index', $vars);
+        }
     }
 }

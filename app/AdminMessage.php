@@ -19,6 +19,24 @@ class AdminMessage extends Model
     protected $dates = ['valid_from', 'created_at', 'updated_at'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'id', 'valid_from', 'valid_to', 'created_at', 'updated_at'
+    ];
+
+    /**
+     * Attributes to be append to arrays.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'published'
+    ];
+
+    /**
      * Get published as human readable
      */
     public function getPublishedAttribute()

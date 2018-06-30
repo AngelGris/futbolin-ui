@@ -9,6 +9,7 @@ use App\ShoppingItem;
 use Carbon\Carbon;
 use DB;
 use Session;
+use Validator;
 
 class ShoppingController extends Controller
 {
@@ -17,16 +18,22 @@ class ShoppingController extends Controller
      *
      * @return void
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vars = [
-            'icon'      => 'fa fa-shopping-cart',
-            'title'     => 'Shopping',
-            'subtitle'  => 'Hora de hacer compras',
-            'items'     => ShoppingItem::where('in_shopping', TRUE)->get()
-        ];
+        if ($request->expectsJson()) {
+            return response()->json([
+                'items' => ShoppingItem::where('in_shopping', TRUE)->get()
+            ], 200);
+        } else {
+            $vars = [
+                'icon'      => 'fa fa-shopping-cart',
+                'title'     => 'Shopping',
+                'subtitle'  => 'Hora de hacer compras',
+                'items'     => ShoppingItem::where('in_shopping', TRUE)->get()
+            ];
 
-        return view('shopping.index', $vars);
+            return view('shopping.index', $vars);
+        }
     }
 
     /**
@@ -38,19 +45,36 @@ class ShoppingController extends Controller
     public function buy(Request $request)
     {
         // Check id in $request
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'id'        => 'required|integer',
-            'player_id' => 'sometimes|required|integer'
         ]);
 
-        $user = Auth::user();
+        $validator->sometimes('player_id', 'required|integer|exists:players,id', function($input) {
+            return $input->id == 4;
+        });
+
+        $validator->validate();
+
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
+
         $shopping_item = ShoppingItem::find($request->input('id'));
 
         // If user doesn't have enough credit for the transaction
         // redirect to shopping with arning message
         if ($user->credits < $shopping_item->price) {
-            Session::flash('flash_danger', 'No tienes suficientes Fúlbos.');
-            return redirect()->route('shopping');
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'type'      => 'credit_insufficient',
+                    'message'   => 'Crédito insuficientes para la transacción'
+                ], 400);
+            } else {
+                Session::flash('flash_danger', 'No tienes suficientes Fúlbos.');
+                return redirect()->route('shopping');
+            }
         }
 
         // Route to go after done
@@ -77,8 +101,15 @@ class ShoppingController extends Controller
             case 5:
                 $player = Player::find($request->input('player_id'));
                 if ($player->team->id != $user->team->id) {
-                    Session::flash('flash_warning', $player->short_name . ' no es de tu equipo.');
-                    return redirect()->route('player', $player->id);
+                    if ($request->expectsJson()) {
+                        return response()->json([
+                            'type'      => 'player_owner',
+                            'message'   => $player->short_name . ' no es de tu equipo'
+                        ], 400);
+                    } else {
+                        Session::flash('flash_warning', $player->short_name . ' no es de tu equipo.');
+                        return redirect()->route('player', $player->id);
+                    }
                 }
 
                 if ($shopping_item->id == 4) {
@@ -87,8 +118,15 @@ class ShoppingController extends Controller
                 } else {
                     $sellable_count = $player->team->sellabel_count;
                     if ($sellable_count < 1) {
-                        Session::flash('flash_warning', 'Ha alcanzado el mínimo de jugadores en su equipo.');
-                        return redirect()->route('player', $player->id);
+                        if ($request->expectsJson()) {
+                            return response()->json([
+                                'type'      => 'players_limit',
+                                'message'   => 'Ha alcanzado el mínimo de jugadores en su equipo'
+                            ], 400);
+                        } else {
+                            Session::flash('flash_warning', 'Ha alcanzado el mínimo de jugadores en su equipo.');
+                            return redirect()->route('player', $player->id);
+                        }
                     }
                     $player->setFree();
                     $success_message = $player->short_name . ' ha sido liberado.';
@@ -110,7 +148,13 @@ class ShoppingController extends Controller
             'credits'           => $shopping_item->price
         ]);
 
-        Session::flash('flash_success', $success_message);
-        return $redirect;
+        if ($request->expectsJson()) {
+            return response()->json([
+                'credits'   => $user->credits
+            ], 200);
+        } else {
+            Session::flash('flash_success', $success_message);
+            return $redirect;
+        }
     }
 }

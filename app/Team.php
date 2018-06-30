@@ -14,7 +14,9 @@ class Team extends Model
      *
      * @var array
      */
-    protected $guarded = ['id', 'user_id'];
+    protected $guarded = [
+        'id', 'user_id'
+    ];
 
     /**
      * The attributes that should be casted to native types.
@@ -23,15 +25,38 @@ class Team extends Model
      */
     protected $casts = [
         'formation' => 'array',
+        'playable'  => 'boolean'
     ];
 
     /**
      * Carbon instance fields
      */
-    protected $dates = ['last_trainning', 'trainer', 'created_at', 'updated_at'];
+    protected $dates = [
+        'last_trainning', 'trainer', 'created_at', 'updated_at'
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'user', 'players', 'strategy', 'last_trainning', 'trainer', 'trainning_count', 'created_at', 'updated_at'
+    ];
+
+    /**
+     * Attributes to be append to arrays.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'average'
+    ];
 
     /**
      * Get team funds movements
+     *
+     * @return Collection TeamFundMovement
      */
     public function fundMovements()
     {
@@ -97,7 +122,6 @@ class Team extends Model
 
         return max(0, min($values));
     }
-
 
     /**
      * Create new player in the team
@@ -188,6 +212,36 @@ class Team extends Model
         return $funds;
     }
 
+    public function getFormationAttribute($value)
+    {
+        $value = json_decode($value);
+        if (!empty($value)) {
+            return array_map('intval', $value);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * Get formation with Player objects
+     *
+     * @return Array Player
+     */
+    public function getFormationObjectsAttribute()
+    {
+        $formation = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+        foreach($this->players as $player) {
+            $pos = array_search($player->id, $this->formation);
+            if ($pos !== FALSE) {
+                $formation[$pos] = $player;
+            } else {
+                $formation[] = $player;
+            }
+        }
+
+        return $formation;
+    }
+
     /**
      * Injured players in the team
      *
@@ -250,6 +304,68 @@ class Team extends Model
     }
 
     /**
+     * Get the public strategy info
+     *
+     * @return Array
+     */
+    public function getStrategyPublicAttribute()
+    {
+        $team = $this;
+        $match = Matches::where(function($query) use ($team) {
+            $query->where('local_id', '=', $team->id);
+            $query->orWhere('visit_id', '=', $team->id);
+        })
+        ->where('type_id', '>', 1)
+        ->latest()
+        ->first();
+
+        /**
+         * Load strategy from last official match
+         */
+        $strategy = [];
+        $data = getMatchLog($match['logfile']);
+        if (!empty($data)) {
+            if ($match->local_id == $this->id) {
+                foreach ($data['local']['formation'] as $form) {
+                    $player = Player::where('team_id', '=', $this->id)->where('number', '=', $form['number'])->first();
+                    $strategy[] = [
+                        'left' => number_format($form['top'] * 1.5, 2),
+                        'top' => number_format($form['left'], 2),
+                        'position' => (!empty($player) ? $player->position : ''),
+                        'number' => (!empty($player) ? $form['number'] : ''),
+                    ];
+                }
+            } else {
+                foreach ($data['visit']['formation'] as $form) {
+                    $player = Player::where('team_id', '=', $this->id)->where('number', '=', $form['number'])->first();
+                    $strategy[] = [
+                        'left' => (100 - $form['top']) * 1.5,
+                        'top' => 100 - $form['left'],
+                        'position' => (!empty($player) ? $player->position : ''),
+                        'number' => (!empty($player) ? $form['number'] : ''),
+                    ];
+                }
+            }
+        }
+
+        /**
+         * If $strategy is empty, load it from the DB
+         */
+        if (empty($strategy)) {
+            $strategy = $this->strategy->positionsToPercetages();
+            for ($i = 0; $i < 11; $i++) {
+                $player = Player::find($this->formation[$i]);
+                $strategy[$i]['position'] = (!empty($player) ? $player['position'] : '');
+                $strategy[$i]['number'] = (!empty($player) ? $player['number'] : '');
+            }
+        } else { // else, cut it to 11 players
+            $strategy = array_slice($strategy, 0, 11);
+        }
+
+        return $strategy;
+    }
+
+    /**
      * Check if team can train
      *
      * @return boolean
@@ -300,7 +416,6 @@ class Team extends Model
         if ($diff > 0) {
             return $diff . ' segundos';
         }
-
     }
 
     /**
@@ -335,6 +450,16 @@ class Team extends Model
         }
 
         return $trophies;
+    }
+
+    /**
+     * Get team's user name
+     *
+     * @return String
+     */
+    public function getUserNameAttribute()
+    {
+        return $this->user->name;
     }
 
     /**

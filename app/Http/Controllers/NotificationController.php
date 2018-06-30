@@ -5,33 +5,48 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notification;
+use Carbon\Carbon;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $vars = [
-            'icon' => 'fa fa-envelope',
-            'title' => 'Notificaciones',
-            'subtitle' => 'Las notificaciones no se autodestruirán'
-        ];
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
 
-        return view('notification.index', $vars);
+            return response()->json([
+                'notifications' => $user->notifications
+            ], 200);
+        } else {
+            $vars = [
+                'icon' => 'fa fa-envelope',
+                'title' => 'Notificaciones',
+                'subtitle' => 'Las notificaciones no se autodestruirán'
+            ];
+
+            return view('notification.index', $vars);
+        }
     }
 
-    public function show(Notification $notification)
+    public function show(Request $request, Notification $notification)
     {
-        $user = Auth::user();
+        if ($request->expectsJson() && !empty(Auth::guard('api')->user()->user)) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
 
         if ($user->id == $notification->user_id) {
-            $notification->read_on = date('Y-m-d H:i:s');
-            $notification->save();
+            if (is_null($notification->read_on)) {
+                $notification->read_on = Carbon::now();
+                $notification->save();
+            }
 
-            return json_encode([
+            return response()->json([
                 'title' => $notification->title,
                 'message' => $notification->message,
                 'unread' => $user->unreadMessages,
-            ]);
+            ], 200);
         } else {
             return FALSE;
         }

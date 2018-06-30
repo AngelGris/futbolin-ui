@@ -14,6 +14,33 @@ class TournamentCategory extends Model
     protected $guarded = ['id'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'tournament', 'created_at', 'updated_at'
+    ];
+
+    /**
+     * The attributes that should be appened to arrays.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'category_name', 'zone_name'
+    ];
+
+    /**
+     * The relationships that should be included in arrays.
+     *
+     * @var array
+     */
+    protected $with = [
+        'rounds', 'positions', 'scorers'
+    ];
+
+    /**
      * Positions for the category
      *
      * @return Collection TournamentPosition

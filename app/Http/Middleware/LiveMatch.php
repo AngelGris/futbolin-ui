@@ -15,11 +15,24 @@ class LiveMatch
      */
     public function handle($request, Closure $next)
     {
-        if (\Auth::check()) {
-            $team = \Auth::user()->team;
+        if ($request->expectsJson() && !empty(\Auth::guard('api')->user())) {
+            $team = \Auth::guard('api')->user()->user->team;
 
             if ($team && $team->live_match) {
-                return redirect()->route('match.live');
+                return response()->json([
+                    'errors' => [
+                        'type'      => 'live_match',
+                        'message'   => 'Broadcasting live match'
+                    ]
+                ], 400);
+            }
+        } else {
+            if (\Auth::check()) {
+                $team = \Auth::user()->team;
+
+                if ($team && $team->live_match) {
+                    return redirect()->route('match.live');
+                }
             }
         }
 

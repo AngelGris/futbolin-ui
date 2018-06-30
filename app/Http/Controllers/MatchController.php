@@ -13,6 +13,9 @@ class MatchController extends Controller
 {
     /**
      * Retrieve log for live broadcast
+     *
+     * @param String $logfile
+     * @return Json
      */
     public function getLiveLog($logfile)
     {
@@ -48,34 +51,22 @@ class MatchController extends Controller
 
     /**
      * Load match result
+     *
+     * @param Request $request
      */
     public function load(Request $request)
     {
-        $data = getMatchLog($request->file);
+        $this->validate($request, [
+            'file'  => 'required|string',
+        ]);
+
+        $data = getMatchLog($request->input('file'));
+
         $local = Team::find($data['local']['id']);
         $visit = Team::find($data['visit']['id']);
 
-        $scorers = [[],[]];
-        foreach ($data['scorers'] as $scorer) {
-            if ($scorer[1] == 0) {
-                $scorers[0][] = $scorer[2] . ' <span>(' . substr($scorer[0], 0, 2) . '\')</span>';
-            } else {
-                $scorers[1][] = '<span>(' . substr($scorer[0], 0, 2) . '\')</span> ' . $scorer[2];
-            }
-        }
-
         $local_rgb_primary = sscanf($local->primary_color, "#%02x%02x%02x");
         $visit_rgb_primary = sscanf($visit->primary_color, "#%02x%02x%02x");
-
-        $actions = [];
-        foreach ($data['plays'] as $play) {
-            if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
-                if (in_array($play[2], [6, 19, 23, 25, 26])) {
-                    $play[3] = '<strong>' . $play[3] . '</strong>';
-                }
-                $actions[] = [substr($play[0], 0, 2), 'rgba(' . implode(', ', ($play[1] == 0) ? $local_rgb_primary : $visit_rgb_primary) . ', 1);', (($play[1] == 0) ? $local['text_color'] : $visit['text_color']), $play[3]];
-            }
-        }
 
         $match_type = \DB::table('matches')
             ->select('type_id')
@@ -91,60 +82,190 @@ class MatchController extends Controller
             }
         }
 
-        $params = [
-            'assistance' => empty($data['assistance']) ? 0 : $data['assistance'],
-            'incomes' => empty($data['incomes']) ? 0 : $data['incomes'],
-            'show_remaining' => $show_remaining,
-            'remaining_time' => readableTime($remaining_time),
-            'datetime' => date('d/m/Y H:i', $data['timestamp']),
-            'stadium' => $data['stadium'],
-            'local' => [
-                'name' => $local->name,
-                'primary_color' => $local->primary_color,
-                'secondary_color' => $local->secondary_color,
-                'rgb_primary' => $local_rgb_primary,
-                'text_color' => $local->text_color,
-                'shield_file' => $local->shieldFile,
-                'goals' => $data['local']['goals'],
-                'formation' => $data['local']['formation'],
-                'posession' => $data['local']['posessionPer'],
-                'shots' => $data['local']['shots'],
-                'shots_goal' => $data['local']['shotsOnTarget'],
-                'yellow_cards' => (isset($data['local']['yellow_cards']) ? $data['local']['yellow_cards'] : -1),
-                'red_cards' => (isset($data['local']['red_cards']) ? $data['local']['red_cards'] : -1),
-                'substitutions' => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
-            ],
-            'visit' => [
-                'name' => $visit->name,
-                'primary_color' => $visit->primary_color,
-                'secondary_color' => $visit->secondary_color,
-                'rgb_primary' => $visit_rgb_primary,
-                'text_color' => $visit->text_color,
-                'shield_file' => $visit->shieldFile,
-                'goals' => $data['visit']['goals'],
-                'formation' => $data['visit']['formation'],
-                'posession' => $data['visit']['posessionPer'],
-                'shots' => $data['visit']['shots'],
-                'shots_goal' => $data['visit']['shotsOnTarget'],
-                'yellow_cards' => (isset($data['visit']['yellow_cards']) ? $data['visit']['yellow_cards'] : -1),
-                'red_cards' => (isset($data['visit']['red_cards']) ? $data['visit']['red_cards'] : -1),
-                'substitutions' => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
-            ],
-            'scorers' => $scorers,
-            'actions' => $actions,
-        ];
+        if ($request->expectsJson() && !empty(Auth::guard('api')->user())) {
+            $scorers = [
+                'local'     => [],
+                'visit'    => []
+            ];
 
-        return view('match.result', $params);
+            $highlights = [];
+            foreach ($data['plays'] as $play) {
+                if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
+                    $highlights[] = [
+                        'type'          => $play[2],
+                        'minutes'       => substr($play[0], 0, 2),
+                        'background'    => ($play[1] == 0) ? $local->primary_color : $visit->primary_color,
+                        'color'         => ($play[1] == 0) ? $local->text_color : $visit->text_color,
+                        'highlight'     => $play[3]
+                    ];
+                }
+            }
+
+            foreach ($data['scorers'] as $scorer) {
+                if ($scorer[1] == 0) {
+                    $scorers['local'][] = [
+                        'minutes'   => substr($scorer[0], 0, 2),
+                        'player'    => $scorer[2]
+                    ];
+                } else {
+                    $scorers['visit'][] = [
+                        'minutes'   => substr($scorer[0], 0, 2),
+                        'player'    => $scorer[2]
+                    ];
+                }
+            }
+
+            return response()->json([
+                'assistance' => empty($data['assistance']) ? 0 : $data['assistance'],
+                'incomes' => empty($data['incomes']) ? 0 : $data['incomes'],
+                'show_remaining'        => $show_remaining,
+                'remaining'             => $remaining_time,
+                'remaining_readable'    => readableTime($remaining_time),
+                'datetime'              => $data['timestamp'],
+                'stadium'               => $data['stadium'],
+                'local' => [
+                    'name' => $local->name,
+                    'primary_color' => $local->primary_color,
+                    'secondary_color' => $local->secondary_color,
+                    'rgb_primary' => $local_rgb_primary,
+                    'text_color' => $local->text_color,
+                    'shield' => (int)preg_replace('/\D+/', '', $local->shieldFile),
+                    'goals' => $data['local']['goals'],
+                    'formation' => $data['local']['formation'],
+                    'posession' => $data['local']['posessionPer'],
+                    'shots' => $data['local']['shots'],
+                    'shots_goal' => $data['local']['shotsOnTarget'],
+                    'yellow_cards' => (isset($data['local']['yellow_cards']) ? $data['local']['yellow_cards'] : -1),
+                    'red_cards' => (isset($data['local']['red_cards']) ? $data['local']['red_cards'] : -1),
+                    'substitutions' => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
+                ],
+                'visit' => [
+                    'name' => $visit->name,
+                    'primary_color' => $visit->primary_color,
+                    'secondary_color' => $visit->secondary_color,
+                    'rgb_primary' => $visit_rgb_primary,
+                    'text_color' => $visit->text_color,
+                    'shield' => (int)preg_replace('/\D+/', '', $visit->shieldFile),
+                    'goals' => $data['visit']['goals'],
+                    'formation' => $data['visit']['formation'],
+                    'posession' => $data['visit']['posessionPer'],
+                    'shots' => $data['visit']['shots'],
+                    'shots_goal' => $data['visit']['shotsOnTarget'],
+                    'yellow_cards' => (isset($data['visit']['yellow_cards']) ? $data['visit']['yellow_cards'] : -1),
+                    'red_cards' => (isset($data['visit']['red_cards']) ? $data['visit']['red_cards'] : -1),
+                    'substitutions' => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
+                ],
+                'scorers'               => $scorers,
+                'highlights'            => $highlights
+            ], 200);
+        } else {
+            $scorers = [[],[]];
+            foreach ($data['scorers'] as $scorer) {
+                if ($scorer[1] == 0) {
+                    $scorers[0][] = $scorer[2] . ' <span>(' . substr($scorer[0], 0, 2) . '\')</span>';
+                } else {
+                    $scorers[1][] = '<span>(' . substr($scorer[0], 0, 2) . '\')</span> ' . $scorer[2];
+                }
+            }
+
+            $actions = [];
+            foreach ($data['plays'] as $play) {
+                if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
+                    if (in_array($play[2], [6, 19, 23, 25, 26])) {
+                        $play[3] = '<strong>' . $play[3] . '</strong>';
+                    }
+                    $actions[] = [substr($play[0], 0, 2), 'rgba(' . implode(', ', ($play[1] == 0) ? $local_rgb_primary : $visit_rgb_primary) . ', 1);', (($play[1] == 0) ? $local['text_color'] : $visit['text_color']), $play[3]];
+                }
+            }
+
+            $params = [
+                'assistance' => empty($data['assistance']) ? 0 : $data['assistance'],
+                'incomes' => empty($data['incomes']) ? 0 : $data['incomes'],
+                'show_remaining' => $show_remaining,
+                'remaining_time' => readableTime($remaining_time),
+                'datetime' => date('d/m/Y H:i', $data['timestamp']),
+                'stadium' => $data['stadium'],
+                'local' => [
+                    'name' => $local->name,
+                    'primary_color' => $local->primary_color,
+                    'secondary_color' => $local->secondary_color,
+                    'rgb_primary' => $local_rgb_primary,
+                    'text_color' => $local->text_color,
+                    'shield_file' => $local->shieldFile,
+                    'goals' => $data['local']['goals'],
+                    'formation' => $data['local']['formation'],
+                    'posession' => $data['local']['posessionPer'],
+                    'shots' => $data['local']['shots'],
+                    'shots_goal' => $data['local']['shotsOnTarget'],
+                    'yellow_cards' => (isset($data['local']['yellow_cards']) ? $data['local']['yellow_cards'] : -1),
+                    'red_cards' => (isset($data['local']['red_cards']) ? $data['local']['red_cards'] : -1),
+                    'substitutions' => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
+                ],
+                'visit' => [
+                    'name' => $visit->name,
+                    'primary_color' => $visit->primary_color,
+                    'secondary_color' => $visit->secondary_color,
+                    'rgb_primary' => $visit_rgb_primary,
+                    'text_color' => $visit->text_color,
+                    'shield_file' => $visit->shieldFile,
+                    'goals' => $data['visit']['goals'],
+                    'formation' => $data['visit']['formation'],
+                    'posession' => $data['visit']['posessionPer'],
+                    'shots' => $data['visit']['shots'],
+                    'shots_goal' => $data['visit']['shotsOnTarget'],
+                    'yellow_cards' => (isset($data['visit']['yellow_cards']) ? $data['visit']['yellow_cards'] : -1),
+                    'red_cards' => (isset($data['visit']['red_cards']) ? $data['visit']['red_cards'] : -1),
+                    'substitutions' => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
+                ],
+                'scorers' => $scorers,
+                'actions' => $actions,
+            ];
+
+            return view('match.result', $params);
+        }
     }
 
     /**
      * Play match
+     *
+     * @param Request $request
      */
     public function play(Request $request)
     {
+        $this->validate($request, [
+            'rival'         => 'required|integer',
+        ]);
+
+        $api = FALSE;
+        if ($request->expectsJson()) {
+            if (empty(Auth::guard('api')->user())) {
+                $user = Auth::user();
+            } else {
+                $user = Auth::guard('api')->user()->user;
+                $api = TRUE;
+            }
+        } else {
+            $user = Auth::user();
+        }
+
+        if ($request->input('rival') == $user->team->id) {
+            return response()->json([
+                'errors' => [
+                    'type'      => 'match_play',
+                    'message'   => 'Can\'t play against your own team'
+                ]
+            ], 500);
+        }
+
+        if ($request->input('rival') <= 26) {
+            $match_type = 1;
+        } else {
+            $match_type = 2;
+        }
+
         $remaining_time = 0;
-        if ($request->match_type == 2) {
-            $last_match = Matches::loadLastFriendlyMatch(Auth::user()->team->id, $request->rival);
+        if ($match_type == 2) {
+            $last_match = Matches::loadLastFriendlyMatch($user->team->id, $request->input('rival'));
 
             if (!empty($last_match)) {
                 $last_match_time = strtotime($last_match->created_at);
@@ -154,21 +275,58 @@ class MatchController extends Controller
         }
 
         if ($remaining_time > 0) {
-            return json_encode(['file' => $last_match->logfile, 'remaining' => readableTime($remaining_time)]);
+            if ($api) {
+                return response()->json([
+                    'rival'                 => $request->input('rival'),
+                    'log_file'              => $last_match->logfile,
+                    'remaining'             => $remaining_time,
+                    'remaining_readable'    => readableTime($remaining_time)
+                ], 200);
+            } else {
+                return response()->json([
+                    'file'      => $last_match->logfile,
+                    'remaining' => readableTime($remaining_time)
+                ], 200);
+            }
         } else {
-            $file_name = $_SERVER['REQUEST_TIME'] . '-' . Auth::user()->team->id . '-' . $request->rival . '.log';
-            $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . Auth::user()->team->id . ' ' . $request->rival . ' ' . $request->match_type . ' -1 ' . $file_name);
+            $file_name = $_SERVER['REQUEST_TIME'] . '-' . $user->team->id . '-' . $request->input('rival') . '.log';
+            $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . $user->team->id . ' ' . $request->input('rival') . ' ' . $match_type . ' -1 ' . $file_name);
             exec($command, $out, $status);
             if ($status == 0) {
-                return json_encode(['id' => $request->rival, 'file' => $file_name, 'remaining' => readableTime(86400)]);
+                if ($api) {
+                    return response()->json([
+                        'rival'                 => $request->input('rival'),
+                        'log_file'              => $file_name,
+                        'remaining'             => 86400,
+                        'remaining_readable'    => readableTime(86400)
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'id'        => $request->input('rival'),
+                        'file'      => $file_name,
+                        'remaining' => readableTime(86400)
+                    ], 201);
+                }
             } else {
-                return json_encode(['err_no' => $status]);
+                if ($api) {
+                    return response()->json([
+                        'errors' => [
+                            'type'      => 'match_play',
+                            'message'   => 'An error occurred while playing the match'
+                        ]
+                    ], 500);
+                } else {
+                    return response()->json(['err_no' => $status], 500);
+                }
             }
         }
     }
 
     /**
      * Show live match
+     *
+     * @param Matches $match
+     * @return View
      */
     public function showLive(Matches $match)
     {
@@ -193,5 +351,117 @@ class MatchController extends Controller
         ];
 
         return view('match.live', $params);
+    }
+
+    /**
+     * Send matches logs for API
+     *
+     * @return Json
+     */
+
+    public function showLiveApi()
+    {
+        $team = Auth::guard('api')->user()->user->team;
+        $match = $team->live_match;
+
+        if (!$match) {
+            return response()->json([
+                'errors' => [
+                    'type'      => 'live_match',
+                    'message'   => 'Live broadcasting ended'
+                ]
+            ], 400);
+        }
+
+        $matches = DB::table('matches_rounds')->join('matches', 'matches.id', 'matches_rounds.match_id')->where('round_id', $match->round->round_id)->where('matches.id', '!=', $match->id)->pluck('matches.logfile')->all();
+        array_unshift($matches, $match->logfile);
+
+        $output = [
+            'category_name' => $match->category->name,
+            'round_number'  => $match->round->number
+        ];
+        foreach ($matches as $logfile) {
+            $data = getMatchLog($logfile);
+
+            $local = Team::find($data['local']['id']);
+            $visit = Team::find($data['visit']['id']);
+
+            $match = Matches::where('logfile', $logfile)->first();
+
+            $local_rgb_primary = sscanf($local->primary_color, "#%02x%02x%02x");
+            $visit_rgb_primary = sscanf($visit->primary_color, "#%02x%02x%02x");
+
+            $scorers = [];
+            foreach ($data['scorers'] as $scorer) {
+                if ($scorer[1] == 0) {
+                    $scorers['local'][] = [
+                        'minutes'   => substr($scorer[0], 0, 2),
+                        'player'    => $scorer[2]
+                    ];
+                } else {
+                    $scorers['visit'][] = [
+                        'minutes'   => substr($scorer[0], 0, 2),
+                        'player'    => $scorer[2]
+                    ];
+                }
+            }
+
+            $plays = [];
+            foreach ($data['plays'] as $play) {
+                if (in_array($play[2], [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 14, 17, 18, 19, 21, 22, 23, 24, 25, 26])) {
+                    $plays[] = [
+                        'type'          => $play[2],
+                        'team'          => $play[1],
+                        'minutes'       => $play[0],
+                        'background'    => ($play[1] == 0) ? $local->primary_color : $visit->primary_color,
+                        'color'         => ($play[1] == 0) ? $local->text_color : $visit->text_color,
+                        'highlight'     => $play[3]
+                    ];
+                }
+            }
+
+            $output['matches'][] = [
+                'assistance'            => empty($data['assistance']) ? 0 : (int)$data['assistance'],
+                'incomes'               => empty($data['incomes']) ? 0 : (int)$data['incomes'],
+                'datetime'              => $data['timestamp'],
+                'stadium'               => $data['stadium'],
+                'local' => [
+                    'name'              => $local->name,
+                    'primary_color'     => $local->primary_color,
+                    'secondary_color'   => $local->secondary_color,
+                    'rgb_primary'       => $local_rgb_primary,
+                    'text_color'        => $local->text_color,
+                    'shield'            => (int)preg_replace('/\D+/', '', $local->shieldFile),
+                    'goals'             => $data['local']['goals'],
+                    'formation'         => $data['local']['formation'],
+                    'posession'         => $data['local']['posessionPer'],
+                    'shots'             => $data['local']['shots'],
+                    'shots_goal'        => $data['local']['shotsOnTarget'],
+                    'yellow_cards'      => (isset($data['local']['yellow_cards']) ? $data['local']['yellow_cards'] : -1),
+                    'red_cards'         => (isset($data['local']['red_cards']) ? $data['local']['red_cards'] : -1),
+                    'substitutions'     => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
+                ],
+                'visit' => [
+                    'name'              => $visit->name,
+                    'primary_color'     => $visit->primary_color,
+                    'secondary_color'   => $visit->secondary_color,
+                    'rgb_primary'       => $visit_rgb_primary,
+                    'text_color'        => $visit->text_color,
+                    'shield'            => (int)preg_replace('/\D+/', '', $visit->shieldFile),
+                    'goals'             => $data['visit']['goals'],
+                    'formation'         => $data['visit']['formation'],
+                    'posession'         => $data['visit']['posessionPer'],
+                    'shots'             => $data['visit']['shots'],
+                    'shots_goal'        => $data['visit']['shotsOnTarget'],
+                    'yellow_cards'      => (isset($data['visit']['yellow_cards']) ? $data['visit']['yellow_cards'] : -1),
+                    'red_cards'         => (isset($data['visit']['red_cards']) ? $data['visit']['red_cards'] : -1),
+                    'substitutions'     => (isset($data['visit']['substitutions']) ? $data['visit']['substitutions'] : -1),
+                ],
+                'scorers'               => $scorers,
+                'plays'                 => $plays
+            ];
+        }
+
+        return response()->json($output);
     }
 }
