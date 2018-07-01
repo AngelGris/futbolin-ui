@@ -52,8 +52,8 @@ function updateSalary() {
     <div class="col-xs-12">
         <label class="col-xs-9 control-label">{{ $k }}</label>
         <div class="col-xs-3">
-            @if ($player->upgraded && !empty($player->last_upgrade[$v]))
-            <span style="color:#009900;">{{ $player->{$v} }}<sub>+{{ $player->last_upgrade[$v] }}</sub></span>
+            @if ($player->upgraded && !empty($player->last_upgrade->{$v}))
+            <span style="color:#009900;">{{ $player->{$v} }}<sub>+{{ $player->last_upgrade->{$v} }}</sub></span>
             @else
             {{ $player->{$v} }}
             @endif
