@@ -10,17 +10,25 @@ class TeamFundMovementController extends Controller
     /**
      * Show team's movements
      */
-    public function index()
+    public function index(Request $request)
     {
-        $team = Auth::user()->team;
+        if ($request->expectsJson()) {
+            $team = Auth::guard('api')->user()->user->team;
 
-        $vars = [
-            'icon' => 'fa fa-money',
-            'title' => 'Finanzas',
-            'subtitle' => 'Money, money, money',
-            'movements' => $team->fundMovements()->paginate(50)
-        ];
+            return response()->json([
+                $team->fundMovements()->paginate(50)
+            ], 200);
+        } else {
+            $team = Auth::user()->team;
 
-        return view('team.finances', $vars);
+            $vars = [
+                'icon' => 'fa fa-money',
+                'title' => 'Finanzas',
+                'subtitle' => 'Money, money, money',
+                'movements' => $team->fundMovements()->paginate(50)
+            ];
+
+            return view('team.finances', $vars);
+        }
     }
 }

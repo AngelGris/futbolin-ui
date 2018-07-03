@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth.api', 'liveMatch']], function() {
         Route::patch('/', 'AccountSettingsController@update');
         Route::get('/notifications', 'NotificationController@index');
         Route::get('/notification/{notification}', 'NotificationController@show')->where('notification', '[0-9]+');
+        Route::get('/transactions', 'TeamFundMovementController@index');
     });
 
     Route::patch('/password', 'AccountSettingsController@updatePassword');

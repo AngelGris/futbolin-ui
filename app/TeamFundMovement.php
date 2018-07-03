@@ -26,6 +26,15 @@ class TeamFundMovement extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'id', 'team_id'
+    ];
+
+    /**
      * Boot model
      *
      * @return void
