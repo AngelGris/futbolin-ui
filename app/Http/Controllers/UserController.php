@@ -37,14 +37,13 @@ class UserController extends Controller
                 }
             }
 
-
             $request_time = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
             $notifications = [
                 'unread'        => $user->unreadMessages,
                 'messages'      => AdminMessage::where('valid_from', '<', $request_time)->where('valid_to', '>', $request_time)->orderBy('valid_from')->get(),
                 'notifications' => $user->notifications->take(5),
                 'transferables' => $user->team->players()->select('players.*', 'player_sellings.best_offer_value')->join('player_sellings', 'player_sellings.player_id', '=', 'players.id')->get(),
-                'suspensions'   => $user->team->players()->join('player_cards', 'player_cards.player_id', '=', 'players.id')->where('player_cards.suspension', '>', 0)->get(),
+                'suspensions'   => $user->team->players()->select('players.*')->join('player_cards', 'player_cards.player_id', '=', 'players.id')->where('player_cards.suspension', '>', 0)->get(),
                 'injuries'      => $user->team->players()->where('recovery', '>', 0)->get(),
                 'retiring'      => $retiring,
                 'upgraded'      => $upgraded
