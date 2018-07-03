@@ -49,124 +49,6 @@ class TeamController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        /**
-         * Create Team
-         */
-        $this->validate($request, [
-            'name'              => 'required|min:3|max:255',
-            'short_name'        => 'required|max:5',
-            'stadium_name'      => 'required|min:3|max:255',
-            'primary_color'     => 'required|size:7',
-            'secondary_color'   => 'required|size:7',
-            'shield'            => 'required',
-        ]);
-
-        $request['text_color'] = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
-
-        if ($request->expectsJson()) {
-            $user = Auth::guard('api')->user()->user;
-            if (!is_null($user->team)) {
-                return response()->json([
-                    'errors' => [
-                        'type'      => 'team_exists',
-                        'message'   => 'El usuario ya tiene un equipo'
-                    ]
-                ], 400);
-            }
-        } else {
-            $user = Auth::user();
-        }
-        $team = $user->createTeam($request);
-
-        if (!is_integer($team)) {
-            /**
-             * Create players
-             */
-            $players = [
-                1   => 'ARQ',
-                2   => 'DEF',
-                3   => 'DEF',
-                4   => 'DEF',
-                5   => 'DEF',
-                6   => 'MED',
-                7   => 'MED',
-                8   => 'MED',
-                9   => 'ATA',
-                10  => 'MED',
-                11  => 'ATA',
-                12  => 'ARQ',
-                13  => 'DEF',
-                14  => 'DEF',
-                15  => 'MED',
-                16  => 'MED',
-                17  => 'MED',
-                18  => 'ATA',
-                19  => 'DEF',
-                20  => 'ARQ',
-                21  => 'DEF',
-            ];
-
-            if (rand(1, 100) > 60) {
-                $players[5] = 'MED';
-            }
-            if (rand(1, 100) <= 40) {
-                $players[6] = 'DEF';
-            }
-            if (rand(1, 100) > 50) {
-                $players[10] = 'ATA';
-            }
-            if ($value = rand(1, 100) > 50) {
-                $players[19] = 'ATA';
-            }
-            if ($value = rand(1, 100) > 40) {
-                if ($value <= 60) {
-                    $player[20] = 'DEF';
-                } elseif ($value <= 80) {
-                    $player[20] = 'MED';
-                } else {
-                    $player[20] = 'ATA';
-                }
-            }
-            if ($value = rand(1, 100) > 50) {
-                $players[21] = 'MED';
-            }
-
-            $formation = [];
-            foreach ($players as $num => $pos) {
-                $player = $team->createPlayer($num, $pos);
-                if (count($formation) < 18) {
-                    $formation[] = $player->id;
-                }
-            }
-            $team->formation = $formation;
-
-            $team->save();
-
-            // Check if the team is ready to play
-            $team->updatePlayable();
-        } else {
-            $team = $user->team;
-        }
-
-        if ($request->expectsJson()) {
-            return response()->json([
-                'team' => $team
-            ], 201);
-        } else {
-            $request->session()->flash('show_walkthrough', TRUE);
-
-            return redirect()->route('strategy');
-        }
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -354,47 +236,49 @@ class TeamController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Show all teams
      */
-    public function update(Request $request)
+    public function showAll(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|min:3|max:255',
-            'short_name' => 'required|max:5',
-            'stadium_name' => 'required|min:3|max:255',
-            'primary_color' => 'required|size:7',
-            'secondary_color' => 'required|size:7',
-            'shield' => 'required',
-        ]);
-
         if ($request->expectsJson()) {
             $user = Auth::guard('api')->user()->user;
         } else {
             $user = Auth::user();
         }
+        $matches = Matches::where('local_id', '=', $user->team->id)->where('type_id', '=', 2)->where('created_at', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'] - 86400))->get();
 
-        $team = $user->team;
-        $team->name = $request->name;
-        $team->short_name = $request->short_name;
-        $team->stadium_name = $request->stadium_name;
-        $team->primary_color = $request->primary_color;
-        $team->secondary_color = $request->secondary_color;
-        $team->text_color = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
-        $team->shield = $request->shield;
-        $team->save();
+        $played = [];
+        foreach ($matches as $match) {
+            $played[$match['visit_id']] = readableTime(86400 - ($_SERVER['REQUEST_TIME'] - strtotime($match['created_at'])), TRUE);
+        }
+
+        $teams = Team::where('user_id', '>', 1)->orderBy('name')->get();
+        foreach ($teams as &$team) {
+            $team->user_name = $team->user->name;
+
+            if (empty($played[$team->id])) {
+                $team->played = NULL;
+            } else {
+                $team->played = $played[$team->id];
+            }
+        }
 
         if ($request->expectsJson()) {
             return response()->json([
-                'team'  => $team
+                'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
+                'teams'     => $teams,
             ], 200);
         } else {
-            \Session::flash('flash_success', 'Equipo actualizado');
+            $vars = [
+                'icon' => 'fa fa-handshake-o',
+                'title' => 'Amistosos',
+                'subtitle' => 'Hora de ponernos a prueba',
+                'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
+                'teams' => $teams,
+                'playable' => $user->team->playable,
+            ];
 
-            return redirect()->route('team');
+            return view('team.listing', $vars);
         }
     }
 
@@ -487,6 +371,124 @@ class TeamController extends Controller
         return view('team.strategy', $vars);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        /**
+         * Create Team
+         */
+        $this->validate($request, [
+            'name'              => 'required|min:3|max:255',
+            'short_name'        => 'required|max:5',
+            'stadium_name'      => 'required|min:3|max:255',
+            'primary_color'     => 'required|size:7',
+            'secondary_color'   => 'required|size:7',
+            'shield'            => 'required',
+        ]);
+
+        $request['text_color'] = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
+
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+            if (!is_null($user->team)) {
+                return response()->json([
+                    'errors' => [
+                        'type'      => 'team_exists',
+                        'message'   => 'El usuario ya tiene un equipo'
+                    ]
+                ], 400);
+            }
+        } else {
+            $user = Auth::user();
+        }
+        $team = $user->createTeam($request);
+
+        if (!is_integer($team)) {
+            /**
+             * Create players
+             */
+            $players = [
+                1   => 'ARQ',
+                2   => 'DEF',
+                3   => 'DEF',
+                4   => 'DEF',
+                5   => 'DEF',
+                6   => 'MED',
+                7   => 'MED',
+                8   => 'MED',
+                9   => 'ATA',
+                10  => 'MED',
+                11  => 'ATA',
+                12  => 'ARQ',
+                13  => 'DEF',
+                14  => 'DEF',
+                15  => 'MED',
+                16  => 'MED',
+                17  => 'MED',
+                18  => 'ATA',
+                19  => 'DEF',
+                20  => 'ARQ',
+                21  => 'DEF',
+            ];
+
+            if (rand(1, 100) > 60) {
+                $players[5] = 'MED';
+            }
+            if (rand(1, 100) <= 40) {
+                $players[6] = 'DEF';
+            }
+            if (rand(1, 100) > 50) {
+                $players[10] = 'ATA';
+            }
+            if ($value = rand(1, 100) > 50) {
+                $players[19] = 'ATA';
+            }
+            if ($value = rand(1, 100) > 40) {
+                if ($value <= 60) {
+                    $player[20] = 'DEF';
+                } elseif ($value <= 80) {
+                    $player[20] = 'MED';
+                } else {
+                    $player[20] = 'ATA';
+                }
+            }
+            if ($value = rand(1, 100) > 50) {
+                $players[21] = 'MED';
+            }
+
+            $formation = [];
+            foreach ($players as $num => $pos) {
+                $player = $team->createPlayer($num, $pos);
+                if (count($formation) < 18) {
+                    $formation[] = $player->id;
+                }
+            }
+            $team->formation = $formation;
+
+            $team->save();
+
+            // Check if the team is ready to play
+            $team->updatePlayable();
+        } else {
+            $team = $user->team;
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'team' => $team
+            ], 201);
+        } else {
+            $request->session()->flash('show_walkthrough', TRUE);
+
+            return redirect()->route('strategy');
+        }
+    }
+
     public function train(Request $request)
     {
         $api = FALSE;
@@ -549,6 +551,51 @@ class TeamController extends Controller
             } else {
                 return json_encode(['title' => 'Entrenamiento', 'message' => '<p>Debes esperar ' . readableTime($team->trainable_remaining) . ' para poder entrenar nuevamente.</p>', 'remaining' => $team->trainable_remaining]);
             }
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|min:3|max:255',
+            'short_name' => 'required|max:5',
+            'stadium_name' => 'required|min:3|max:255',
+            'primary_color' => 'required|size:7',
+            'secondary_color' => 'required|size:7',
+            'shield' => 'required',
+        ]);
+
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
+
+        $team = $user->team;
+        $team->name = $request->name;
+        $team->short_name = $request->short_name;
+        $team->stadium_name = $request->stadium_name;
+        $team->primary_color = $request->primary_color;
+        $team->secondary_color = $request->secondary_color;
+        $team->text_color = textColor(sscanf($request['primary_color'], "#%02x%02x%02x"), sscanf($request['secondary_color'], "#%02x%02x%02x"));
+        $team->shield = $request->shield;
+        $team->save();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'team'  => $team
+            ], 200);
+        } else {
+            \Session::flash('flash_success', 'Equipo actualizado');
+
+            return redirect()->route('team');
         }
     }
 
@@ -625,53 +672,6 @@ class TeamController extends Controller
             return response()->json([
                 'team' => $team
             ], 200);
-        }
-    }
-
-    /**
-     * Show all teams
-     */
-    public function showAll(Request $request)
-    {
-        if ($request->expectsJson()) {
-            $user = Auth::guard('api')->user()->user;
-        } else {
-            $user = Auth::user();
-        }
-        $matches = Matches::where('local_id', '=', $user->team->id)->where('type_id', '=', 2)->where('created_at', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'] - 86400))->get();
-
-        $played = [];
-        foreach ($matches as $match) {
-            $played[$match['visit_id']] = readableTime(86400 - ($_SERVER['REQUEST_TIME'] - strtotime($match['created_at'])), TRUE);
-        }
-
-        $teams = Team::where('user_id', '>', 1)->orderBy('name')->get();
-        foreach ($teams as &$team) {
-            $team->user_name = $team->user->name;
-
-            if (empty($played[$team->id])) {
-                $team->played = NULL;
-            } else {
-                $team->played = $played[$team->id];
-            }
-        }
-
-        if ($request->expectsJson()) {
-            return response()->json([
-                'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
-                'teams'     => $teams,
-            ], 200);
-        } else {
-            $vars = [
-                'icon' => 'fa fa-handshake-o',
-                'title' => 'Amistosos',
-                'subtitle' => 'Hora de ponernos a prueba',
-                'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
-                'teams' => $teams,
-                'playable' => $user->team->playable,
-            ];
-
-            return view('team.listing', $vars);
         }
     }
 }
