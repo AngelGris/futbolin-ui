@@ -50,7 +50,7 @@ class Team extends Model
      * @var array
      */
     protected $appends = [
-        'average'
+        'average', 'user_name'
     ];
 
     /**
