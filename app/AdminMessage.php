@@ -24,7 +24,7 @@ class AdminMessage extends Model
      * @var array
      */
     protected $hidden = [
-        'id', 'valid_from', 'valid_to', 'created_at', 'updated_at'
+        'id', 'valid_from', 'valid_to', 'updated_at'
     ];
 
     /**
