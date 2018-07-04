@@ -44,7 +44,7 @@ class NotificationController extends Controller
 
             return response()->json([
                 'title' => $notification->title,
-                'message' => $notification->message,
+                'message' => strip_tags($notification->message),
                 'unread' => $user->unreadMessages,
             ], 200);
         } else {
