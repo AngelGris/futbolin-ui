@@ -50,6 +50,8 @@ class UserController extends Controller
             ];
         }
 
+        $user->team->spending_margin = $user->team->calculateSpendingMargin();
+
         return response()->json([
             'user' => $user->makeVisible(['email', 'credits', 'last_activity']),
             'notifications' => $notifications
