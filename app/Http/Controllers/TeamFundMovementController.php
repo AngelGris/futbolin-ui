@@ -15,9 +15,7 @@ class TeamFundMovementController extends Controller
         if ($request->expectsJson()) {
             $team = Auth::guard('api')->user()->user->team;
 
-            return response()->json([
-                $team->fundMovements()->paginate(50)
-            ], 200);
+            return response()->json($team->fundMovements()->paginate(50), 200);
         } else {
             $team = Auth::user()->team;
 
