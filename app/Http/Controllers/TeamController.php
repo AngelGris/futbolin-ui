@@ -653,6 +653,7 @@ class TeamController extends Controller
             'strategy' => 'required|integer|exists:strategies,id'
         ]);
 
+        $api = FALSE;
         if ($request->expectsJson()) {
             if (empty(Auth::guard('api')->user())) {
                 $team = Auth::user()->team;
