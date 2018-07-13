@@ -90,7 +90,7 @@ class MatchController extends Controller
 
             $highlights = [];
             foreach ($data['plays'] as $play) {
-                if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
+                if (in_array($play[2], [1, 2, 5, 6, 7, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34])) {
                     $highlights[] = [
                         'type'          => $play[2],
                         'minutes'       => substr($play[0], 0, 2),
@@ -170,8 +170,8 @@ class MatchController extends Controller
 
             $actions = [];
             foreach ($data['plays'] as $play) {
-                if (in_array($play[2], [1, 2, 6, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26])) {
-                    if (in_array($play[2], [6, 19, 23, 25, 26])) {
+                if (in_array($play[2], [1, 2, 5, 6, 7, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34])) {
+                    if (in_array($play[2], [6, 19, 23, 25, 26, 27])) {
                         $play[3] = '<strong>' . $play[3] . '</strong>';
                     }
                     $actions[] = [substr($play[0], 0, 2), 'rgba(' . implode(', ', ($play[1] == 0) ? $local_rgb_primary : $visit_rgb_primary) . ', 1);', (($play[1] == 0) ? $local['text_color'] : $visit['text_color']), $play[3]];
@@ -408,7 +408,7 @@ class MatchController extends Controller
 
             $plays = [];
             foreach ($data['plays'] as $play) {
-                if (in_array($play[2], [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 14, 17, 18, 19, 21, 22, 23, 24, 25, 26])) {
+                if (in_array($play[2], [1, 2, 5, 6, 7, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34])) {
                     $plays[] = [
                         'type'          => $play[2],
                         'team'          => $play[1],

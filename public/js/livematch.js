@@ -73,7 +73,7 @@ $(function() {
         });
 
         data.plays.forEach(function(item) {
-            if ($.inArray(parseInt(item[2]), [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 14, 17, 18, 19, 21, 22, 23, 24, 25, 26]) >= 0) {
+            if ($.inArray(parseInt(item[2]), [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 14, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34]) >= 0) {
                 time = item[0].split(':');
                 time = (parseInt(time[0]) * 60) + parseInt(time[1]);
                 item.unshift(time);
@@ -96,7 +96,7 @@ $(function() {
             });
 
             data.plays.forEach(function(item) {
-                if ($.inArray(parseInt(item[2]), [6, 19]) >= 0) {
+                if ($.inArray(parseInt(item[2]), [6, 19, 27]) >= 0) {
                     time = item[0].split(':');
                     time = (parseInt(time[0]) * 60) + parseInt(time[1]);
                     other_goals.push([time, data.logfile, item[1]]);
@@ -106,10 +106,11 @@ $(function() {
     });
 
     function addMarker(play, sound = true) {
-        if ($.inArray(parseInt(play[3]), [6, 19, 22, 23, 24, 25, 26]) >= 0) {
+        if ($.inArray(parseInt(play[3]), [6, 19, 22, 23, 24, 25, 26, 27]) >= 0) {
             switch (play[3]) {
                 case 6:
                 case 19:
+                case 27:
                     icon = 'fa-futbol-o';
                     player = $('#jplayer-goal');
                     break;
@@ -210,13 +211,14 @@ $(function() {
         while(plays_index < log_plays.length && log_plays[plays_index][0] <= time_current) {
             broadcast(log_plays[plays_index]);
 
-            if ($.inArray(parseInt(log_plays[plays_index][3]), [4, 6, 11, 12, 17, 18, 19, 22, 23, 24, 25, 26]) >= 0) {
+            if ($.inArray(parseInt(log_plays[plays_index][3]), [4, 6, 11, 12, 17, 18, 19, 22, 23, 24, 25, 26, 27]) >= 0) {
                 switch (log_plays[plays_index][3]) {
                     case 4:
                         increase_stats((log_plays[plays_index][2] + 1) % 2, 'fouls');
                         break;
                     case 6:
                     case 19:
+                    case 27:
                         increase_stats(log_plays[plays_index][2], 'goals');
                         break;
                     case 12:
