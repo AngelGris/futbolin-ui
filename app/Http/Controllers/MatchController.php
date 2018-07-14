@@ -391,7 +391,10 @@ class MatchController extends Controller
             $local_rgb_primary = sscanf($local->primary_color, "#%02x%02x%02x");
             $visit_rgb_primary = sscanf($visit->primary_color, "#%02x%02x%02x");
 
-            $scorers = [];
+            $scorers = [
+                'local' => [],
+                'visit' => []
+            ];
             foreach ($data['scorers'] as $scorer) {
                 if ($scorer[1] == 0) {
                     $scorers['local'][] = [
