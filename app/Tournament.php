@@ -39,6 +39,27 @@ class Tournament extends Model
     public function close()
     {
         /**
+         * Prizes for winners
+         */
+        foreach($this->tournamentCategories as $category) {
+            if ($category->category == 1) {
+                $prizes = [5, 3, 2];
+            } else {
+                $prizes = [3, 2, 1];
+            }
+            for ($i = 0; $i <= 2; $i++) {
+                if ($category->positions[$i]->team->user->id > 1) {
+                    if ($category->positions[$i]->team->user->credits <= 255 - $prizes[$i]) {
+                        $category->positions[$i]->team->user->credits += $prizes[$i];
+                    } else {
+                        $category->positions[$i]->team->user->credits = 255;
+                    }
+                    $category->positions[$i]->team->user->save();
+                }
+            }
+        }
+
+        /**
          * Players aging
          */
         $sql = \DB::table('players')
