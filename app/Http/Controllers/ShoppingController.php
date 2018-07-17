@@ -49,8 +49,14 @@ class ShoppingController extends Controller
             'id'        => 'required|integer',
         ]);
 
+        // If $input->id is 4 or 5 then player_id must be present
         $validator->sometimes('player_id', 'required|integer|exists:players,id', function($input) {
-            return $input->id == 4;
+            return in_array($input->id, [4, 5]);
+        });
+
+        // If $input->id == 6 then credits must be present
+        $validator->sometimes('credits', 'required|integer|min:1', function($input) {
+            return $input->id == 6;
         });
 
         $validator->validate();
@@ -133,6 +139,31 @@ class ShoppingController extends Controller
                 }
 
                 $redirect = redirect()->route('player', $player->id);
+                break;
+            case 6:
+                if ($request->input('credits') * \Config::get('constants.CREDITS_SELL_VALUE') <= \Config::get('constants.MAX_TEAM_FUNDS') - $user->team->funds) {
+                    $shopping_item->price = $request->input('credits');
+                    $value = $request->input('credits') * \Config::get('constants.CREDITS_SELL_VALUE');
+                } else {
+                    $value = \Config::get('constants.MAX_TEAM_FUNDS') - $user->team->funds;
+                    $shopping_item->price = (int)ceil($value / \Config::get('constants.CREDITS_SELL_VALUE'));
+                }
+
+                if ($shopping_item->price == 0) {
+                    if ($request->expectsJson()) {
+                        return response()->json([
+                            'type'      => 'funds_limits',
+                            'message'   => 'Has alcanzado el límite de ' . formatCurrency(\Config::get('constants.MAX_TEAM_FUNDS')) . ', no puedes tener más dinero.'
+                        ], 400);
+                    } else {
+                        Session::flash('flash_warning', 'Has alcanzado el límite de ' . formatCurrency(\Config::get('constants.MAX_TEAM_FUNDS')) . ', no puedes tener más dinero.');
+                        return redirect()->route('finances');
+                    }
+                }
+
+                $user->team->moneyMovement($value, 'Venta de Fúlbos');
+                $success_message = 'Has vendido ' . $shopping_item->price . ' Fúlbos por ' . formatCurrency($value);
+                $redirect = redirect()->route('finances');
                 break;
             default:
                 Session::flash('flash_danger', 'Item inválido.');

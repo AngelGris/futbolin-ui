@@ -10,6 +10,12 @@ function changeShield(id) {
     return false;
 };
 
+function formatCurrency(value) {
+    value = value.toLocaleString().replace('.', ',');
+
+    return value + ' $';
+}
+
 function loadAdminMessage(id) {
     $.ajax({
         'method': 'GET',
