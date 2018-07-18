@@ -12,7 +12,7 @@ class PlayerSelling extends Model
      * @var array
      */
     protected $fillable = [
-        'player_id', 'value', 'closes_at'
+        'player_id', 'value', 'best_offer_value', 'closes_at'
     ];
 
     /**
@@ -58,11 +58,7 @@ class PlayerSelling extends Model
      */
     public function getOfferValueAttribute()
     {
-        if ($this->best_offer_value) {
-            return $this->best_offer_value;
-        } else {
-            return $this->value;
-        }
+        return $this->best_offer_value;
     }
 
     /**

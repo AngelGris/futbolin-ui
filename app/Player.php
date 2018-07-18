@@ -487,9 +487,10 @@ class Player extends Model
     public function startSelling()
     {
         $selling = PlayerSelling::create([
-            'player_id' => $this->id,
-            'value'     => $this->value,
-            'closes_at' => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
+            'player_id'         => $this->id,
+            'value'             => $this->value,
+            'best_offer_value'  => $this->value,
+            'closes_at'         => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
         ]);
 
         return $selling;
