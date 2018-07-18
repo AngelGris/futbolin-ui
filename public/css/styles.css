@@ -33,6 +33,7 @@ h4 { font-size: 16px; }
 
 body {
 	background-color: #2c2c2c;
+    color: #000;
 	font-size: 12px;
 	font-family: 'Helvetica Neue', Helvetica, sans-serif;
 	height: 100%;
@@ -687,7 +688,7 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 
 .pagination-slider-container {
 	float:left;
-	height: 31px;
+	height: 34px;
 	overflow: hidden;
 	position: relative;
 	width: calc(100% - 66px);
