@@ -127,6 +127,7 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
 
     Route::group(['prefix' => 'mercado'], function() {
         Route::get('/', ['as' => 'market', 'uses' => 'MarketController@index']);
+        Route::get('/ofertas', ['as' => 'market.offers', 'uses' => 'MarketController@offers']);
         Route::get('/transacciones', ['as' => 'market.transactions', 'uses' => 'MarketController@transactions']);
     });
 

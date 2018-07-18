@@ -202,33 +202,6 @@ class Player extends Model
     }
 
     /**
-     * Get player's average attribute
-     *
-     * @return float
-     */
-    public function getAverageAttribute()
-    {
-        switch ($this->position)
-        {
-            case 'ARQ':
-                return (int)((($this->goalkeeping * 8) + $this->passing + $this->strength) / 10);
-                break;
-            case 'DEF':
-                return (int)((($this->defending * 3) + ($this->jumping * 2) + $this->passing + $this->speed + ($this->tackling * 3)) / 10);
-                break;
-            case 'MED':
-                return (int)((($this->dribbling * 3) + ($this->passing * 3) + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
-                break;
-            case 'ATA':
-                return (int)(($this->dribbling + ($this->heading * 2) + ($this->jumping * 2) + ($this->precision * 2) + $this->speed + ($this->strength * 2)) / 10);
-                break;
-            default:
-                return (int)(($this->goalkeeping + $this->defending + $this->dribbling + $this->heading + $this->jumping + $this->passing + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
-                break;
-        }
-    }
-
-    /**
      * Get player's handler for Blade
      *
      * @return string
@@ -572,6 +545,36 @@ class Player extends Model
     }
 
     /**
+     * Update player's average attribute
+     *
+     * @return integer
+     */
+    public function updateAverage()
+    {
+        switch ($this->position)
+        {
+            case 'ARQ':
+                $this->average = (int)((($this->goalkeeping * 8) + $this->passing + $this->strength) / 10);
+                break;
+            case 'DEF':
+                $this->average = (int)((($this->defending * 3) + ($this->jumping * 2) + $this->passing + $this->speed + ($this->tackling * 3)) / 10);
+                break;
+            case 'MED':
+                $this->average = (int)((($this->dribbling * 3) + ($this->passing * 3) + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
+                break;
+            case 'ATA':
+                $this->average = (int)(($this->dribbling + ($this->heading * 2) + ($this->jumping * 2) + ($this->precision * 2) + $this->speed + ($this->strength * 2)) / 10);
+                break;
+            default:
+                $this->average = (int)(($this->goalkeeping + $this->defending + $this->dribbling + $this->heading + $this->jumping + $this->passing + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
+                break;
+        }
+        $this->save();
+
+        return $this->average;
+    }
+
+    /**
      * Upgrade player
      *
      * @return void
@@ -654,6 +657,7 @@ class Player extends Model
             $this->last_upgrade = $last_upgrade;
             $this->last_upgraded = $_SERVER['REQUEST_TIME'];
             $this->save();
+            $this->updateAverage();
         }
     }
 }

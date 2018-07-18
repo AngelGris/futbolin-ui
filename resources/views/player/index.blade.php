@@ -12,7 +12,7 @@ $(function() {
 
 function updateSalary() {
     var value = parseInt($('#txtValue').val() * {{ \Config::get('constants.PLAYERS_SALARY') }});
-    $('#player-salary').html(value);
+    $('#player-salary').html(formatCurrency(value));
 }
 </script>
 @endsection
@@ -32,7 +32,7 @@ function updateSalary() {
     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-free">Dejar libre</button>
 @elseif (!empty($player->selling->id))
     <br>
-    @if ($player->selling->best_offer_value > 0)
+    @if ($player->selling->best_offer_team)
     Mejor oferta: {{ formatCurrency($player->selling->best_offer_value) }} ({{ $player->selling->offeringTeam->name }})
     @else
     SIN OFERTAS
@@ -44,11 +44,7 @@ function updateSalary() {
 @endif
 </h4>
 <div class="col-xs-12 col-sm-6 col-md-3 zebra">
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Energía</label>
-        <div class="col-xs-3">{{ $player->stamina }}</div>
-    </div>
-    @foreach (['Arquero' => 'goalkeeping', 'Defensa' => 'defending', 'Gambeta' => 'dribbling', 'Cabeceo' => 'heading', 'Salto' => 'jumping', 'Pase' => 'passing', 'Precisión' => 'precision', 'Velocidad' => 'speed', 'Fuerza' => 'strength', 'Quite' => 'tackling'] as $k => $v)
+    @foreach (['Media' => 'average', 'Arquero' => 'goalkeeping', 'Defensa' => 'defending', 'Gambeta' => 'dribbling', 'Cabeceo' => 'heading', 'Salto' => 'jumping', 'Pase' => 'passing', 'Precisión' => 'precision', 'Velocidad' => 'speed', 'Fuerza' => 'strength', 'Quite' => 'tackling'] as $k => $v)
     <div class="col-xs-12">
         <label class="col-xs-9 control-label">{{ $k }}</label>
         <div class="col-xs-3">
@@ -60,6 +56,10 @@ function updateSalary() {
         </div>
     </div>
     @endforeach
+    <div class="col-xs-12">
+        <label class="col-xs-9 control-label">Energía</label>
+        <div class="col-xs-3">{{ $player->stamina }}</div>
+    </div>
     <div class="col-xs-12">
         <label class="col-xs-9 control-label">Experiencia</label>
         <div class="col-xs-3">{{ $player->experience }}</div>

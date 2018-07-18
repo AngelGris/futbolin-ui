@@ -6,6 +6,9 @@
 
 @section('content-inner')
 <div class="col-sm-12">
+    <a class="btn btn-sm btn-primary" href="{{ route('market') }}">Volver al mercado</a>
+</div>
+<div class="col-sm-12">
     {{ $transactions->links() }}
 </div>
 <div class="clear"></div>

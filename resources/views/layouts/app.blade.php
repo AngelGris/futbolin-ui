@@ -10,7 +10,6 @@
 
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}" type="text/css" />
-        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" type="text/css" />
         <link rel="stylesheet" href="{{ asset('css/styles.css') }}" type="text/css" />
         @yield('styles')
 
