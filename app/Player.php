@@ -197,6 +197,7 @@ class Player extends Model
         $player->number         = $number;
         $player->value          = 100000;
         $player->save();
+        $player->updateAverage();
 
         return $player;
     }

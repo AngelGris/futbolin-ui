@@ -15,7 +15,7 @@ class AddAverageToPlayers extends Migration
     public function up()
     {
         Schema::table('players', function(Blueprint $table) {
-            $table->tinyInteger('average')->unsigned()->after('healed');
+            $table->tinyInteger('average')->unsigned()->default(0)->after('healed');
         });
 
         $players = Player::withTrashed()->get();
