@@ -44,7 +44,7 @@ class Player extends Model
      * @var array
      */
     protected $appends = [
-        'name', 'short_name', 'average', 'cards_count', 'suspended', 'upgraded', 'transferable', 'bladeHandlerIcons'
+        'name', 'short_name', 'cards_count', 'suspended', 'upgraded', 'transferable', 'bladeHandlerIcons'
     ];
 
     /**
