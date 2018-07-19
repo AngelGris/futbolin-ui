@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Storage;
 
 class Kernel extends ConsoleKernel
 {
@@ -121,6 +122,16 @@ class Kernel extends ConsoleKernel
                     }
                 })
                 ->after(function() {
+                    /**
+                     * Copy logs to S3
+                     */
+                    $logs = DB::table('matches')->select('logfile')->where('created_at', '>=', Carbon::now()->subMinutes(10))->get();
+                    foreach ($logs as $log) {
+                        if (!Storage::disk('s3')->exists(env('APP_ENV') . '/logs/' . $log->logfile)) {
+                            Storage::disk('s3')->put(env('APP_ENV') . '/logs/' . $log->logfile, file_get_contents(base_path() . '/python/logs/' . $log->logfile));
+                        }
+                    }
+
                     /**
                      * Upgrade players
                      */

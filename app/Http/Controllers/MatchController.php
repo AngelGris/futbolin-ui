@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Team;
+use App\Matches;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
-use App\Team;
-use App\Matches;
+use Storage;
 
 class MatchController extends Controller
 {
@@ -293,6 +294,11 @@ class MatchController extends Controller
             $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . $user->team->id . ' ' . $request->input('rival') . ' ' . $match_type . ' -1 ' . $file_name);
             exec($command, $out, $status);
             if ($status == 0) {
+                /**
+                 * Copy log to S3
+                 */
+                Storage::disk('s3')->put(env('APP_ENV') . '/logs/' . $file_name, file_get_contents(base_path() . '/python/logs/' . $file_name));
+
                 if ($api) {
                     return response()->json([
                         'rival'                 => $request->input('rival'),

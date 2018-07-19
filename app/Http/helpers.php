@@ -41,6 +41,9 @@ function getMatchLog($file)
     if (is_file($file_name)) {
         $string = file_get_contents($file_name);
         $data = json_decode($string,true);
+    } else if (\Storage::disk('s3')->exists(env('APP_ENV') . '/logs/' . $file)) {
+        $string = \Storage::disk('s3')->get(env('APP_ENV') . '/logs/' . $file);
+        $data = json_decode($string,true);
     }
 
     return $data;

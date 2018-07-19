@@ -5,13 +5,16 @@
 $(function() {
     $('.load-match').click(function (event) {
         event.preventDefault();
+        $('#modal-match-loading').modal('show');
 
         $.ajax({
             'method' : 'GET',
             'url' : '{{ route('match.load') }}',
             'data' : {file : $(this).data('file'), _token : '{{ csrf_token() }}'},
         }).done(function(data){
-            refreshResultModal(data);
+            $('#modal-match-loading').on('hidden.bs.modal', function () {
+                refreshResultModal(data);
+            }).modal('hide');
         });
     });
 });
