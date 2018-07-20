@@ -503,7 +503,7 @@ class TeamController extends Controller
             $team = Auth::user()->team;
         }
 
-        $restart = !empty($request->input('restart')) && $request->input('restart');
+        $restart = !empty($request->input('restart')) && filter_var($request->input('restart'), FILTER_VALIDATE_BOOLEAN);
 
         /**
          * Train if the team is in trainning spam or it's to restart
