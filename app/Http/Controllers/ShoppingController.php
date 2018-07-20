@@ -62,7 +62,11 @@ class ShoppingController extends Controller
         $validator->validate();
 
         if ($request->expectsJson()) {
-            $user = Auth::guard('api')->user()->user;
+            if (empty(Auth::guard('api')->user())) {
+                $user = Auth::user();
+            } else {
+                $user = Auth::guard('api')->user()->user;
+            }
         } else {
             $user = Auth::user();
         }
@@ -85,6 +89,8 @@ class ShoppingController extends Controller
 
         // Route to go after done
         $redirect = redirect()->route('shopping');
+
+        $ajax_response = [];
 
         // Complete transaction
         switch($shopping_item->id) {
@@ -165,6 +171,16 @@ class ShoppingController extends Controller
                 $success_message = 'Has vendido ' . $shopping_item->price . ' Fúlbos por ' . formatCurrency($value);
                 $redirect = redirect()->route('finances');
                 break;
+            case 7:
+                $trainning_points = $user->team->keepTrainning();
+                $ajax_response = [
+                    'trained'       => TRUE,
+                    'count'         => $user->team->trainning_count,
+                    'points'        => $trainning_points,
+                    'next'          => $user->team->trainable_remaining,
+                    'show_options'  => FALSE
+                ];
+                break;
             default:
                 Session::flash('flash_danger', 'Item inválido.');
                 return redirect()->route('shopping');
@@ -180,7 +196,7 @@ class ShoppingController extends Controller
         ]);
 
         if ($request->expectsJson()) {
-            return response()->json([
+            return response()->json($ajax_response + [
                 'credits'   => $user->credits
             ], 200);
         } else {

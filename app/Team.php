@@ -473,6 +473,19 @@ class Team extends Model
     }
 
     /**
+     * Keep train run
+     *
+     * @return integer trainning points
+     */
+    public function keepTrainning()
+    {
+        $this->last_trainning = Carbon::now();
+        $this->train(TRUE);
+
+        return \Config::get('constants.TRAINNING_POINTS') * min(5, $this->trainning_count);
+    }
+
+    /**
      * Process money income
      *
      * @param integer $incomes

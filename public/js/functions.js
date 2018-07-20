@@ -161,12 +161,60 @@ $(function(){
             'dataType': 'json'
         }).done(function(data){
             showAdminMessage(data.title, data.message);
-            $('button.trainning-button').hide();
-            $('li.trainning').hide();
-            $('div.trainning-button-disabled').show();
-            $('li.trainning-disabled').show();
-            startRemainingTimer(data.remaining);
+            if (data.remaining > 0) {
+                $('button.trainning-button').hide();
+                $('li.trainning').hide();
+                $('div.trainning-button-disabled').show();
+                $('li.trainning-disabled').show();
+                startRemainingTimer(data.remaining);
+            }
         });
+    });
+
+    $('#modal-admin-message').on('click', '#btn-trainning-keep', function() {
+        var token = $(this).data('token');
+
+        $('#modal-admin-message').one('hidden.bs.modal', function () {
+            $.ajax({
+                'method' : 'POST',
+                'url' : '/shopping/comprar/',
+                'data' : {_token : token, id: 7},
+                'dataType': 'json'
+            }).done(function(data){
+                showAdminMessage('Continuar entrenando', '<p>¡Tu racha de entrenamientos es de ' + data.count + ' días!</p><p>Hoy tus jugadores ganaron ' + data.points + ' puntos de experiencia y recuperaron ' + data.points + ' puntos de energía.</p>');
+                if (data.next > 0) {
+                    $('button.trainning-button').hide();
+                    $('li.trainning').hide();
+                    $('div.trainning-button-disabled').show();
+                    $('li.trainning-disabled').show();
+                    startRemainingTimer(data.next);
+                }
+            }).fail(function(data) {
+                if (data.responseJSON.type == 'credit_insufficient') {
+                    showAdminMessage('No tienes Fúlbos', '<p>Necesitas Fúlbos para poder mantener tu racha de entrenamientos.</p><p>¿Quieres comprar más Fúlbos?</p><p><a href="/shopping/creditos" class="btn btn-primary">Comprar Fúlbos</a></p>');
+                }
+            });
+        }).modal('hide');
+    });
+
+    $('#modal-admin-message').on('click', '#btn-trainning-restart', function() {
+        var token = $(this).data('token');
+
+        $('#modal-admin-message').one('hidden.bs.modal', function () {
+            $.ajax({
+                'method' : 'POST',
+                'url' : '/equipo/entrenar/',
+                'data' : {_token : token, restart: true},
+                'dataType': 'json'
+            }).done(function(data){
+                showAdminMessage(data.title, data.message);
+                $('button.trainning-button').hide();
+                $('li.trainning').hide();
+                $('div.trainning-button-disabled').show();
+                $('li.trainning-disabled').show();
+                startRemainingTimer(data.remaining);
+            });
+        }).modal('hide');
     });
 
     function startRemainingTimer(remaining = 0) {

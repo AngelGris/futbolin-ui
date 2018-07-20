@@ -503,53 +503,87 @@ class TeamController extends Controller
             $team = Auth::user()->team;
         }
 
-        if ($team->train()) {
-            $trainning_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $team->trainning_count);
+        $restart = !empty($request->input('restart')) && $request->input('restart');
 
-            if ($team->trainning_count < 5) {
-                switch ($team->trainning_count) {
-                    case 1:
-                        $ordinal = 'primer';
-                        break;
-                    case 2:
-                        $ordinal = 'segundo';
-                        break;
-                    case 3:
-                        $ordinal = 'tercer';
-                        break;
-                    default:
-                        $ordinal = 'cuarto';
-                        break;
+        /**
+         * Train if the team is in trainning spam or it's to restart
+         * Else ask user to restart or keep trainnings run
+         */
+        if ($team->trainning_count == 0 || $team->inTrainningSpam || $restart) {
+            if ($team->train()) {
+                $trainning_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $team->trainning_count);
+
+                if ($team->trainning_count < 5) {
+                    switch ($team->trainning_count) {
+                        case 1:
+                            $ordinal = 'primer';
+                            break;
+                        case 2:
+                            $ordinal = 'segundo';
+                            break;
+                        case 3:
+                            $ordinal = 'tercer';
+                            break;
+                        default:
+                            $ordinal = 'cuarto';
+                            break;
+                    }
+                    $message = '<p>¡Es tu ' . $ordinal . ' entrenamiento!</p>';
+                    $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
+                    $message .= '<p>Vuelve a entrenar mañana para ganar ' . ($trainning_points + \Config::get('constants.TRAINNING_POINTS')) . ' puntos mas</p>';
+                } else {
+                    $message = '<p>¡Entrenaste a tu equipo ' . $team->trainning_count . ' días seguidos!</p>';
+                    $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
+                    $message .= '<p>Vuelve a entrenar mañana para ganar ' . $trainning_points . ' puntos mas</p>';
                 }
-                $message = '<p>¡Es tu ' . $ordinal . ' entrenamiento!</p>';
-                $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
-                $message .= '<p>Vuelve a entrenar mañana para ganar ' . ($trainning_points + \Config::get('constants.TRAINNING_POINTS')) . ' puntos mas</p>';
-            } else {
-                $message = '<p>¡Entrenaste a tu equipo ' . $team->trainning_count . ' días seguidos!</p>';
-                $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
-                $message .= '<p>Vuelve a entrenar mañana para ganar ' . $trainning_points . ' puntos mas</p>';
-            }
 
-            if ($api) {
-                return response()->json([
-                    'trained'   => TRUE,
-                    'count'     => $team->trainning_count,
-                    'points'    => $trainning_points,
-                    'next'      => $team->trainable_remaining
-                ], 200);
+                if ($api) {
+                    return response()->json([
+                        'trained'       => TRUE,
+                        'count'         => $team->trainning_count,
+                        'points'        => $trainning_points,
+                        'next'          => $team->trainable_remaining,
+                        'show_options'  => FALSE
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'title'     => 'Entrenamiento',
+                        'message'   => $message,
+                        'remaining' => $team->trainable_remaining
+                    ], 200);
+                }
             } else {
-                return json_encode(['title' => 'Entrenamiento', 'message' => $message, 'remaining' => $team->trainable_remaining]);
+                if ($api) {
+                    return response()->json([
+                        'trained'       => FALSE,
+                        'count'         => $team->trainning_count,
+                        'points'        => 0,
+                        'next'          => $team->trainable_remaining,
+                        'show_options'  => FALSE
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'title'     => 'Entrenamiento',
+                        'message'   => '<p>Debes esperar ' . readableTime($team->trainable_remaining) . ' para poder entrenar nuevamente.</p>',
+                        'remaining' => $team->trainable_remaining
+                    ], 200);
+                }
             }
         } else {
             if ($api) {
                 return response()->json([
-                    'trained'   => FALSE,
-                    'count'     => $team->trainning_count,
-                    'points'    => 0,
-                    'next'      => $team->trainable_remaining
+                    'trained'       => FALSE,
+                    'count'         => $team->trainning_count,
+                    'points'        => 0,
+                    'next'          => $team->trainable_remaining,
+                    'show_options'  => TRUE
                 ], 200);
             } else {
-                return json_encode(['title' => 'Entrenamiento', 'message' => '<p>Debes esperar ' . readableTime($team->trainable_remaining) . ' para poder entrenar nuevamente.</p>', 'remaining' => $team->trainable_remaining]);
+                return response()->json([
+                    'title'     => 'Entrenamiento',
+                    'message'   => '<p>Has perdido tu racha de <strong>' . $team->trainning_count . ' entrenamientos</strong>, ¿quieres usar <strong>1 Fúlbo</strong> para mantenerla o iniciar una racha nueva?</p><button id="btn-trainning-keep" data-token="' . csrf_token() . '" class="btn btn-sm btn-primary" style="margin-right:10px;">Mantener racha por 1 Fúlbo</button><button id="btn-trainning-restart" data-token="' . csrf_token() . '" class="btn btn-sm btn-default">Iniciar nueva racha</button>',
+                    'remaining' => 0,
+                ]);
             }
         }
     }
