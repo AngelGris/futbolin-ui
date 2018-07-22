@@ -60,7 +60,33 @@ class MarketController extends Controller
     public function listing(Request $request)
     {
         $market = [];
-        $players = PlayerSelling::orderBy('updated_at', 'DESC')->get();
+        $players = PlayerSelling::join('players', 'players.id', 'player_sellings.player_id');
+        if (!empty($request->input('position')) && in_array($request->input('position'), ['ARQ', 'DEF', 'MED', 'ATA'])) {
+            $players = $players->where('position', $request->input('position'));
+        }
+        if (!empty($request->input('attribute')) && in_array($request->input('attribute'), ['average', 'goalkeeping', 'defending', 'dribbling', 'heading', 'jumping', 'passing', 'precision', 'speed', 'strength', 'tackling'])) {
+            $from = 0;
+            $to = 100;
+            if (!empty($request->input('attribute_from'))) {
+                $from = (int)$request->input('attribute_from');
+            }
+            if (!empty($request->input('attribute_to'))) {
+                $to = (int)$request->input('attribute_to');
+            }
+            $players = $players->whereBetween($request->input('attribute'), [min($from, $to), max($from, $to)]);
+        }
+        if (!empty($request->input('value_from')) || !empty($request->input('value_to'))) {
+            $value_from = 0;
+            $value_to = \Config::get('constants.MAX_PLAYER_VALUE');
+            if (!empty($request->input('value_from'))) {
+                $value_from = (int)$request->input('value_from');
+            }
+            if (!empty($request->input('value_to'))) {
+                $value_to = (int)$request->input('value_to');
+            }
+            $players = $players->whereBetween('best_offer_value', [min($value_from, $value_to), max($value_from, $value_to)]);
+        }
+        $players = $players->orderBy('player_sellings.updated_at', 'DESC')->get();
         foreach ($players as $player) {
             $pla = Player::find($player->player_id);
             $market[] = [
