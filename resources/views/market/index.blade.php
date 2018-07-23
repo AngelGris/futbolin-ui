@@ -54,11 +54,23 @@ $(function() {
     });
 
     $('.btn-offer').click(function() {
+        var limit = {{ $_team->calculateSpendingMargin() }};
         $('#modal-make-offer-player-id').val($(this).data('id'));
         $('#modal-make-offer-player-name').text($(this).data('name'));
-        $('#modal-make-offer-value').text($(this).data('value'));
+        $('.modal-make-offer-value').text(formatCurrency($(this).data('value')));
         $('#modal-make-offer-input').val($(this).data('offer'));
         updateSalary();
+        if ($(this).data('value') <= limit) {
+            $('#modal-make-offer-enabled').show();
+            $('#modal-make-offer-disabled').hide();
+            $('#modal-make-offer-input').attr('disabled', false);
+            $('#buy-item').attr('disabled', false);
+        } else {
+            $('#modal-make-offer-enabled').hide();
+            $('#modal-make-offer-disabled').show();
+            $('#modal-make-offer-input').attr('disabled', true);
+            $('#buy-item').attr('disabled', true);
+        }
         $('#modal-make-offer').modal('show');
     });
 });
@@ -190,7 +202,7 @@ function updateSalary() {
             </td>
             <td align="center">
                 @if (!$transferable->player->team || $transferable->player->team->id != $_team->id)
-                <button class="btn btn-primary btn-offer" data-id="{{ $transferable->player->id }}" data-name="{{ $transferable->player->first_name . ' ' . $transferable->player->last_name }}" data-value="{{ formatCurrency($transferable->offer_value) }}" data-offer="{{ (int)($transferable->offer_value * 1.05) }}">Ofertar</button>
+                <button class="btn btn-primary btn-offer" data-id="{{ $transferable->player->id }}" data-name="{{ $transferable->player->first_name . ' ' . $transferable->player->last_name }}" data-value="{{ $transferable->offer_value + 1 }}" data-offer="{{ (int)($transferable->offer_value * 1.05) }}">Ofertar</button>
                 @endif
             </td>
         </tr>
@@ -211,7 +223,8 @@ function updateSalary() {
                 </div>
                 <div class="modal-body">
                     <p>Hacer una oferta por <span id="modal-make-offer-player-name" style="font-weight: bold;"></span></p>
-                    <p>La oferta tiene que ser superior a <span id="modal-make-offer-value"></span></p>
+                    <p id="modal-make-offer-enabled">La oferta tiene que ser entre <span class="modal-make-offer-value"></span> y {{ formatCurrency($_team->calculateSpendingMargin()) }}.</p>
+                    <p id="modal-make-offer-disabled">La oferta mínima es de <span class="modal-make-offer-value"></span> pero sólo tienes {{ formatCurrency($_team->calculateSpendingMargin()) }}. No puedes hacer una oferta.</p>
                     <div class="col-sm-12">
                         <div class="col-sm-5">
                             <label for="modal-make-offer-input">Valor de la oferta</label>
