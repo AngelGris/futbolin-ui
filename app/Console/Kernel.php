@@ -240,9 +240,10 @@ class Kernel extends ConsoleKernel
                             $player = Player::create(NULL, $value, $position);
 
                             PlayerSelling::create([
-                                'player_id' => $player->id,
-                                'value'     => $player->value,
-                                'closes_at' => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
+                                'player_id'         => $player->id,
+                                'value'             => $player->value,
+                                'best_offer_value'  => $player->value,
+                                'closes_at'         => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
                             ]);
                         }
                     }
