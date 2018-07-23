@@ -8,6 +8,7 @@ use App\PlayerSelling;
 use App\Team;
 use App\TeamFundMovement;
 use App\Tournament;
+use App\TournamentCategory;
 use App\TournamentPosition;
 use App\TournamentRound;
 use App\Notification;
@@ -199,8 +200,15 @@ class Kernel extends ConsoleKernel
          * Run weekly team maintenance
          */
         $schedule->call(function() {
-                    // Pay salaries
-                    $teams = Team::where('id', '>=', 27)->get();
+                    // Pay salaries to teams in tournaments
+                    $categories = DB::table('tournament_categories')->select('id')->where('tournament_id', function($query) {
+                        $query->from('tournament_categories')->selectRaw('MAX(tournament_id)');
+                    })->get();
+                    $cats = [];
+                    foreach ($categories as $category) {
+                        $cats[] = $category->id;
+                    }
+                    $teams = Team::select('teams.*')->join('tournament_positions', 'teams.id', '=', 'tournament_positions.team_id')->where('teams.user_id', '>', 1)->whereIn('tournament_positions.category_id', $cats)->get();
                     foreach ($teams as $team) {
                         $team->paySalaries();
                     }
