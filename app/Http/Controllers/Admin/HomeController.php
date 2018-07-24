@@ -82,6 +82,15 @@ class HomeController extends Controller
             ->orderBy('injuries_count', 'DESC')
             ->get();
 
+        $injury_positions = DB::table('players')->selectRaw('position, COUNT(*) as count')->where('recovery', '>', 0)->groupBy('position')->get();
+        $injury_stats = ['ARQ' => 0, 'DEF' => 0, 'MED' => 0, 'ATA' => 0];
+        $total = 0;
+        foreach($injury_positions as $row) {
+            $injury_stats[$row->position] = $row->count;
+            $total += $row->count;
+        }
+        $injury_stats['total'] = $total;
+
         $players_energy = DB::table('players')
             ->select(DB::raw('`stamina`, COUNT(*) AS `count`'))
             ->where('team_id', '>', 1)
@@ -161,23 +170,24 @@ class HomeController extends Controller
         $match_stats['total']['goals_diff'] = $match_stats['total']['goals_local'] - $match_stats['total']['goals_visit'];
 
         $vars = [
-            'payments' => $payments,
-            'transactions' => $transactions,
-            'total_credits' => User::sum('credits'),
-            'last_users' => User::where('id', '>', 1)->whereNotNull('last_activity')->orderBy('last_activity', 'DESC')->limit(10)->get(),
-            'last_users_stats' => $last_users_stats,
-            'last_trainnings' => Team::where('user_id', '>', 1)->whereNotNull('last_trainning')->orderBy('last_trainning', 'DESC')->limit(10)->get(),
+            'payments'              => $payments,
+            'transactions'          => $transactions,
+            'total_credits'         => User::sum('credits'),
+            'last_users'            => User::where('id', '>', 1)->whereNotNull('last_activity')->orderBy('last_activity', 'DESC')->limit(10)->get(),
+            'last_users_stats'      => $last_users_stats,
+            'last_trainnings'       => Team::where('user_id', '>', 1)->whereNotNull('last_trainning')->orderBy('last_trainning', 'DESC')->limit(10)->get(),
             'last_trainnings_stats' => $last_trainnings_stats,
-            'last_teams' => Team::where('user_id', '>', 1)->latest()->limit(10)->get(),
-            'last_matches' => Matches::latest()->limit(10)->get(),
-            'cards_count' => $cards_count,
-            'suspensions' => $suspensions_count,
-            'injured_players' => Player::where('recovery', '>', 0)->orderBy('recovery')->limit(10)->get(),
-            'injury_types' => $injury_types,
-            'players_energy' => json_encode($players_energy),
-            'players_retiring' => Player::where('retiring', 1)->limit(10)->get(),
-            'teams_energy' => json_encode($teams_energy),
-            'match_stats' => $match_stats
+            'last_teams'            => Team::where('user_id', '>', 1)->latest()->limit(10)->get(),
+            'last_matches'          => Matches::latest()->limit(10)->get(),
+            'cards_count'           => $cards_count,
+            'suspensions'           => $suspensions_count,
+            'injured_players'       => Player::where('recovery', '>', 0)->orderBy('recovery')->limit(10)->get(),
+            'injury_stats'          => $injury_stats,
+            'injury_types'          => $injury_types,
+            'players_energy'        => json_encode($players_energy),
+            'players_retiring'      => Player::where('retiring', 1)->limit(10)->get(),
+            'teams_energy'          => json_encode($teams_energy),
+            'match_stats'           => $match_stats
         ];
 
         return view('admin.home', $vars);
