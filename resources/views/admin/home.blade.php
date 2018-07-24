@@ -239,7 +239,7 @@ $(function(){
 <div class="clear"></div>
 <div class="col-md-6 zebra">
     <h3>Jugadores Lesionados</h3>
-    ARQ: {{ $injury_stats['ARQ'] }} ({{ number_format($injury_stats['ARQ'] * 100 / $injury_stats['total'], 2) }}%) - DEF: {{ $injury_stats['DEF'] }} ({{ number_format($injury_stats['DEF'] * 100 / $injury_stats['total'], 2) }}%) - MED: {{ $injury_stats['MED'] }} ({{ number_format($injury_stats['MED'] * 100 / $injury_stats['total'], 2) }}%) - ATA: {{ $injury_stats['ATA'] }} ({{ number_format($injury_stats['ATA'] * 100 / $injury_stats['total'], 2) }}%)
+    ARQ: {{ $injury_stats['ARQ'] }} ({{ number_format($injury_stats['ARQ'] * 100 / $injury_stats['total'], 2) }}%) - DEF: {{ $injury_stats['DEF'] }} ({{ number_format($injury_stats['DEF'] * 100 / $injury_stats['total'], 2) }}%) - MED: {{ $injury_stats['MED'] }} ({{ number_format($injury_stats['MED'] * 100 / $injury_stats['total'], 2) }}%) - ATA: {{ $injury_stats['ATA'] }} ({{ number_format($injury_stats['ATA'] * 100 / $injury_stats['total'], 2) }}%) - TOT: {{ $injury_stats['total'] }}
     @foreach($injured_players as $player)
     <div class="col-xs-12">
         <div class="col-xs-3">{{ $player->short_name }}</div>
