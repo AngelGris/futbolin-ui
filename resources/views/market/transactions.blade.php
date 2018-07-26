@@ -8,6 +8,7 @@
 <div class="col-sm-12">
     <a class="btn btn-sm btn-primary" href="{{ route('market') }}">Volver al mercado</a>
     <a class="btn btn-sm btn-primary" href="{{ route('market.offers') }}">Mis ofertas</a>
+    <a class="btn btn-sm btn-primary" href="{{ route('market.following') }}">Siguiendo</a>
 </div>
 <div class="col-sm-12">
     {{ $transactions->links() }}

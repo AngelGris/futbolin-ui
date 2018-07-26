@@ -128,7 +128,10 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
     Route::group(['prefix' => 'mercado'], function() {
         Route::get('/', ['as' => 'market', 'uses' => 'MarketController@index']);
         Route::get('/ofertas', ['as' => 'market.offers', 'uses' => 'MarketController@offers']);
+        Route::post('/seguir', ['as' => 'market.follow', 'uses' => 'MarketController@follow']);
+        Route::get('/siguiendo', ['as' => 'market.following', 'uses' => 'MarketController@following']);
         Route::get('/transacciones', ['as' => 'market.transactions', 'uses' => 'MarketController@transactions']);
+        Route::post('/no-seguir', ['as' => 'market.unfollow', 'uses' => 'MarketController@unfollow']);
     });
 
     Route::group(['prefix' => 'shopping'], function() {

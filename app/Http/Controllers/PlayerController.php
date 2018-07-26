@@ -214,6 +214,8 @@ class PlayerController extends Controller
         $selling->best_offer_team = $user->team->id;
         $selling->save();
 
+        $user->followPlayer($selling->id);
+
         if ($request->expectsJson()) {
             return response()->json([], 204);
         } else {

@@ -7,16 +7,100 @@ use App\PlayerSelling;
 use App\MarketTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class MarketController extends Controller
 {
+    /**
+     * Start following a player in the market
+     */
+    public function follow(Request $request)
+    {
+        // Check id in $request
+        $validator = Validator::make($request->all(), [
+            'id'    => 'required|integer',
+        ]);
+
+        $validator->validate();
+
+        if (empty(Auth::guard('api')->user())) {
+            Auth::user()->followPlayer($request->input('id'));
+        } else {
+            Auth::guard('api')->user()->user->followPlayer($request->input('id'));
+        }
+
+        return response()->json([
+            'id' => $request->input('id')
+        ], 200);
+    }
+
+    /**
+     * Show followed players
+     */
+    public function following(Request $request)
+    {
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
+
+        // Players following
+        $following = [];
+        foreach ($user->following as $follow) {
+            $following[] = $follow->player_id;
+        }
+
+        $players = PlayerSelling::whereIn('player_id', $following)->orderBy('player_sellings.updated_at', 'DESC')->paginate(30);
+
+        if ($request->expectsJson()) {
+            foreach ($players as $player) {
+                $pla = Player::find($player->player_id);
+                $market[] = [
+                    'id'            => $player->id,
+                    'player'    => [
+                        'id'        => $pla->id,
+                        'name'      => $pla->short_name,
+                        'position'  => $pla->position,
+                        'age'       => $pla->age,
+                        'average'   => $pla->average,
+                        'icons'     => $pla->icons,
+                        'team_id'   => $pla->team_id,
+                        'team'      => is_null($pla->team_id) ? '' : $pla->team->name
+                    ],
+                    'following'     => in_array($pla->id, $user->followingList),
+                    'value'         => $player->value,
+                    'offer_value'   => $player->best_offer_value,
+                    'offer_team'    => $player->best_offer_team,
+                    'closes_at'     => $player->closes_at->timestamp,
+                ];
+            }
+
+            return response()->json([
+                'market'   => $market
+            ], 200);
+        } else {
+            $vars = [
+                'icon'          => 'fa fa-retweet',
+                'title'         => 'Mercado de pases',
+                'subtitle'      => 'A buscar refuerzos',
+                'transferables' => $players,
+                'following'     => json_encode($following),
+                'offers'        => TRUE
+            ];
+
+            return view('market.index', $vars);
+        }
+    }
+
     /**
      * Show market main page
      */
     public function index(Request $request)
     {
         $filters = [];
-        $players = PlayerSelling::join('players', 'players.id', 'player_sellings.player_id');
+        $user = Auth::user();
+        $players = PlayerSelling::select('player_sellings.*')->join('players', 'players.id', 'player_sellings.player_id');
 
         // Position filter
         if (!empty($request->query('filter_position'))) {
@@ -42,11 +126,19 @@ class MarketController extends Controller
             $players = $players->whereBetween('best_offer_value', [$filters['value_from'], $filters['value_to']]);
         }
 
+        // Players following
+        $follows = $user->following()->select('player_id')->get();
+        $following = [];
+        foreach ($follows as $follow) {
+            $following[] = $follow->player_id;
+        }
+
         $vars = [
             'icon'          => 'fa fa-retweet',
             'title'         => 'Mercado de pases',
             'subtitle'      => 'A buscar refuerzos',
             'transferables' => $players->orderBy('player_sellings.updated_at', 'DESC')->paginate(30),
+            'following'     => json_encode($following),
             'filters'       => $filters,
             'offers'        => FALSE
         ];
@@ -59,8 +151,10 @@ class MarketController extends Controller
      */
     public function listing(Request $request)
     {
+        $user = Auth::guard('api')->user()->user;
+
         $market = [];
-        $players = PlayerSelling::join('players', 'players.id', 'player_sellings.player_id');
+        $players = PlayerSelling::select('player_sellings.*')->join('players', 'players.id', 'player_sellings.player_id');
         if (!empty($request->input('position')) && in_array($request->input('position'), ['ARQ', 'DEF', 'MED', 'ATA'])) {
             $players = $players->where('position', $request->input('position'));
         }
@@ -90,6 +184,7 @@ class MarketController extends Controller
         foreach ($players as $player) {
             $pla = Player::find($player->player_id);
             $market[] = [
+                'id'            => $player->id,
                 'player'    => [
                     'id'        => $pla->id,
                     'name'      => $pla->short_name,
@@ -100,6 +195,7 @@ class MarketController extends Controller
                     'team_id'   => $pla->team_id,
                     'team'      => is_null($pla->team_id) ? '' : $pla->team->name
                 ],
+                'following'     => in_array($pla->id, $user->followingList),
                 'value'         => $player->value,
                 'offer_value'   => $player->best_offer_value,
                 'offer_team'    => $player->best_offer_team,
@@ -117,14 +213,15 @@ class MarketController extends Controller
      */
     public function offers()
     {
-        $team = Auth::user()->team;
-        $players = PlayerSelling::where('best_offer_team', $team->id)->orderBy('updated_at', 'DESC')->paginate(30);
+        $user = Auth::user();
+        $players = PlayerSelling::where('best_offer_team', $user->team->id)->orderBy('updated_at', 'DESC')->paginate(30);
 
         $vars = [
             'icon'          => 'fa fa-retweet',
             'title'         => 'Mercado de pases',
             'subtitle'      => 'A buscar refuerzos',
             'transferables' => $players,
+            'following'     => json_encode($user->followingList),
             'filter'        => '',
             'offers'        => TRUE
         ];
@@ -152,5 +249,28 @@ class MarketController extends Controller
 
             return view('market.transactions', $vars);
         }
+    }
+
+    /**
+     * Stop following a player in the market
+     */
+    public function unfollow(Request $request)
+    {
+        // Check id in $request
+        $validator = Validator::make($request->all(), [
+            'id'    => 'required|integer',
+        ]);
+
+        $validator->validate();
+
+        if (empty(Auth::guard('api')->user())) {
+            Auth::user()->unfollowPlayer($request->input('id'));
+        } else {
+            Auth::guard('api')->user()->user->unfollowPlayer($request->input('id'));
+        }
+
+        return response()->json([
+            'id' => $request->input('id')
+        ], 200);
     }
 }

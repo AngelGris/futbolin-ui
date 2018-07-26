@@ -8,6 +8,7 @@
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script type="text/javascript">
 $(function() {
+    var following = {{ $following }};
     updateSalary();
 
     $('#dyntable').dataTable({
@@ -71,7 +72,43 @@ $(function() {
             $('#modal-make-offer-input').attr('disabled', true);
             $('#buy-item').attr('disabled', true);
         }
+        if (following.indexOf($(this).data('id')) >= 0) {
+            $('#follow-player').hide();
+            $('#unfollow-player').data('transfer', $(this).data('transfer'));
+            $('#unfollow-player').show();
+        } else {
+            $('#follow-player').data('transfer', $(this).data('transfer'));
+            $('#follow-player').show();
+            $('#unfollow-player').hide();
+        }
         $('#modal-make-offer').modal('show');
+    });
+
+    $('#follow-player').click(function(event) {
+        event.preventDefault();
+        $.ajax({
+            'method' : 'POST',
+            'url' : '{{ route('market.follow') }}',
+            'data' : {id : $(this).data('transfer'), _token : '{{ csrf_token() }}'},
+        }).done(function(data){
+            following.push(parseInt($('#modal-make-offer-player-id').val()));
+            $('#modal-make-offer').modal('hide');
+        });
+    });
+
+    $('#unfollow-player').click(function(event) {
+        event.preventDefault();
+        $.ajax({
+            'method' : 'POST',
+            'url' : '{{ route('market.unfollow') }}',
+            'data' : {id : $(this).data('transfer'), _token : '{{ csrf_token() }}'},
+        }).done(function(data){
+            var index = following.indexOf(parseInt($('#modal-make-offer-player-id').val()));
+            if (index > -1) {
+                following.splice(index, 1);
+            }
+            $('#modal-make-offer').modal('hide');
+        });
     });
 });
 
@@ -88,8 +125,9 @@ function updateSalary() {
     <a class="btn btn-sm btn-primary" href="{{ route('market') }}">Volver al mercado</a>
     @else
     <button id="toggle-filters" class="btn btn-sm btn-primary">Filtros</button>
-    <a class="btn btn-sm btn-primary" href="{{ route('market.offers') }}">Mis ofertas</a>
     @endif
+    <a class="btn btn-sm btn-primary" href="{{ route('market.offers') }}">Mis ofertas</a>
+    <a class="btn btn-sm btn-primary" href="{{ route('market.following') }}">Siguiendo</a>
     <a class="btn btn-sm btn-primary" href="{{ route('market.transactions') }}">Transacciones finalizadas</a>
 </div>
 <div class="col-sm-4" style="text-align:right;">
@@ -202,7 +240,7 @@ function updateSalary() {
             </td>
             <td align="center">
                 @if (!$transferable->player->team || $transferable->player->team->id != $_team->id)
-                <button class="btn btn-primary btn-offer" data-id="{{ $transferable->player->id }}" data-name="{{ $transferable->player->first_name . ' ' . $transferable->player->last_name }}" data-value="{{ $transferable->offer_value + 1 }}" data-offer="{{ (int)($transferable->offer_value * 1.05) }}">Ofertar</button>
+                <button class="btn btn-primary btn-offer" data-transfer="{{ $transferable->id }}" data-id="{{ $transferable->player->id }}" data-name="{{ $transferable->player->first_name . ' ' . $transferable->player->last_name }}" data-value="{{ $transferable->offer_value + 1 }}" data-offer="{{ (int)($transferable->offer_value * 1.05) }}">Ofertar</button>
                 @endif
             </td>
         </tr>
@@ -242,6 +280,8 @@ function updateSalary() {
                 <div class="modal-footer">
                     {{ csrf_field() }}
                     <input type="hidden" name="player_id" id="modal-make-offer-player-id" value="">
+                    <button id="follow-player" class="btn btn-primary">Seguir</button>
+                    <button id="unfollow-player" class="btn btn-primary">Dejar de seguir</button>
                     <button id="buy-item" class="btn btn-primary">Ofertar</button>
                     <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
                 </div>
