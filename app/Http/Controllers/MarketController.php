@@ -54,6 +54,7 @@ class MarketController extends Controller
         $players = PlayerSelling::whereIn('player_id', $following)->orderBy('player_sellings.updated_at', 'DESC')->paginate(30);
 
         if ($request->expectsJson()) {
+            $market = [];
             foreach ($players as $player) {
                 $pla = Player::find($player->player_id);
                 $market[] = [
