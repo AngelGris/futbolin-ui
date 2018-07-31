@@ -96,6 +96,15 @@ class PlayerController extends Controller
      */
     public function index(Player $player, Request $request)
     {
+        $user = Auth::user();
+
+        // Players following
+        $follows = $user->following()->select('player_id')->get();
+        $following = [];
+        foreach ($follows as $follow) {
+            $following[] = $follow->player_id;
+        }
+
         if ($request->expectsJson()) {
             return response()->json([
                 'player'    => $player
@@ -106,6 +115,7 @@ class PlayerController extends Controller
                 'title' => $player['first_name'] . ' ' . $player['last_name'],
                 'subtitle' => 'Una parte del todo',
                 'header_team' => $player['team'],
+                'following'     => json_encode($following),
                 'player' => $player
             ];
 
