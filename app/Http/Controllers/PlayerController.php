@@ -96,7 +96,11 @@ class PlayerController extends Controller
      */
     public function index(Player $player, Request $request)
     {
-        $user = Auth::user();
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
 
         // Players following
         $follows = $user->following()->select('player_id')->get();
