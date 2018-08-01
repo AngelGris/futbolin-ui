@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content-inner')
-<div class="col-md-6 zebra">
+<div class="col-md-12 zebra">
     <h3>Lesionados</h3>
     ARQ: {{ $stats['ARQ'] }} ({{ number_format($stats['ARQ'] * 100 / $stats['total'], 2) }}%) - DEF: {{ $stats['DEF'] }} ({{ number_format($stats['DEF'] * 100 / $stats['total'], 2) }}%) - MED: {{ $stats['MED'] }} ({{ number_format($stats['MED'] * 100 / $stats['total'], 2) }}%) - ATA: {{ $stats['ATA'] }} ({{ number_format($stats['ATA'] * 100 / $stats['total'], 2) }}%) - TOT: {{ $stats['total'] }}
     @foreach($players as $player)
