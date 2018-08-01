@@ -212,22 +212,55 @@ class MarketController extends Controller
     /**
      * Show user's current offers
      */
-    public function offers()
+    public function offers(Request $request)
     {
-        $user = Auth::user();
-        $players = PlayerSelling::where('best_offer_team', $user->team->id)->orderBy('updated_at', 'DESC')->paginate(30);
+        if ($request->expectsJson()) {
+            $user = Auth::guard('api')->user()->user;
+        } else {
+            $user = Auth::user();
+        }
+        $players = PlayerSelling::where('best_offer_team', $user->team->id)->orderBy('updated_at', 'DESC');
 
-        $vars = [
-            'icon'          => 'fa fa-retweet',
-            'title'         => 'Mercado de pases',
-            'subtitle'      => 'A buscar refuerzos',
-            'transferables' => $players,
-            'following'     => json_encode($user->followingList),
-            'filter'        => '',
-            'offers'        => TRUE
-        ];
+        if ($request->expectsJson()) {
+            $market = [];
+            $players = $players->get();
+            foreach ($players as $player) {
+                $pla = Player::find($player->player_id);
+                $market[] = [
+                    'id'            => $player->id,
+                    'player'    => [
+                        'id'        => $pla->id,
+                        'name'      => $pla->short_name,
+                        'position'  => $pla->position,
+                        'age'       => $pla->age,
+                        'average'   => $pla->average,
+                        'icons'     => $pla->icons,
+                        'team_id'   => $pla->team_id,
+                        'team'      => is_null($pla->team_id) ? '' : $pla->team->name
+                    ],
+                    'following'     => in_array($pla->id, $user->followingList),
+                    'value'         => $player->value,
+                    'offer_value'   => $player->best_offer_value,
+                    'offer_team'    => $player->best_offer_team,
+                    'closes_at'     => $player->closes_at->timestamp,
+                ];
+            }
+            return response()->json([
+                'market' => $market
+            ], 200);
+        } else {
+            $vars = [
+                'icon'          => 'fa fa-retweet',
+                'title'         => 'Mercado de pases',
+                'subtitle'      => 'A buscar refuerzos',
+                'transferables' => $players->paginate(30),
+                'following'     => json_encode($user->followingList),
+                'filter'        => '',
+                'offers'        => TRUE
+            ];
 
-        return view('market.index', $vars);
+            return view('market.index', $vars);
+        }
     }
 
     /**
@@ -236,7 +269,6 @@ class MarketController extends Controller
     public function transactions(Request $request)
     {
         $transactions = MarketTransaction::OrderBy('created_at', 'DESC')->paginate(30);
-
 
         if ($request->expectsJson()) {
             return response()->json($transactions, 200);
