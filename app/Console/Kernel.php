@@ -84,6 +84,44 @@ class Kernel extends ConsoleKernel
         })
         ->appendOutputTo('/var/log/futbolin/every_minute.log');
 
+        $schedule->call(function() {
+            // Generate free players
+            $generation_rate = \Config::get('constants.FREE_PLAYERS_GENERATE') * 41.67; // (41.67 = 1000 / 24)
+            $rand = mt_rand(1, 1000);
+
+            if ($rand < $generation_rate) {
+                $value = mt_rand(1, 10);
+                switch ($value) {
+                    case 1:
+                        $position = 'ARQ';
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        $position = 'DEF';
+                        break;
+                    case 5:
+                    case 6:
+                    case 7:
+                        $position = 'MED';
+                        break;
+                    default:
+                        $position = 'ATA';
+                        break;
+                }
+                $player = Player::create(NULL, $value, $position);
+
+                PlayerSelling::create([
+                    'player_id'         => $player->id,
+                    'value'             => $player->value,
+                    'best_offer_value'  => $player->value,
+                    'closes_at'         => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
+                ]);
+            }
+        })
+        ->hourly()
+        ->appendOutputTo('/var/log/futbolin/free_players.log');
+
         /**
          *  Run cron to play matches
          *  Monday, Wednesday and Friday at 8pm
@@ -211,41 +249,6 @@ class Kernel extends ConsoleKernel
                     $teams = Team::select('teams.*')->join('tournament_positions', 'teams.id', '=', 'tournament_positions.team_id')->where('teams.user_id', '>', 1)->whereIn('tournament_positions.category_id', $cats)->get();
                     foreach ($teams as $team) {
                         $team->paySalaries();
-                    }
-
-                    // Generate free players
-                    $freePlayers = Player::whereNull('team_id')->count();
-                    $diff = $teams->count() - $freePlayers;
-                    if ($diff > 0) {
-                        for ($i = 0; $i < \Config::get('constants.FREE_PLAYERS_GENERATE'); $i++) {
-                            $value = mt_rand(1, 10);
-                            switch ($value) {
-                                case 1:
-                                    $position = 'ARQ';
-                                    break;
-                                case 2:
-                                case 3:
-                                case 4:
-                                    $position = 'DEF';
-                                    break;
-                                case 5:
-                                case 6:
-                                case 7:
-                                    $position = 'MED';
-                                    break;
-                                default:
-                                    $position = 'ATA';
-                                    break;
-                            }
-                            $player = Player::create(NULL, $value, $position);
-
-                            PlayerSelling::create([
-                                'player_id'         => $player->id,
-                                'value'             => $player->value,
-                                'best_offer_value'  => $player->value,
-                                'closes_at'         => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
-                            ]);
-                        }
                     }
                 })
                 ->cron('0 20 * * 7 *')
