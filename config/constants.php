@@ -13,6 +13,7 @@ return [
     'USER_INACTIVE' => 1209600, // seconds to consider a user inactive
 
     'CURRENCY' => 'USD', // currency used to buy credits
+    'CREDITS_SELL_VALUE' => 200000, // value of credits for sell
 
     'MAX_TEAM_FUNDS' => 2000000000, // Maximum funds a team can have
     'MAX_PLAYER_VALUE' => 15000000, // Maximum player value
@@ -24,6 +25,6 @@ return [
     'TICKET_VALUE' => 10, // Value paid for each ticket
     'PLAYERS_SALARY' => 0.015, // Rate of the player value that is his salary
     'PLAYERS_TRANSFERABLE_PERIOD' => 7, // Number of days a player remains transferable
-    'FREE_PLAYERS_GENERATE' => 10, // Number of free players to generate each week
+    'FREE_PLAYERS_GENERATE' => 3, // Number of free players to generate each day
 ];
 ?>

@@ -44,7 +44,7 @@ class Player extends Model
      * @var array
      */
     protected $appends = [
-        'name', 'short_name', 'average', 'cards_count', 'suspended', 'upgraded', 'transferable', 'bladeHandlerIcons'
+        'name', 'short_name', 'cards_count', 'suspended', 'upgraded', 'transferable', 'bladeHandlerIcons'
     ];
 
     /**
@@ -197,35 +197,9 @@ class Player extends Model
         $player->number         = $number;
         $player->value          = 100000;
         $player->save();
+        $player->updateAverage();
 
         return $player;
-    }
-
-    /**
-     * Get player's average attribute
-     *
-     * @return float
-     */
-    public function getAverageAttribute()
-    {
-        switch ($this->position)
-        {
-            case 'ARQ':
-                return (int)((($this->goalkeeping * 8) + $this->passing + $this->strength) / 10);
-                break;
-            case 'DEF':
-                return (int)((($this->defending * 3) + ($this->jumping * 2) + $this->passing + $this->speed + ($this->tackling * 3)) / 10);
-                break;
-            case 'MED':
-                return (int)((($this->dribbling * 3) + ($this->passing * 3) + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
-                break;
-            case 'ATA':
-                return (int)(($this->dribbling + ($this->heading * 2) + ($this->jumping * 2) + ($this->precision * 2) + $this->speed + ($this->strength * 2)) / 10);
-                break;
-            default:
-                return (int)(($this->goalkeeping + $this->defending + $this->dribbling + $this->heading + $this->jumping + $this->passing + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
-                break;
-        }
     }
 
     /**
@@ -498,9 +472,10 @@ class Player extends Model
         $this->save();
 
         PlayerSelling::create([
-            'player_id' => $this->id,
-            'value'     => $this->value,
-            'closes_at' => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
+            'player_id'         => $this->id,
+            'value'             => $this->value,
+            'best_offer_value'  => $this->value,
+            'closes_at'         => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
         ]);
 
         return $this;
@@ -514,9 +489,10 @@ class Player extends Model
     public function startSelling()
     {
         $selling = PlayerSelling::create([
-            'player_id' => $this->id,
-            'value'     => $this->value,
-            'closes_at' => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
+            'player_id'         => $this->id,
+            'value'             => $this->value,
+            'best_offer_value'  => $this->value,
+            'closes_at'         => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
         ]);
 
         return $selling;
@@ -569,6 +545,36 @@ class Player extends Model
             $this->healed = TRUE;
         }
         $this->save();
+    }
+
+    /**
+     * Update player's average attribute
+     *
+     * @return integer
+     */
+    public function updateAverage()
+    {
+        switch ($this->position)
+        {
+            case 'ARQ':
+                $this->average = (int)((($this->goalkeeping * 8) + $this->passing + $this->strength) / 10);
+                break;
+            case 'DEF':
+                $this->average = (int)((($this->defending * 3) + ($this->jumping * 2) + $this->passing + $this->speed + ($this->tackling * 3)) / 10);
+                break;
+            case 'MED':
+                $this->average = (int)((($this->dribbling * 3) + ($this->passing * 3) + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
+                break;
+            case 'ATA':
+                $this->average = (int)(($this->dribbling + ($this->heading * 2) + ($this->jumping * 2) + ($this->precision * 2) + $this->speed + ($this->strength * 2)) / 10);
+                break;
+            default:
+                $this->average = (int)(($this->goalkeeping + $this->defending + $this->dribbling + $this->heading + $this->jumping + $this->passing + $this->precision + $this->speed + $this->strength + $this->tackling) / 10);
+                break;
+        }
+        $this->save();
+
+        return $this->average;
     }
 
     /**
@@ -654,6 +660,7 @@ class Player extends Model
             $this->last_upgrade = $last_upgrade;
             $this->last_upgraded = $_SERVER['REQUEST_TIME'];
             $this->save();
+            $this->updateAverage();
         }
     }
 }

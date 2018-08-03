@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Team;
+use App\Matches;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
-use App\Team;
-use App\Matches;
+use Storage;
 
 class MatchController extends Controller
 {
@@ -293,6 +294,11 @@ class MatchController extends Controller
             $command = escapeshellcmd('python3 ' . base_path() . '/python/play.py ' . $user->team->id . ' ' . $request->input('rival') . ' ' . $match_type . ' -1 ' . $file_name);
             exec($command, $out, $status);
             if ($status == 0) {
+                /**
+                 * Copy log to S3
+                 */
+                Storage::disk('s3')->put(env('APP_ENV') . '/logs/' . $file_name, file_get_contents(base_path() . '/python/logs/' . $file_name));
+
                 if ($api) {
                     return response()->json([
                         'rival'                 => $request->input('rival'),
@@ -344,10 +350,29 @@ class MatchController extends Controller
 
         $other_matches = DB::table('matches_rounds')->join('matches', 'matches.id', 'matches_rounds.match_id')->where('round_id', $match->round->round_id)->where('matches.id', '!=', $match->id)->pluck('matches.logfile')->all();
 
+        $aux = DB::table('tournament_positions')->select('tournament_positions.*', 'teams.name')->join('teams', 'teams.id', 'tournament_positions.team_id')->join('tournament_rounds', 'tournament_rounds.category_id', 'tournament_positions.category_id')->where('tournament_rounds.id', $match->round->round_id)->get();
+        $positions = [];
+        foreach ($aux as $pos) {
+            $positions[] = [
+                'team_id'               => $pos->team_id,
+                'team_name'             => $pos->name,
+                'base_position'         => $pos->last_position,
+                'base_points'           => $pos->last_points,
+                'base_goals_favor'      => $pos->last_goals_favor,
+                'base_goals_against'    => $pos->last_goals_against,
+                'position'              => $pos->last_position,
+                'points'                => $pos->last_points,
+                'goals_favor'           => $pos->last_goals_favor,
+                'goals_against'         => $pos->last_goals_against,
+                'goals_difference'      => $pos->last_goals_difference
+            ];
+        }
+
         $params = [
-            'title' => $match->local->name . ' - ' . $match->visit->name . ' en vivo',
-            'match' => $match,
-            'match_others' => json_encode($other_matches)
+            'title'         => $match->local->name . ' - ' . $match->visit->name . ' en vivo',
+            'match'         => $match,
+            'match_others'  => json_encode($other_matches),
+            'positions'     => json_encode($positions)
         ];
 
         return view('match.live', $params);
@@ -391,7 +416,10 @@ class MatchController extends Controller
             $local_rgb_primary = sscanf($local->primary_color, "#%02x%02x%02x");
             $visit_rgb_primary = sscanf($visit->primary_color, "#%02x%02x%02x");
 
-            $scorers = [];
+            $scorers = [
+                'local' => [],
+                'visit' => []
+            ];
             foreach ($data['scorers'] as $scorer) {
                 if ($scorer[1] == 0) {
                     $scorers['local'][] = [

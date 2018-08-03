@@ -89,7 +89,10 @@ $(function() {
             'url' : '/vivo/relato/' + item,
             'dataType' : 'json'
         }).done(function(data) {
-            $('<div class="col-sm-6 match-other"><div class="col-sm-4"><img class="svg" id="shield-' + data.local.id + '" src="' + data.local.shield_file + '" data-color-primary="' + data.local.primary_color + '" data-color-secondary="' + data.local.secondary_color + '" style="height:50px;"><div class="match-other-name">' + data.local.short_name + '</div></div><div class="col-sm-4"><span id="score-' + data.logfile.replace('.', '-') + '-local">0</span> : <span id="score-' +  data.logfile.replace('.', '-') + '-visit">0</span></div><div class="col-sm-4"><img class="svg" id="shield-' + data.visit.id + '" src="' + data.visit.shield_file + '" data-color-primary="' + data.visit.primary_color + '" data-color-secondary="' + data.visit.secondary_color + '" style="height:50px;"><div class="match-other-name">' + data.visit.short_name + '</div></div></div>').appendTo('.match-other-wrapper').hide().fadeIn(1000);
+            rivals[data.local.id] = data.visit.id;
+            rivals[data.visit.id] = data.local.id;
+
+            $('<div class="col-sm-6 match-other"><div class="col-sm-4"><img class="svg" id="shield-' + data.local.id + '" src="' + data.local.shield_file + '" data-color-primary="' + data.local.primary_color + '" data-color-secondary="' + data.local.secondary_color + '" style="height:50px;"><div class="match-other-name">' + data.local.short_name + '</div></div><div class="col-sm-4"><span id="goals-' + data.local.id + '">0</span> : <span id="goals-' + data.visit.id + '">0</span></div><div class="col-sm-4"><img class="svg" id="shield-' + data.visit.id + '" src="' + data.visit.shield_file + '" data-color-primary="' + data.visit.primary_color + '" data-color-secondary="' + data.visit.secondary_color + '" style="height:50px;"><div class="match-other-name">' + data.visit.short_name + '</div></div></div>').appendTo('#match-other-wrapper').hide().fadeIn(1000);
 
             $('img.svg').each(function(){
                 loadSVGintoIMG($(this), $(this).attr('src'));
@@ -99,11 +102,64 @@ $(function() {
                 if ($.inArray(parseInt(item[2]), [6, 19, 27]) >= 0) {
                     time = item[0].split(':');
                     time = (parseInt(time[0]) * 60) + parseInt(time[1]);
-                    other_goals.push([time, data.logfile, item[1]]);
+                    other_goals.push([time, (item[1] == 0 ? data.local.id : data.visit.id)]);
                 }
             });
+
+            updateLivePositions();
         });
     });
+
+    function updateLivePositions() {
+        // Update values in positions
+        positions.forEach(function(item, index) {
+            goals_favor = parseInt($('#goals-' + item.team_id).text());
+            goals_against = parseInt($('#goals-' + rivals[item.team_id]).text());
+            positions[index].goals_favor = positions[index].base_goals_favor + goals_favor;
+            positions[index].goals_against = positions[index].base_goals_against + goals_against;
+            positions[index].goals_difference = positions[index].goals_favor - positions[index].goals_against;
+            if (goals_favor > goals_against) {
+                positions[index].points = positions[index].base_points + 3;
+            } else if (goals_against == goals_favor) {
+                positions[index].points = positions[index].base_points + 1;
+            } else {
+                positions[index].points = positions[index].base_points;
+            }
+        });
+        // Sort positions
+        positions.sort(function(a, b) {
+            if (a.points > b.points) {
+                return -1;
+            } else if (b.points > a.points) {
+                return 1;
+            } else if (a.goals_difference > b.goals_difference) {
+                return -1;
+            } else if (b.goals_difference > a.goals_difference) {
+                return 1;
+            } else if (a.goals_favor > b.goals_favor) {
+                return -1;
+            } else if (b.goals_favor > a.goals_favor) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        // Display new positions
+        $('#live-positions').hide().empty();
+        $('<div class="col-sm-12"><div class="col-xs-2" style="font-weight:bold;text-align:center;">Pos</div><div class="col-xs-6" style="font-weight:bold;text-align:center;">Equipo</div><div class="col-xs-2" style="font-weight:bold;text-align:right;">PTS</div><div class="col-xs-2" style="font-weight:bold;text-align:right;">DG</div></div>').appendTo('#live-positions');
+        positions.forEach(function(item, index) {
+            item.position = index + 1;
+            var icon = '<span class="fa fa-chevron-right position-full-right"></span>';
+            if (item.position > item.base_position) {
+                icon = '<span class="fa fa-chevron-down position-full-down"></span>';
+            } else if (item.position < item.base_position) {
+                icon = '<span class="fa fa-chevron-up position-full-up"></span>';
+            }
+            $('<div class="col-sm-12"><div class="col-xs-2" style="text-align:right;">' + item.position + ' ' + icon + '</div><div class="col-xs-6">' + item.team_name + '</div><div class="col-xs-2" style="text-align:right;">' + item.points + '</div><div class="col-xs-2" style="text-align:right;">' + (item.goals_favor - item.goals_against) + '</div></div>').appendTo('#live-positions');
+        });
+        $('#live-positions').show();
+    }
 
     function addMarker(play, sound = true) {
         if ($.inArray(parseInt(play[3]), [6, 19, 22, 23, 24, 25, 26, 27]) >= 0) {
@@ -178,15 +234,10 @@ $(function() {
         });
     }
 
-    function score_other(id, team) {
-        field = '#score-' + id.replace('.', '-');
-        if (team == 0) {
-            field += '-local';
-        } else {
-            field += '-visit';
-        }
-
+    function score_other(id) {
+        var field = '#goals-' + id;
         $(field).hide().text(parseInt($(field).text()) + 1).fadeIn(1000);
+        updateLivePositions();
     }
 
     function start_timer() {
@@ -220,6 +271,7 @@ $(function() {
                     case 19:
                     case 27:
                         increase_stats(log_plays[plays_index][2], 'goals');
+                        updateLivePositions();
                         break;
                     case 12:
                     case 18:
@@ -265,7 +317,7 @@ $(function() {
         aux = []
         other_goals.forEach(function(item) {
             if (item[0] <= time_current) {
-                score_other(item[1], item[2]);
+                score_other(item[1]);
             } else {
                 aux.push(item);
             }

@@ -59,6 +59,14 @@ class User extends Authenticatable
     }
 
     /**
+     *
+     */
+    public function following()
+    {
+        return $this->belongsToMany(PlayerSelling::class);
+    }
+
+    /**
      * Get the team associated with the user
      *
      * @return Team
@@ -117,6 +125,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Start following a player
+     *
+     * @param integer $playerId
+     * @return boolean
+     */
+    public function followPlayer($playerSellingId)
+    {
+        $this->following()->syncWithoutDetaching([$playerSellingId]);
+    }
+
+    /**
      * Generate API token for user in a given device
      *
      * @param string $deviceId
@@ -136,6 +155,20 @@ class User extends Authenticatable
         $apiToken->save();
 
         return $apiToken->api_token;
+    }
+
+    /**
+     * Get a list of the followed players
+     */
+    public function getFollowingListAttribute()
+    {
+        $follows = $this->following()->select('player_id')->get();
+        $following = [];
+        foreach ($follows as $follow) {
+            $following[] = $follow->player_id;
+        }
+
+        return $following;
     }
 
     /**
@@ -177,6 +210,17 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token, $this));
+    }
+
+    /**
+     * Stop following a player
+     *
+     * @param integer $playerId
+     * @return boolean
+     */
+    public function unfollowPlayer($playerSellingId)
+    {
+        $this->following()->detach($playerSellingId);
     }
 
     /**

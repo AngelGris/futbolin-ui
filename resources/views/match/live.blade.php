@@ -12,6 +12,8 @@
 var match_log = '{{ $match->logfile }}';
 var match_others = {!! $match_others !!};
 var match_duration = {{ config('constants.LIVE_MATCH_DURATION') * 60 }};
+var positions = {!! $positions !!};
+var rivals = { {{ $match->local->id }} : {{ $match->visit->id }}, {{ $match->visit->id }} : {{ $match->local->id }} };
 </script>
 @endsection
 
@@ -62,9 +64,9 @@ var match_duration = {{ config('constants.LIVE_MATCH_DURATION') * 60 }};
                 <div class="col-xs-4 stats-team">{{ $match->visit->short_name }}</div>
             </div>
             <div class="col-xs-12">
-                <div class="col-xs-4 local-goals">0</div>
+                <div class="col-xs-4 local-goals goals" id="goals-{{ $match->local->id }}">0</div>
                 <div class="col-xs-4">Goles</div>
-                <div class="col-xs-4 visit-goals">0</div>
+                <div class="col-xs-4 visit-goals goals" id="goals-{{ $match->visit->id }}">0</div>
             </div>
             <div class="col-xs-12">
                 <div class="col-xs-4"><span class="local-shots">0</span> (<span class="local-shots-on-goal">0</span>)</div>
@@ -107,7 +109,11 @@ var match_duration = {{ config('constants.LIVE_MATCH_DURATION') * 60 }};
         </div>
     </div>
 </div>
-<div class="col-sm-4 match-other-wrapper">
+<div class="col-sm-4">
+    <div id="match-other-wrapper">
+    </div>
+    <div id="live-positions" class="zebra">
+    </div>
 </div>
 <div id="live-loading">
     <img src="{{ asset('img/connecting.gif') }}" style="width:60px;"><br>

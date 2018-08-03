@@ -10,6 +10,21 @@
     </div>
     @endforeach
 </div>
+<div class="modal fade" id="modal-match-loading">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Cargando resumen del partido</h4>
+            </div>
+            <div class="modal-body modal-match-result" id="modal-match-loading-content">
+                <img src="{{ asset('img/loader.gif') }}" />
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="modal-match-result">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -18,6 +33,7 @@
                 <h4 class="modal-title">Resumen del partido</h4>
             </div>
             <div class="modal-body modal-match-result" id="modal-match-result-content">
+                <img src="{{ asset('img/loader.gif') }}" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

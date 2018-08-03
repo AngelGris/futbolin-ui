@@ -86,6 +86,22 @@
                                 <span class="head-icon head-users"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                @if (count($_transferables) > 0)
+                                <li class="nav-header">Jugadores transferibles</li>
+                                @foreach ($_transferables as $player)
+                                <li>
+                                    <a href="{{ route('player', $player->id) }}">
+                                        <strong>{{ $player->number }} {{ $player->first_name }} {{ $player->last_name }}</strong>
+                                        <small>{{ $player->position }}</small><br>
+                                        @if ($player->best_offer_team)
+                                        <span>Mejor oferta: {{ formatCurrency($player->best_offer_value) }}</span>
+                                        @else
+                                        <span>SIN OFERTAS</span>
+                                        @endif
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
                                 @if (count($_suspensions) > 0)
                                 <li class="nav-header">Suspendidos</li>
                                 @foreach ($_suspensions as $player)
@@ -215,7 +231,7 @@
                                     <a href="{{ route('player', $player->id) }}">
                                         <strong>{{ $player->number }} {{ $player->first_name }} {{ $player->last_name }}</strong>
                                         <small>{{ $player->position }}</small><br>
-                                        @if ($player->best_offer_value)
+                                        @if ($player->best_offer_team)
                                         <span>Mejor oferta: {{ formatCurrency($player->best_offer_value) }}</span>
                                         @else
                                         <span>SIN OFERTAS</span>

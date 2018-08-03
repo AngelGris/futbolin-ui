@@ -1,22 +1,5 @@
 @extends('layouts.inner')
 
-@section('javascript-inner')
-<script type="text/javascript">
-$(function() {
-    updateSalary();
-
-    $('#txtValue').keyup(function() {
-        updateSalary();
-    });
-});
-
-function updateSalary() {
-    var value = parseInt($('#txtValue').val() * {{ \Config::get('constants.PLAYERS_SALARY') }});
-    $('#player-salary').html(value);
-}
-</script>
-@endsection
-
 @section('content-inner')
 @if ($player->team && $player->treatable && $player->team->id == $_team->id)
 <h3>{{ $player->number }} - {!! $player->name !!} <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-treatment">Tratar jugador</button></h3>
@@ -32,23 +15,19 @@ function updateSalary() {
     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-free">Dejar libre</button>
 @elseif (!empty($player->selling->id))
     <br>
-    @if ($player->selling->best_offer_value > 0)
+    @if ($player->selling->best_offer_team)
     Mejor oferta: {{ formatCurrency($player->selling->best_offer_value) }} ({{ $player->selling->offeringTeam->name }})
     @else
     SIN OFERTAS
     @endif
     @if (!$player->team || $player->team->id != $_team->id)
-    <button class="btn btn-primary btn-sm btn-offer" data-toggle="modal" data-target="#modal-make-offer">Ofertar</button>
+    <button class="btn btn-primary btn-sm btn-offer" data-transfer="{{ $player->selling->id }}" data-id="{{ $player->id }}" data-name="{{ $player->first_name . ' ' . $player->last_name }}" data-value="{{ $player->selling->offer_value + 1 }}" data-offer="{{ (int)($player->selling->offer_value * 1.05) }}">Ofertar</button>
     @endif
     <br>Transferible hasta el {{ $player->selling->closes_at->format('d/m/Y H:i') }}
 @endif
 </h4>
 <div class="col-xs-12 col-sm-6 col-md-3 zebra">
-    <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Energía</label>
-        <div class="col-xs-3">{{ $player->stamina }}</div>
-    </div>
-    @foreach (['Arquero' => 'goalkeeping', 'Defensa' => 'defending', 'Gambeta' => 'dribbling', 'Cabeceo' => 'heading', 'Salto' => 'jumping', 'Pase' => 'passing', 'Precisión' => 'precision', 'Velocidad' => 'speed', 'Fuerza' => 'strength', 'Quite' => 'tackling'] as $k => $v)
+    @foreach (['Media' => 'average', 'Arquero' => 'goalkeeping', 'Defensa' => 'defending', 'Gambeta' => 'dribbling', 'Cabeceo' => 'heading', 'Salto' => 'jumping', 'Pase' => 'passing', 'Precisión' => 'precision', 'Velocidad' => 'speed', 'Fuerza' => 'strength', 'Quite' => 'tackling'] as $k => $v)
     <div class="col-xs-12">
         <label class="col-xs-9 control-label">{{ $k }}</label>
         <div class="col-xs-3">
@@ -60,6 +39,10 @@ function updateSalary() {
         </div>
     </div>
     @endforeach
+    <div class="col-xs-12">
+        <label class="col-xs-9 control-label">Energía</label>
+        <div class="col-xs-3">{{ $player->stamina }}</div>
+    </div>
     <div class="col-xs-12">
         <label class="col-xs-9 control-label">Experiencia</label>
         <div class="col-xs-3">{{ $player->experience }}</div>
@@ -192,40 +175,6 @@ function updateSalary() {
 @endif
 @endif
 @if (!empty($player->selling->id) && (!$player->team || $player->team->id != $_team->id))
-<div class="modal fade" id="modal-make-offer" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post" action="{{ route('player.offer') }}">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Hacer oferta</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Hacer una oferta por <strong>{{ $player->first_name }} {{ $player->last_name }}</strong></p>
-                    <p>La oferta tiene que ser superior a {{ formatCurrency($player->selling->offer_value) }}</p>
-                    <div class="col-sm-12">
-                        <div class="col-sm-5">
-                            <label for="modal-make-offer-input">Valor de la oferta</label>
-                        </div>
-                        <div class="col-sm-7">
-                            <input type="text" name="offer" id="txtValue" value="{{ (int)($player->selling->offer_value * 1.05) }}" />
-                        </div>
-                        <div class="col-sm-5">
-                            <label>Salario</label>
-                        </div>
-                        <div class="col-sm-7"><span id="player-salary"></span></div>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-                <div class="modal-footer">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="player_id" id="modal-make-offer-player-id" value="{{ $player->id }}">
-                    <button id="buy-item" class="btn btn-primary">Ofertar</button>
-                    <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+@include('modules.modals.marketoffer')
 @endif
 @endsection

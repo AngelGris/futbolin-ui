@@ -31,7 +31,19 @@ class PlayerController extends Controller
 
     public function injuries($domain, \App\Team $team)
     {
-        return view('admin.player.injuries', ['players' => Player::where('recovery', '>', 0)->orderBy('recovery')->get()]);
+        $injury_positions = DB::table('players')->selectRaw('position, COUNT(*) as count')->where('recovery', '>', 0)->groupBy('position')->get();
+        $injury_stats = ['ARQ' => 0, 'DEF' => 0, 'MED' => 0, 'ATA' => 0];
+        $total = 0;
+        foreach($injury_positions as $row) {
+            $injury_stats[$row->position] = $row->count;
+            $total += $row->count;
+        }
+        $injury_stats['total'] = $total;
+
+        return view('admin.player.injuries', [
+            'stats'     => $injury_stats,
+            'players'   => Player::where('recovery', '>', 0)->orderBy('recovery')->get()
+        ]);
     }
 
     public function retiring()

@@ -47,13 +47,16 @@ $(function() {
 
     $('.load-match').click(function(event) {
         event.preventDefault();
+        $('#modal-match-loading').modal('show');
 
         $.ajax({
             'method' : 'GET',
             'url' : '{{ route('match.load') }}',
             'data' : {file : $(this).data('filename'), show_remaining : false, _token : '{{ csrf_token() }}'},
         }).done(function(data){
-            refreshResultModal(data);
+            $('#modal-match-loading').on('hidden.bs.modal', function () {
+                refreshResultModal(data);
+            }).modal('hide');
         });
     });
 });
@@ -186,6 +189,21 @@ function movePager(id) {
             @endforeach
         </tbody>
     </table>
+</div>
+<div class="modal fade" id="modal-match-loading">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Cargando resumen del partido</h4>
+            </div>
+            <div class="modal-body modal-match-result" id="modal-match-loading-content">
+                <img src="{{ asset('img/loader.gif') }}" />
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal fade" id="modal-match-result">
     <div class="modal-dialog">

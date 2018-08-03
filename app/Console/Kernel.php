@@ -8,6 +8,7 @@ use App\PlayerSelling;
 use App\Team;
 use App\TeamFundMovement;
 use App\Tournament;
+use App\TournamentCategory;
 use App\TournamentPosition;
 use App\TournamentRound;
 use App\Notification;
@@ -16,6 +17,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Storage;
 
 class Kernel extends ConsoleKernel
 {
@@ -82,6 +84,44 @@ class Kernel extends ConsoleKernel
         })
         ->appendOutputTo('/var/log/futbolin/every_minute.log');
 
+        $schedule->call(function() {
+            // Generate free players
+            $generation_rate = \Config::get('constants.FREE_PLAYERS_GENERATE') * 41.67; // (41.67 = 1000 / 24)
+            $rand = mt_rand(1, 1000);
+
+            if ($rand < $generation_rate) {
+                $value = mt_rand(1, 10);
+                switch ($value) {
+                    case 1:
+                        $position = 'ARQ';
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        $position = 'DEF';
+                        break;
+                    case 5:
+                    case 6:
+                    case 7:
+                        $position = 'MED';
+                        break;
+                    default:
+                        $position = 'ATA';
+                        break;
+                }
+                $player = Player::create(NULL, $value, $position);
+
+                PlayerSelling::create([
+                    'player_id'         => $player->id,
+                    'value'             => $player->value,
+                    'best_offer_value'  => $player->value,
+                    'closes_at'         => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
+                ]);
+            }
+        })
+        ->hourly()
+        ->appendOutputTo('/var/log/futbolin/free_players.log');
+
         /**
          *  Run cron to play matches
          *  Monday, Wednesday and Friday at 8pm
@@ -121,6 +161,16 @@ class Kernel extends ConsoleKernel
                     }
                 })
                 ->after(function() {
+                    /**
+                     * Copy logs to S3
+                     */
+                    $logs = DB::table('matches')->select('logfile')->where('created_at', '>=', Carbon::now()->subMinutes(10))->get();
+                    foreach ($logs as $log) {
+                        if (!Storage::disk('s3')->exists(env('APP_ENV') . '/logs/' . $log->logfile)) {
+                            Storage::disk('s3')->put(env('APP_ENV') . '/logs/' . $log->logfile, file_get_contents(base_path() . '/python/logs/' . $log->logfile));
+                        }
+                    }
+
                     /**
                      * Upgrade players
                      */
@@ -188,44 +238,17 @@ class Kernel extends ConsoleKernel
          * Run weekly team maintenance
          */
         $schedule->call(function() {
-                    // Pay salaries
-                    $teams = Team::where('id', '>=', 27)->get();
+                    // Pay salaries to teams in tournaments
+                    $categories = DB::table('tournament_categories')->select('id')->where('tournament_id', function($query) {
+                        $query->from('tournament_categories')->selectRaw('MAX(tournament_id)');
+                    })->get();
+                    $cats = [];
+                    foreach ($categories as $category) {
+                        $cats[] = $category->id;
+                    }
+                    $teams = Team::select('teams.*')->join('tournament_positions', 'teams.id', '=', 'tournament_positions.team_id')->where('teams.user_id', '>', 1)->whereIn('tournament_positions.category_id', $cats)->get();
                     foreach ($teams as $team) {
                         $team->paySalaries();
-                    }
-
-                    // Generate free players
-                    $freePlayers = Player::whereNull('team_id')->count();
-                    $diff = $teams->count() - $freePlayers;
-                    if ($diff > 0) {
-                        for ($i = 0; $i < \Config::get('constants.FREE_PLAYERS_GENERATE'); $i++) {
-                            $value = mt_rand(1, 10);
-                            switch ($value) {
-                                case 1:
-                                    $position = 'ARQ';
-                                    break;
-                                case 2:
-                                case 3:
-                                case 4:
-                                    $position = 'DEF';
-                                    break;
-                                case 5:
-                                case 6:
-                                case 7:
-                                    $position = 'MED';
-                                    break;
-                                default:
-                                    $position = 'ATA';
-                                    break;
-                            }
-                            $player = Player::create(NULL, $value, $position);
-
-                            PlayerSelling::create([
-                                'player_id' => $player->id,
-                                'value'     => $player->value,
-                                'closes_at' => Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))
-                            ]);
-                        }
                     }
                 })
                 ->cron('0 20 * * 7 *')
@@ -234,8 +257,8 @@ class Kernel extends ConsoleKernel
         /**
          * Delete old matches log files
          */
-        $schedule->exec('find ' . base_path() . '/python/logs/ -type f -mtime +90 -name \'*.log\' -delete')
-                ->monthly()
+        $schedule->exec('find ' . base_path() . '/python/logs/ -type f -mtime +30 -name \'*.log\' -delete')
+                ->daily()
                 ->appendOutputTo('/var/log/futbolin/old-logs.log');
     }
 

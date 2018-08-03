@@ -1,3 +1,10 @@
+div.market-filters {
+    background-color: #ddd;
+    border-radius: 10px;
+    height: 100px;
+    margin: 10px;
+}
+
 table.table-transferables td {
     line-height: 25px !important;
 }

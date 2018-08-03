@@ -20,7 +20,11 @@ Route::group(['middleware' => ['auth.api', 'liveMatch']], function() {
 
     Route::group(['prefix' => 'market'], function() {
         Route::get('/', 'MarketController@listing');
+        Route::post('/follow', 'MarketController@follow');
+        Route::get('/following', 'MarketController@following');
+        Route::get('/offers', 'MarketController@offers');
         Route::get('/transactions', 'MarketController@transactions');
+        Route::post('/unfollow', 'MarketController@unfollow');
     });
 
     Route::group(['prefix' => 'match'], function() {
