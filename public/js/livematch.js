@@ -162,7 +162,7 @@ $(function() {
     }
 
     function addMarker(play, sound = true) {
-        if ($.inArray(parseInt(play[3]), [6, 19, 22, 23, 24, 25, 26, 27]) >= 0) {
+        if ($.inArray(parseInt(play[3]), [6, 19, 22, 23, 24, 25, 26, 27, 31]) >= 0) {
             switch (play[3]) {
                 case 6:
                 case 19:
@@ -187,7 +187,10 @@ $(function() {
                     icon = 'fa-square fa-square-red'
                     player = $('#jplayer-whistle');
                     break;
-
+                case 31:
+                    icon = 'fa-square fa-dot-circle-o'
+                    player = $('#jplayer-whistle');
+                    break;
             }
             $('<span class="fa ' + icon + '" style="left:' + (play[0] * 100 / time_total) + '%" title="' + play[1] + ' - ' + play[4] + '" data-toggle="tooltip" data-placement="top"></span>').appendTo("#timeline-markers").hide().fadeIn(1000).tooltip();
             if (sound && player) {
@@ -262,9 +265,10 @@ $(function() {
         while(plays_index < log_plays.length && log_plays[plays_index][0] <= time_current) {
             broadcast(log_plays[plays_index]);
 
-            if ($.inArray(parseInt(log_plays[plays_index][3]), [4, 6, 11, 12, 17, 18, 19, 22, 23, 24, 25, 26, 27]) >= 0) {
+            if ($.inArray(parseInt(log_plays[plays_index][3]), [4, 6, 11, 12, 17, 18, 19, 22, 23, 24, 25, 26, 27, 31]) >= 0) {
                 switch (log_plays[plays_index][3]) {
                     case 4:
+                    case 31:
                         increase_stats((log_plays[plays_index][2] + 1) % 2, 'fouls');
                         break;
                     case 6:
