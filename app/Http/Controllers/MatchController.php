@@ -401,9 +401,25 @@ class MatchController extends Controller
         $matches = DB::table('matches_rounds')->join('matches', 'matches.id', 'matches_rounds.match_id')->where('round_id', $match->round->round_id)->where('matches.id', '!=', $match->id)->pluck('matches.logfile')->all();
         array_unshift($matches, $match->logfile);
 
+        $aux = DB::table('tournament_positions')->select('tournament_positions.*', 'teams.name', 'teams.short_name')->join('teams', 'teams.id', 'tournament_positions.team_id')->join('tournament_rounds', 'tournament_rounds.category_id', 'tournament_positions.category_id')->where('tournament_rounds.id', $match->round->round_id)->orderBy('last_position')->get();
+        $positions = [];
+        foreach ($aux as $pos) {
+            $positions[] = [
+                'team_id'               => $pos->team_id,
+                'team_name'             => $pos->name,
+                'team_short_name'       => $pos->short_name,
+                'position'              => $pos->last_position,
+                'points'                => $pos->last_points,
+                'goals_favor'           => $pos->last_goals_favor,
+                'goals_against'         => $pos->last_goals_against,
+                'goals_difference'      => $pos->last_goals_difference
+            ];
+        }
+
         $output = [
             'category_name' => $match->category->name,
-            'round_number'  => $match->round->number
+            'round_number'  => $match->round->number,
+            'positions'     => $positions
         ];
         foreach ($matches as $logfile) {
             $data = getMatchLog($logfile);
