@@ -74,7 +74,7 @@ class Kernel extends ConsoleKernel
                     ]);
                     $selling->delete();
                 } elseif ($selling->created_at > Carbon::now()->subWeeks(4)) {
-                    $selling->closes_at = Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))->subMinute();
+                    $selling->closes_at = Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'));
                     $selling->save();
                 } else {
                     $selling->player->delete();
