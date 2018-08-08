@@ -131,6 +131,10 @@ h4.assistance {
     top: 10px;
 }
 
+#match-other-tab {
+    display: none;
+}
+
 .match-other {
     font-size: 16px;
     padding: 10px 0;
@@ -144,6 +148,14 @@ h4.assistance {
 .match-other>div:nth-child(2) {
     font-size: 24px;
     line-height: 50px;
+}
+
+.live-positions-name {
+    display: block;
+}
+
+.live-positions-shortname {
+    display: none;
 }
 
 #live-loading {
@@ -200,7 +212,44 @@ h4.assistance {
 
 @media screen and (max-width: 767px) {
     .match-other-wrapper {
+        background: #fff;
+        height: 50%;
+        padding: 0;
+        position: fixed;
+        top: 100%;
+    }
+
+    #match-other-tab {
+        background: #fff;
+        border: solid 1px #888;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+        display: block;
+        height: 20px;
+        margin: auto;
+        cursor: pointer;
+        position: relative;
+        text-align: center;
+        top: -19px;
+        width: 60px;
+    }
+
+    #match-other-scroll {
+        height: 100%;
+        margin-top: -20px;
+        overflow: auto;
+    }
+
+    #match-other-wrapper {
+        border-top: solid 1px #888;
+    }
+
+    .live-positions-name {
         display: none;
+    }
+
+    .live-positions-shortname {
+        display: block;
     }
 }
 

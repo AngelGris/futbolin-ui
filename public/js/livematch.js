@@ -92,7 +92,7 @@ $(function() {
             rivals[data.local.id] = data.visit.id;
             rivals[data.visit.id] = data.local.id;
 
-            $('<div class="col-sm-6 match-other"><div class="col-sm-4"><img class="svg" id="shield-' + data.local.id + '" src="' + data.local.shield_file + '" data-color-primary="' + data.local.primary_color + '" data-color-secondary="' + data.local.secondary_color + '" style="height:50px;"><div class="match-other-name">' + data.local.short_name + '</div></div><div class="col-sm-4"><span id="goals-' + data.local.id + '">0</span> : <span id="goals-' + data.visit.id + '">0</span></div><div class="col-sm-4"><img class="svg" id="shield-' + data.visit.id + '" src="' + data.visit.shield_file + '" data-color-primary="' + data.visit.primary_color + '" data-color-secondary="' + data.visit.secondary_color + '" style="height:50px;"><div class="match-other-name">' + data.visit.short_name + '</div></div></div>').appendTo('#match-other-wrapper').hide().fadeIn(1000);
+            $('<div class="col-xs-6 match-other"><div class="col-xs-4"><img class="svg" id="shield-' + data.local.id + '" src="' + data.local.shield_file + '" data-color-primary="' + data.local.primary_color + '" data-color-secondary="' + data.local.secondary_color + '" style="height:50px;"><div class="match-other-name">' + data.local.short_name + '</div></div><div class="col-xs-4"><span id="goals-' + data.local.id + '">0</span> : <span id="goals-' + data.visit.id + '">0</span></div><div class="col-xs-4"><img class="svg" id="shield-' + data.visit.id + '" src="' + data.visit.shield_file + '" data-color-primary="' + data.visit.primary_color + '" data-color-secondary="' + data.visit.secondary_color + '" style="height:50px;"><div class="match-other-name">' + data.visit.short_name + '</div></div></div>').appendTo('#match-other-wrapper').hide().fadeIn(1000);
 
             $('img.svg').each(function(){
                 loadSVGintoIMG($(this), $(this).attr('src'));
@@ -108,6 +108,10 @@ $(function() {
 
             updateLivePositions();
         });
+    });
+
+    $('#match-other-tab').click(function() {
+        $('.match-other-wrapper').animate({'top' : '50%'}, 1000);
     });
 
     function updateLivePositions() {
@@ -147,7 +151,7 @@ $(function() {
 
         // Display new positions
         $('#live-positions').hide().empty();
-        $('<div class="col-sm-12"><div class="col-xs-2" style="font-weight:bold;text-align:center;">Pos</div><div class="col-xs-6" style="font-weight:bold;text-align:center;">Equipo</div><div class="col-xs-2" style="font-weight:bold;text-align:right;">PTS</div><div class="col-xs-2" style="font-weight:bold;text-align:right;">DG</div></div>').appendTo('#live-positions');
+        $('<div class="col-xs-12"><div class="col-xs-3 col-sm-2" style="font-weight:bold;text-align:center;">Pos</div><div class="col-xs-5 col-sm-6" style="font-weight:bold;text-align:center;">Equipo</div><div class="col-xs-2" style="font-weight:bold;text-align:right;">PTS</div><div class="col-xs-2" style="font-weight:bold;text-align:right;">DG</div><div class="clear"></div></div>').appendTo('#live-positions');
         positions.forEach(function(item, index) {
             item.position = index + 1;
             var icon = '<span class="fa fa-chevron-right position-full-right"></span>';
@@ -156,7 +160,7 @@ $(function() {
             } else if (item.position < item.base_position) {
                 icon = '<span class="fa fa-chevron-up position-full-up"></span>';
             }
-            $('<div class="col-sm-12"><div class="col-xs-2" style="text-align:right;">' + item.position + ' ' + icon + '</div><div class="col-xs-6">' + item.team_name + '</div><div class="col-xs-2" style="text-align:right;">' + item.points + '</div><div class="col-xs-2" style="text-align:right;">' + (item.goals_favor - item.goals_against) + '</div></div>').appendTo('#live-positions');
+            $('<div class="col-xs-12"><div class="col-xs-3 col-sm-2" style="text-align:right;">' + item.position + ' ' + icon + '</div><div class="col-xs-5 col-sm-6"><span class="live-positions-name">' + item.team_name + '</span><span class="live-positions-shortname">' + item.team_short_name + '</span></div><div class="col-xs-2" style="text-align:right;">' + item.points + '</div><div class="col-xs-2" style="text-align:right;">' + (item.goals_favor - item.goals_against) + '</div><div class="clear"></div></div>').appendTo('#live-positions');
         });
         $('#live-positions').show();
     }

@@ -109,10 +109,13 @@ var rivals = { {{ $match->local->id }} : {{ $match->visit->id }}, {{ $match->vis
         </div>
     </div>
 </div>
-<div class="col-sm-4">
-    <div id="match-other-wrapper">
-    </div>
-    <div id="live-positions" class="zebra">
+<div class="col-sm-4 match-other-wrapper">
+    <div id="match-other-tab">TAB</div>
+    <div id="match-other-scroll">
+        <div id="match-other-wrapper">
+        </div>
+        <div id="live-positions" class="zebra">
+        </div>
     </div>
 </div>
 <div id="live-loading">
