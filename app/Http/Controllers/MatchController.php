@@ -468,7 +468,7 @@ class MatchController extends Controller
             $output['matches'][] = [
                 'assistance'            => empty($data['assistance']) ? 0 : (int)$data['assistance'],
                 'incomes'               => empty($data['incomes']) ? 0 : (int)$data['incomes'],
-                'datetime'              => $data['timestamp'],
+                'datetime'              => $match->created_at->timestamp,
                 'stadium'               => $data['stadium'],
                 'local' => [
                     'name'              => $local->name,
