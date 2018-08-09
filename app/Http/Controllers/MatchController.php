@@ -453,7 +453,7 @@ class MatchController extends Controller
 
             $plays = [];
             foreach ($data['plays'] as $play) {
-                if (in_array($play[2], [1, 2, 5, 6, 7, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34])) {
+                if (in_array($play[2], [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 14, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34])) {
                     $plays[] = [
                         'type'          => $play[2],
                         'team'          => $play[1],
