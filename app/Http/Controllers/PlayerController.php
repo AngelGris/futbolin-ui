@@ -199,7 +199,9 @@ class PlayerController extends Controller
             }
         }
 
-        if (!$user->team->canHire) {
+        $selling = PlayerSelling::where('player_id', $player->id)->first();
+
+        if ($selling->best_offer_team != $user->team->id && !$user->team->canHire) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
@@ -213,9 +215,7 @@ class PlayerController extends Controller
             }
         }
 
-        $selling = PlayerSelling::where('player_id', $player->id)->first();
-
-        if ($selling->best_offer_team) {
+        if ($selling->best_offer_team && $selling->best_offer_team != $user->team->id) {
             // Notify team with previous offer
             Notification::create([
                 'user_id' => $selling->offeringTeam->user->id,
