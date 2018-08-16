@@ -194,7 +194,7 @@ class Team extends Model
      */
     public function getCanHireAttribute()
     {
-        return (\Config::get('constants.MAX_TEAM_PLAYERS') - $this->players()->leftJoin('player_sellings', 'players.id', '=', 'player_sellings.player_id')->whereNull('player_sellings.id')->count()) > 0;
+        return (\Config::get('constants.MAX_TEAM_PLAYERS') - $this->players()->count() - DB::table('player_sellings')->where('best_offer_team', $this->id)->count()) > 0;
     }
 
     /**
