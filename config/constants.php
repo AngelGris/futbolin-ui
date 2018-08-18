@@ -24,7 +24,7 @@ return [
     'STADIUM_SIZE' => 20000, // Stadium capacity
     'TICKET_VALUE' => 10, // Value paid for each ticket
     'PLAYERS_SALARY' => 0.015, // Rate of the player value that is his salary
-    'PLAYERS_TRANSFERABLE_PERIOD' => 7, // Number of days a player remains transferable
+    'PLAYERS_TRANSFERABLE_PERIOD' => 3, // Number of days a player remains transferable
     'FREE_PLAYERS_GENERATE' => 3, // Number of free players to generate each day
 ];
 ?>

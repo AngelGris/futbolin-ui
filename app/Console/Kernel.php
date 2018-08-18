@@ -73,7 +73,7 @@ class Kernel extends ConsoleKernel
                         'message' => 'No has podido vender a <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->first_name . ' ' . $selling->player->last_name . '</a> y continua a disposición de tu cuerpo técnico.',
                     ]);
                     $selling->delete();
-                } elseif ($selling->created_at > Carbon::now()->subWeeks(4)) {
+                } elseif ($selling->created_at > Carbon::now()->subWeeks(2)) {
                     $selling->closes_at = Carbon::now()->addDays(\Config::get('constants.PLAYERS_TRANSFERABLE_PERIOD'))->subMinute();
                     $selling->save();
                 } else {
