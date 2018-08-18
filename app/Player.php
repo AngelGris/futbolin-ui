@@ -582,9 +582,9 @@ class Player extends Model
      *
      * @return void
      */
-    public function upgrade()
+    public function upgrade($force = FALSE)
     {
-        if ($this->experience >= 100) {
+        if ($force || $this->experience >= 100) {
             $points = 0;
             $age_limit = 7;
             $age_diff = $this->age - 17;
@@ -656,7 +656,9 @@ class Player extends Model
                 }
             }
 
-            $this->experience -= 100;
+            if (!$force) {
+                $this->experience -= 100;
+            }
             $this->last_upgrade = $last_upgrade;
             $this->last_upgraded = $_SERVER['REQUEST_TIME'];
             $this->save();
