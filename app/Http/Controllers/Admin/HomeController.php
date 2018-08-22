@@ -127,33 +127,49 @@ class HomeController extends Controller
             $teams_energy[] = [$k, $v];
         }
 
+        $stats_date = Carbon::create(2018, 8, 22, 0, 0, 0);
         $match_stats = [
             'friendly' => [
-                'total'         => Matches::where('type_id', 2)->count(),
-                'local'         => Matches::where('type_id', 2)->where('winner', 1)->count(),
-                'tied'          => Matches::where('type_id', 2)->where('winner', 0)->count(),
-                'visit'         => Matches::where('type_id', 2)->where('winner', 2)->count(),
-                'goals_local'   => Matches::where('type_id', 2)->where('winner', 1)->sum('local_goals'),
-                'goals_visit'   => Matches::where('type_id', 2)->where('winner', 1)->sum('visit_goals'),
+                'total'         => Matches::where('type_id', 2)->where('created_at', '>', $stats_date)->count(),
+                'local'         => Matches::where('type_id', 2)->where('created_at', '>', $stats_date)->where('winner', 1)->count(),
+                'tied'          => Matches::where('type_id', 2)->where('created_at', '>', $stats_date)->where('winner', 0)->count(),
+                'visit'         => Matches::where('type_id', 2)->where('created_at', '>', $stats_date)->where('winner', 2)->count(),
+                'goals_local'   => Matches::where('type_id', 2)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('local_goals'),
+                'goals_visit'   => Matches::where('type_id', 2)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('visit_goals'),
             ],
             'official' => [
-                'total'         => Matches::where('type_id', 1)->count(),
-                'local'         => Matches::where('type_id', 1)->where('winner', 1)->count(),
-                'tied'          => Matches::where('type_id', 1)->where('winner', 0)->count(),
-                'visit'         => Matches::where('type_id', 1)->where('winner', 2)->count(),
-                'goals_local'   => Matches::where('type_id', 1)->where('winner', 1)->sum('local_goals'),
-                'goals_visit'   => Matches::where('type_id', 1)->where('winner', 1)->sum('visit_goals')
+                'total'         => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->count(),
+                'local'         => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 1)->count(),
+                'tied'          => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 0)->count(),
+                'visit'         => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 2)->count(),
+                'goals_local'   => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('local_goals'),
+                'goals_visit'   => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('visit_goals')
             ]
         ];
 
-        $match_stats['friendly']['local_per'] = number_format($match_stats['friendly']['local'] * 100 / $match_stats['friendly']['total'], 2);
-        $match_stats['friendly']['tied_per'] = number_format($match_stats['friendly']['tied'] * 100 / $match_stats['friendly']['total'], 2);
-        $match_stats['friendly']['visit_per'] = number_format($match_stats['friendly']['visit'] * 100 / $match_stats['friendly']['total'], 2);
-        $match_stats['friendly']['goals_diff'] = $match_stats['friendly']['goals_local'] - $match_stats['friendly']['goals_visit'];
-        $match_stats['official']['local_per'] = number_format($match_stats['official']['local'] * 100 / $match_stats['official']['total'], 2);
-        $match_stats['official']['tied_per'] = number_format($match_stats['official']['tied'] * 100 / $match_stats['official']['total'], 2);
-        $match_stats['official']['visit_per'] = number_format($match_stats['official']['visit'] * 100 / $match_stats['official']['total'], 2);
-        $match_stats['official']['goals_diff'] = $match_stats['official']['goals_local'] - $match_stats['official']['goals_visit'];
+        if ($match_stats['friendly']['total'] > 0) {
+            $match_stats['friendly']['local_per'] = number_format($match_stats['friendly']['local'] * 100 / $match_stats['friendly']['total'], 2);
+            $match_stats['friendly']['tied_per'] = number_format($match_stats['friendly']['tied'] * 100 / $match_stats['friendly']['total'], 2);
+            $match_stats['friendly']['visit_per'] = number_format($match_stats['friendly']['visit'] * 100 / $match_stats['friendly']['total'], 2);
+            $match_stats['friendly']['goals_diff'] = $match_stats['friendly']['goals_local'] - $match_stats['friendly']['goals_visit'];
+        } else {
+            $match_stats['friendly']['local_per'] = number_format(0, 2);
+            $match_stats['friendly']['tied_per'] = number_format(0, 2);
+            $match_stats['friendly']['visit_per'] = number_format(0, 2);
+            $match_stats['friendly']['goals_diff'] = 0;
+        }
+
+        if ($match_stats['official']['total'] > 0) {
+            $match_stats['official']['local_per'] = number_format($match_stats['official']['local'] * 100 / $match_stats['official']['total'], 2);
+            $match_stats['official']['tied_per'] = number_format($match_stats['official']['tied'] * 100 / $match_stats['official']['total'], 2);
+            $match_stats['official']['visit_per'] = number_format($match_stats['official']['visit'] * 100 / $match_stats['official']['total'], 2);
+            $match_stats['official']['goals_diff'] = $match_stats['official']['goals_local'] - $match_stats['official']['goals_visit'];
+        } else {
+            $match_stats['official']['local_per'] = number_format(0, 2);
+            $match_stats['official']['tied_per'] = number_format(0, 2);
+            $match_stats['official']['visit_per'] = number_format(0, 2);
+            $match_stats['official']['goals_diff'] = 0;
+        }
 
         $match_stats['total'] = [
             'total'         => $match_stats['friendly']['total'] + $match_stats['official']['total'],

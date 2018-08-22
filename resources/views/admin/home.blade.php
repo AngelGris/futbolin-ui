@@ -337,6 +337,48 @@ $(function(){
         <div class="col-xs-1">{{ $match_stats['total']['goals_visit']}}</div>
         <div class="col-xs-1">{{ $match_stats['total']['goals_diff']}}</div>
     </div>
+    <h3>Estadísticas de partidos (anteriores)</h3>
+    <div class="col-xs-12">
+        <div class="col-xs-1">Tipo</div>
+        <div class="col-xs-2">Total</div>
+        <div class="col-xs-2">Local</div>
+        <div class="col-xs-2">Empate</div>
+        <div class="col-xs-2">Visita</div>
+        <div class="col-xs-1">Gol local</div>
+        <div class="col-xs-1">Gol visita</div>
+        <div class="col-xs-1">Dif.</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-1">Oficiales</div>
+        <div class="col-xs-2">3878</div>
+        <div class="col-xs-2">2890 (74.52%)</div>
+        <div class="col-xs-2">672 (17.33%)</div>
+        <div class="col-xs-2">316 (8.15%)</div>
+        <div class="col-xs-1">8523</div>
+        <div class="col-xs-1">864</div>
+        <div class="col-xs-1">7659</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-1">Amistosos</div>
+        <div class="col-xs-2">24242</div>
+        <div class="col-xs-2">14019 (57.83%)
+    </div>
+        <div class="col-xs-2">4263 (17.59%)</div>
+        <div class="col-xs-2">5960 (24.59%)</div>
+        <div class="col-xs-1">47160</div>
+        <div class="col-xs-1">9658</div>
+        <div class="col-xs-1">37502</div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-1">Total</div>
+        <div class="col-xs-2">28120</div>
+        <div class="col-xs-2">16909 (60.13%)</div>
+        <div class="col-xs-2">4935 (17.55%)</div>
+        <div class="col-xs-2">6276 (22.32%)</div>
+        <div class="col-xs-1">55683</div>
+        <div class="col-xs-1">10522</div>
+        <div class="col-xs-1">45161</div>
+    </div>
 </div>
 <div id="home-last-matches" class="col-md-6 zebra">
     <h3>Últimos partidos</h3>
