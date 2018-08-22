@@ -258,7 +258,7 @@ class Kernel extends ConsoleKernel
         /**
          * Delete old matches log files
          */
-        $schedule->exec('find ' . base_path() . '/python/logs/ -type f -mtime +30 -name \'*.log\' -delete')
+        $schedule->exec('find ' . base_path() . '/python/logs/ -type f -mtime +1 -name \'*.log\' -delete')
                 ->daily()
                 ->appendOutputTo('/var/log/futbolin/old-logs.log');
     }
