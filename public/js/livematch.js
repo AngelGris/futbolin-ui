@@ -269,7 +269,7 @@ $(function() {
         while(plays_index < log_plays.length && log_plays[plays_index][0] <= time_current) {
             broadcast(log_plays[plays_index]);
 
-            if ($.inArray(parseInt(log_plays[plays_index][3]), [4, 6, 11, 12, 17, 18, 19, 22, 23, 24, 25, 26, 27, 31]) >= 0) {
+            if ($.inArray(parseInt(log_plays[plays_index][3]), [4, 6, 11, 12, 17, 18, 19, 22, 23, 24, 25, 26, 27, 31, 32, 33]) >= 0) {
                 switch (log_plays[plays_index][3]) {
                     case 4:
                     case 31:
@@ -283,9 +283,11 @@ $(function() {
                         break;
                     case 12:
                     case 18:
+                    case 33:
                         increase_stats(log_plays[plays_index][2], 'shots-on-goal');
                     case 11:
                     case 17:
+                    case 32:
                         increase_stats(log_plays[plays_index][2], 'shots');
                         break;
                     case 22:
