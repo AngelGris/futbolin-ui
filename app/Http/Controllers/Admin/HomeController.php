@@ -138,12 +138,12 @@ class HomeController extends Controller
                 'goals_visit'   => Matches::where('type_id', 2)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('visit_goals'),
             ],
             'official' => [
-                'total'         => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->count(),
-                'local'         => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 1)->count(),
-                'tied'          => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 0)->count(),
-                'visit'         => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 2)->count(),
-                'goals_local'   => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('local_goals'),
-                'goals_visit'   => Matches::where('type_id', 1)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('visit_goals')
+                'total'         => Matches::where('type_id', 3)->where('created_at', '>', $stats_date)->count(),
+                'local'         => Matches::where('type_id', 3)->where('created_at', '>', $stats_date)->where('winner', 1)->count(),
+                'tied'          => Matches::where('type_id', 3)->where('created_at', '>', $stats_date)->where('winner', 0)->count(),
+                'visit'         => Matches::where('type_id', 3)->where('created_at', '>', $stats_date)->where('winner', 2)->count(),
+                'goals_local'   => Matches::where('type_id', 3)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('local_goals'),
+                'goals_visit'   => Matches::where('type_id', 3)->where('created_at', '>', $stats_date)->where('winner', 1)->sum('visit_goals')
             ]
         ];
 
