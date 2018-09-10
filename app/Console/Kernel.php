@@ -224,6 +224,18 @@ class Kernel extends ConsoleKernel
                 ->appendOutputTo('/var/log/futbolin/stamina.log');
 
         /**
+         * Create new tournament
+         */
+        $schedule->call(function() {
+                    $tournaments = Tournament::where('closed', FALSE)->count();
+                    if ($tournaments == 0) {
+                        Tournament::createTournament();
+                    }
+                })
+                ->cron('0 12 * * 5 *')
+                ->appendOutputTo('/var/log/futbolin/tournament.log');
+
+        /**
          * Close opened tournaments
          */
         $schedule->call(function() {
