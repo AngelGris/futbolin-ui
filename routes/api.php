@@ -64,7 +64,7 @@ Route::group(['middleware' => ['auth.api', 'liveMatch']], function() {
         Route::get('/{team}', 'TeamController@show')->where('team', '[0-9]+');
         Route::patch('/formation', 'TeamController@updateFormation');
         Route::group(['prefix' => 'numbers'], function() {
-            Route::patch('/update', ['as' => 'team.numbers.update', 'uses' => 'TeamController@updateNumbers']);
+            Route::patch('/', 'TeamController@updateNumbers');
         });
         Route::patch('/strategy', 'TeamController@updateStrategy');
         Route::post('/train', 'TeamController@train');
