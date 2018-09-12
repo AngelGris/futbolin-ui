@@ -91,10 +91,13 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
         Route::get('/{team}', ['as' => 'team.show', 'uses' => 'TeamController@show'])->where('team', '[0-9]+');
         Route::get('/crear', 'TeamController@create');
         Route::get('/editar', ['as' => 'team.edit', 'uses' => 'TeamController@edit']);
+        Route::post('/entrenar', 'TeamController@train');
         Route::get('/estadisticas/{rival}', ['as' => 'team.statsVersus', 'uses' => 'TeamController@showStatsVersus'])->where('rival', '[0-9]+');
         Route::post('/estrategia', ['as' => 'team.strategy', 'uses' => 'TeamController@updateStrategy']);
         Route::post('/formacion', ['as' => 'team.formation', 'uses' => 'TeamController@updateFormation']);
-        Route::post('/entrenar', 'TeamController@train');
+        Route::group(['prefix' => 'dorsales'], function() {
+            Route::post('/actualizar', ['as' => 'team.numbers.update', 'uses' => 'TeamController@updateNumbers']);
+        });
     });
 
     Route::get('/finanzas', ['as' => 'finances', 'uses' => 'TeamFundMovementController@index']);

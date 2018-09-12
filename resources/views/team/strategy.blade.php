@@ -307,6 +307,7 @@ $(function() {
                 </div>
                 @endif
             @endfor
+            <button class="btn btn-sm btn-primary" style="margin-top: 10px;" data-toggle="modal" data-target="#modal-numbers-confirm">Actualizar dorsales</button>
         </div>
     </div>
 </div>
@@ -365,6 +366,26 @@ $(function() {
             <h4 id="player-header" class="widgettitle"></h4>
         </div>
         <div class="widgetcontent"></div>
+    </div>
+</div>
+<div class="modal fade" id="modal-numbers-confirm" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Confirmar acción</h4>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que quiere actualizar los dorsales de los jugadores usando la formación actual?</p>
+            </div>
+            <div class="modal-footer">
+                <form id="form-numbers-update" method="POST" action="{{ route('team.numbers.update') }}">
+                    {{ csrf_field() }}
+                    <input type="submit" class="btn btn-primary" value="Actualizar" />
+                    <button type="reset" data-dismiss="modal" class="btn">Cancelar</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

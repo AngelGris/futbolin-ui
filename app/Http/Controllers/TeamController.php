@@ -679,6 +679,45 @@ class TeamController extends Controller
     }
 
     /**
+     * Update players numbers
+     */
+    public function updateNumbers(Request $request)
+    {
+        $api = FALSE;
+        if ($request->expectsJson()) {
+            if (empty(Auth::guard('api')->user())) {
+                $team = Auth::user()->team;
+            } else {
+                $team = Auth::guard('api')->user()->user->team;
+                $api = TRUE;
+            }
+        } else {
+            $team = Auth::user()->team;
+        }
+
+        $count = 0;
+        foreach ($team->players as $player) {
+            $index = array_search($player->id, $team->formation);
+            if ($index === FALSE) {
+                $number = 19 + $count;
+                $count++;
+            } else {
+                $number = $index + 1;
+            }
+            $player->number = $number;
+            $player->save();
+        }
+
+        if ($api) {
+            return response()->json([
+                'team' => $team
+            ], 200);
+        } else {
+            return redirect()->route('strategy');
+        }
+    }
+
+    /**
      * Save team strategy
      */
     public function updateStrategy(Request $request)
