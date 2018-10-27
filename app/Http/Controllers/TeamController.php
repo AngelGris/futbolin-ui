@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Team;
+use App\TournamentCategory;
 use App\Matches;
 use App\Player;
 use App\Strategy;
+use App\Team;
 
 class TeamController extends Controller
 {
@@ -154,6 +155,18 @@ class TeamController extends Controller
         }
 
         if($request->expectsJson()) {
+            $trophies = [];
+            foreach ($team->trophies as $trophy) {
+                if (!isset($categories[$trophy->category->id])) {
+                    $categories[$trophy->category->id] = TournamentCategory::find($trophy->category->id);
+                }
+                $trophies[] = [
+                    'category_id'   => $categories[$trophy->category->id]->id,
+                    'category_name' => $categories[$trophy->category->id]->name,
+                    'position'      => $trophy->position,
+                ];
+            }
+
             return response()->json([
                 'team'                  => $team,
                 'strategy'              => $team->strategy_public,
@@ -199,6 +212,7 @@ class TeamController extends Controller
                     ]
                 ],
                 'last_matches_versus'   => $last_matches_versus,
+                'trophies'              => $trophies,
             ], 200);
         } else {
             $vars = [
