@@ -155,18 +155,6 @@ class TeamController extends Controller
         }
 
         if($request->expectsJson()) {
-            $trophies = [];
-            foreach ($team->trophies as $trophy) {
-                if (!isset($categories[$trophy->category->id])) {
-                    $categories[$trophy->category->id] = TournamentCategory::find($trophy->category->id);
-                }
-                $trophies[] = [
-                    'category_id'   => $categories[$trophy->category->id]->id,
-                    'category_name' => $categories[$trophy->category->id]->name,
-                    'position'      => $trophy->position,
-                ];
-            }
-
             return response()->json([
                 'team'                  => $team,
                 'strategy'              => $team->strategy_public,
@@ -212,7 +200,7 @@ class TeamController extends Controller
                     ]
                 ],
                 'last_matches_versus'   => $last_matches_versus,
-                'trophies'              => $trophies,
+                'trophies'              => $team->trophies,
             ], 200);
         } else {
             $vars = [

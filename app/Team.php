@@ -445,7 +445,7 @@ class Team extends Model
         $trophies = [];
         foreach ($positions as $position) {
             if (!$position->category->isOpen) {
-                $trophies[] = $position;
+                $trophies[] = $position->makeVisible('tournamentName');
             }
         }
 

@@ -19,7 +19,7 @@ class TournamentPosition extends Model
      * @var array
      */
     protected $hidden = [
-        'category_id', 'team', 'created_at', 'updated_at'
+        'category_id', 'category', 'team', 'created_at', 'updated_at'
     ];
 
     /**
@@ -85,5 +85,10 @@ class TournamentPosition extends Model
     public function getTeamShortNameAttribute()
     {
         return $this->team->short_name;
+    }
+
+    public function getTournamentNameAttribute()
+    {
+        return $this->category->name;
     }
 }
