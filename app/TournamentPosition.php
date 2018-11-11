@@ -28,7 +28,7 @@ class TournamentPosition extends Model
      * @var array
      */
     protected $appends = [
-        'team_name', 'team_short_name'
+        'team_name', 'team_short_name', 'tournament_id', 'tournament_name'
     ];
 
     /**
@@ -87,6 +87,21 @@ class TournamentPosition extends Model
         return $this->team->short_name;
     }
 
+    /**
+     * Get tournament ID
+     *
+     * @return integer
+     */
+    public function getTournamentIdAttribute() {
+        return $this->category->id;
+    }
+
+    /**
+     * Get tournament name
+     *
+     * @return string
+     *
+     */
     public function getTournamentNameAttribute()
     {
         return $this->category->name;
