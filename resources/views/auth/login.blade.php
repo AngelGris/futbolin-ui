@@ -34,7 +34,7 @@
                 <button type="submit" class="btn btn-primary">Entrar</button>
             </div>
             <div class="inputwrapper">
-                <label class="pull-left"><input type="checkbox" class="remember" name="remember" {{ old('remember') | true ? 'checked' : '' }} /> Recordarme</label>
+                <label class="pull-left"><input type="checkbox" class="remember" name="remember" {{ old('remember', true) ? 'checked' : '' }} /> Recordarme</label>
             </div>
             <div class="inputwrapper col-xs-12">
                 <div class="pull-right">¿No es miembro? <a href="{{ route('register') }}" class="btn btn-danger">Afiliarse</a></div>
