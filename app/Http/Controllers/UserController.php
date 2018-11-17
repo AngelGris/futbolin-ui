@@ -50,7 +50,9 @@ class UserController extends Controller
             ];
         }
 
-        $user->team->spending_margin = $user->team->calculateSpendingMargin();
+        if (!is_null($user->team)) {
+            $user->team->spending_margin = $user->team->calculateSpendingMargin();
+        }
 
         return response()->json([
             'user' => $user->makeVisible(['email', 'credits', 'last_activity']),
