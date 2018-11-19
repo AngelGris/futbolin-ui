@@ -185,7 +185,7 @@ $(function(){
                 if (data.next > 0) {
                     $('button.trainning-button').hide();
                     $('li.trainning').hide();
-                    $('div.trainning-button-disabled').show();
+                    $('button.trainning-button-disabled').show();
                     $('li.trainning-disabled').show();
                     startRemainingTimer(data.next);
                 }
@@ -210,7 +210,7 @@ $(function(){
                 showAdminMessage(data.title, data.message);
                 $('button.trainning-button').hide();
                 $('li.trainning').hide();
-                $('div.trainning-button-disabled').show();
+                $('button.trainning-button-disabled').show();
                 $('li.trainning-disabled').show();
                 startRemainingTimer(data.remaining);
             });
