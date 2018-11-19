@@ -207,9 +207,14 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .userloggedinfo .trainning-button:hover {
 	background-color: #7295AE;
 }
-.userloggedinfo .trainning-button-disabled {
-	padding-top: 12px;
-	text-align: center;
+.trainning-button img,
+.trainning-button-disabled img,
+.trainning-disabled img{
+	width: 100%;
+}
+div.trainning-button-disabled {
+    padding-top: 12px;
+    text-align: center;
 }
 .userloggedinfo .trainning-button-disabled p {
 	font-size: 12px;

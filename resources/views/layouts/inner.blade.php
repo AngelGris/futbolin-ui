@@ -153,17 +153,17 @@
                         @endif
                         @if($_team->trainer > \Carbon\Carbon::now())
                         <li class="trainning-disabled">
-                            <span class="fa fa-star-half-o"></span>
+                            <span class="fa fa-user-circle"></span>
                             <div>{{ $_team->trainer_remaining }}</div>
                         </li>
                         @else
                         <li class="trainning"{!! ($_team['trainable'] ? '' : ' style="display:none;"') !!}>
                             <a href="#" class="trainning-button" data-token="{{ csrf_token() }}">
-                                <span class="fa fa-star"></span>
+                                <img src="{{ asset('img/train.svg') }}" />
                             </a>
                         </li>
                         <li class="trainning-disabled"{!! ($_team['trainable'] ? ' style="display:none;"' : '') !!}>
-                            <span class="fa fa-star-o"></span>
+                            <img src="{{ asset('img/train-disabled.svg') }}" />
                             <div class="remaining-timer">00:00:00</div>
                         </li>
                         @endif
@@ -293,18 +293,18 @@
                             <div class="userloggedinfo">
                                 @if($_team->trainer > \Carbon\Carbon::now())
                                 <div class="trainning-button-disabled">
-                                    <span class="fa fa-star-half-o"></span>
+                                    <span class="fa fa-user-circle"></span>
                                     <p>{{ $_team->trainer_remaining }}</p>
                                 </div>
                                 @else
                                 <button class="trainning-button"{!! ($_team->trainable ? '' : ' style="display:none;"') !!} data-token="{{ csrf_token() }}">
-                                    <span class="fa fa-star"></span>
+                                    <img src="{{ asset('img/train.svg') }}" />
                                     <p>Entrenar</p>
                                 </button>
-                                <div class="trainning-button-disabled"{!! ($_team->trainable ? ' style="display:none;"' : '') !!}>
-                                    <span class="fa fa-star-o"></span>
+                                <button class="trainning-button-disabled"{!! ($_team->trainable ? ' style="display:none;"' : '') !!} disabled>
+                                    <img src="{{ asset('img/train-disabled.svg') }}" />
                                     <p class="remaining-timer">00:00:00</p>
-                                </div>
+                                </button>
                                 @endif
                                 <div class="userinfo">
                                     <h5>
