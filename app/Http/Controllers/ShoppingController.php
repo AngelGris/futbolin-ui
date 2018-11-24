@@ -27,8 +27,8 @@ class ShoppingController extends Controller
         } else {
             $vars = [
                 'icon'      => 'fa fa-shopping-cart',
-                'title'     => 'Shopping',
-                'subtitle'  => 'Hora de hacer compras',
+                'title'     => __('headers.shopping_title'),
+                'subtitle'  => __('headers.shopping_subtitle'),
                 'items'     => ShoppingItem::where('in_shopping', TRUE)->get()
             ];
 

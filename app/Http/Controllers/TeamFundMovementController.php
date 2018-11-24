@@ -21,8 +21,8 @@ class TeamFundMovementController extends Controller
 
             $vars = [
                 'icon' => 'fa fa-money',
-                'title' => 'Finanzas',
-                'subtitle' => 'Money, money, money',
+                'title' => __('headers.finances_title'),
+                'subtitle' => __('headers.finances_subtitle'),
                 'movements' => $team->fundMovements()->paginate(50)
             ];
 

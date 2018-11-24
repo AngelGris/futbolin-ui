@@ -48,7 +48,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $params['title'] = config('app.name') . ' - Afiliarse';
+        $params['title'] = config('app.name') . ' - ' . __('labels.affiliate');
         $params['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);

@@ -23,18 +23,18 @@ $(function() {
         name: 'welcome',
         steps: [{
            popup: {
-                content: '<p>¡Bienvenido/a {{ $_user['first_name'] }}!</p><br /><p>Voy a enseñarte rápidamente cómo funciona el juego para que puedas llevar a tu equipo a lo más alto.</p><p>¿Estamos listos?</p>',
+                content: '@lang('walkthrough.popup_1', ['name' => $_user['first_name']])',
                 type: 'modal',
            },
         }, {
             popup: {
-                content: '<p>Esta es la página de estrategias y aquí puedes decidir cómo parar a tu equipo en la cancha y cuáles jugadores serán titulares, y cuáles suplentes.',
+                content: '@lang('walkthrough.popup_2')',
                 type: 'modal'
             }
         }, {
             wrapper: '#btn-formation',
             popup: {
-                content: '<p>Presionando en la formación puedes ver las diferentes opciones de formación que tienes y elegir la que creas mejor para tu equipo.</p>',
+                content: '@lang('walkthrough.popup_3')',
                 type: 'tooltip',
                 position: 'bottom',
                 offsetHorizontal: -100,
@@ -43,7 +43,7 @@ $(function() {
         }, {
             wrapper: '#dyntable',
             popup: {
-                content: '<p>Elige los jugadores que quieres que jueguen y arrástralos hasta la posición que quieres que ocupen, o hasta el banco de suplentes.</p>',
+                content: '@lang('walkthrough.popup_4')',
                 type: 'tooltip',
                 position: 'top',
                 onEnter: $.noop,
@@ -54,11 +54,11 @@ $(function() {
                 }, 2000);
             },
         }, {
-            wrapper: $('a[href="{{ route('teams') }}"]').is(':visible') ? 'a[href="{{ route('teams') }}"]' : 'button.navbar-toggle',
+            wrapper: $('a[href="{{ route('finances') }}"]').is(':visible') ? 'a[href="{{ route('finances') }}"]' : 'button.navbar-toggle',
             popup: {
-                content: '<p>Cuando tu equipo esté listo puedes ir a la página de amistosos para jugar contra sparrings y otros equipos para ver si tu estrategia es buena.</p>',
+                content: '@lang('walkthrough.popup_5')',
                 type: 'tooltip',
-                position: $('a[href="{{ route('teams') }}"]').is(':visible') ? 'right' : 'bottom',
+                position: $('a[href="{{ route('finances') }}"]').is(':visible') ? 'right' : 'bottom',
                 offsetHorizontal: $('a[href="{{ route('teams') }}"]').is(':visible') ? 0 : -150,
                 offsetArrowHorizontal: $('a[href="{{ route('teams') }}"]').is(':visible') ? 0 : 100,
             },
@@ -68,14 +68,41 @@ $(function() {
                 }, 2000);
             }
         }, {
+            wrapper: $('a[href="{{ route('market') }}"]').is(':visible') ? 'a[href="{{ route('market') }}"]' : 'button.navbar-toggle',
             popup: {
-                content: '<p>En cada partido de campeonato que juegues tus jugadores ganaran experiencia, y al llegar a 100 puntos de experiencia mejoraran sus atributos. (partidos con sparring y amistosos no suman experiencia)</p><p>Pero en esos partidos los jugadores pierden energía y jugadores cansados rinden menos.</p>',
+                content: '@lang('walkthrough.popup_6')',
+                type: 'tooltip',
+                position: $('a[href="{{ route('market') }}"]').is(':visible') ? 'right' : 'bottom',
+                offsetHorizontal: $('a[href="{{ route('market') }}"]').is(':visible') ? 0 : -150,
+                offsetArrowHorizontal: $('a[href="{{ route('market') }}"]').is(':visible') ? 0 : 100,
+            }
+        }, {
+            wrapper: $('a[href="{{ route('teams') }}"]').is(':visible') ? 'a[href="{{ route('teams') }}"]' : 'button.navbar-toggle',
+            popup: {
+                content: '@lang('walkthrough.popup_7')',
+                type: 'tooltip',
+                position: $('a[href="{{ route('teams') }}"]').is(':visible') ? 'right' : 'bottom',
+                offsetHorizontal: $('a[href="{{ route('teams') }}"]').is(':visible') ? 0 : -150,
+                offsetArrowHorizontal: $('a[href="{{ route('teams') }}"]').is(':visible') ? 0 : 100,
+            }
+        }, {
+            wrapper: $('a[href="{{ route('shopping') }}"]').is(':visible') ? 'a[href="{{ route('shopping') }}"]' : 'button.navbar-toggle',
+            popup: {
+                content: '@lang('walkthrough.popup_8')',
+                type: 'tooltip',
+                position: $('a[href="{{ route('shopping') }}"]').is(':visible') ? 'right' : 'bottom',
+                offsetHorizontal: $('a[href="{{ route('shopping') }}"]').is(':visible') ? 0 : -150,
+                offsetArrowHorizontal: $('a[href="{{ route('shopping') }}"]').is(':visible') ? 0 : 100,
+            }
+        }, {
+            popup: {
+                content: '@lang('walkthrough.popup_9')',
                 type: 'modal'
             }
         }, {
             wrapper: $('button.trainning-button').is(':visible') ? 'button.trainning-button' : 'li.trainning',
             popup: {
-                content: '<p>También puedes ayudar a tus jugadores a mejorar y recuperar energía haciéndolos entrenar todos los días presionando en el botón "Entrenar"</p>',
+                content: '@lang('walkthrough.popup_10')',
                 type: 'tooltip',
                 position: 'bottom',
                 offsetHorizontal: $('button.trainning-button').is(':visible') ? -50 : 100,
@@ -83,22 +110,22 @@ $(function() {
             }
         }, {
             popup: {
-                content: '<p>Ahora sí puedes ponerte a trabajar en tu equipo y cualquier duda que tengas puedes consultar la guía de usuario en el pie de la página.</p><p>¡Buena suerte!</p>',
+                content: '@lang('walkthrough.popup_11')',
                 type: 'modal'
             }
         }],
         buttons: {
             jpwNext: {
-                i18n: 'Próximo &rarr;',
+                i18n: '@lang('labels.next') &rarr;',
             },
             jpwPrevious: {
-                i18n: '&larr; Anterior',
+                i18n: '&larr; @lang('labels.previous')',
             },
             jpwFinish: {
-                i18n: 'Finalizar &#10004;',
+                i18n: '@lang('labels.finish') &#10004;',
             },
             jpwClose: {
-                i18n: 'Cerrar',
+                i18n: '@lang('labels.close')',
             }
         }
     });
@@ -140,7 +167,7 @@ $(function() {
     $('.rollover-player').mouseover(function() {
         var id = parseInt($(this).data('player-id'));
         $('#player-header').html(players[id]['number'] + '. ' + players[id]['name']);
-        $('#player-info .widgetcontent').html('<div class="col-xs-6"><strong>EDAD: ' + players[id]['age'] + '</strong><br>ARQ: ' + players[id]['goalkeeping'] + '<br>GAM: ' + players[id]['dribbling'] + '<br>SAL: ' + players[id]['jumping'] + '<br>PRE: ' + players[id]['precision'] + '<br>FUE: ' + players[id]['strength'] + '<br>EXP: ' + players[id]['experience'] + '</div><div class="col-xs-6"><strong>MED: ' + players[id]['average'] + '</strong><br>DEF: ' + players[id]['defending'] + '<br>CAB: ' + players[id]['heading'] + '<br>PAS: ' + players[id]['passing'] + '<br>VEL: ' + players[id]['speed'] + '<br>QUI: ' + players[id]['tackling'] + '<br>ENE: ' + players[id]['stamina'] + '</div>');
+        $('#player-info .widgetcontent').html('<div class="col-xs-6"><strong>@lang('attributes.age_short'): ' + players[id]['age'] + '</strong><br>@lang('attributes.goalkeeping_short'): ' + players[id]['goalkeeping'] + '<br>@lang('attributes.dribbling_short'): ' + players[id]['dribbling'] + '<br>@lang('attributes.jumping_short'): ' + players[id]['jumping'] + '<br>@lang('attributes.precision_short'): ' + players[id]['precision'] + '<br>@lang('attributes.strength_short'): ' + players[id]['strength'] + '<br>@lang('attributes.experience_short'): ' + players[id]['experience'] + '</div><div class="col-xs-6"><strong>@lang('attributes.average_short'): ' + players[id]['average'] + '</strong><br>@lang('attributes.defending_short'): ' + players[id]['defending'] + '<br>@lang('attributes.heading_short'): ' + players[id]['heading'] + '<br>@lang('attributes.passing_short'): ' + players[id]['passing'] + '<br>@lang('attributes.speed_short'): ' + players[id]['speed'] + '<br>@lang('attributes.tackling_short'): ' + players[id]['tackling'] + '<br>ENE: ' + players[id]['stamina'] + '</div>');
         $('#player-info').stop().fadeTo(0, 1).css({'display': 'contents'});
     }).mouseleave(function() {
         //$('#player-info').fadeOut(500);
@@ -278,7 +305,7 @@ $(function() {
                     @endforeach
                 </ul>
             </div>
-            <h4 class="widgettitle">Formación</h4>
+            <h4 class="widgettitle">@lang('labels.formation')</h4>
         </div>
         <div class="widgetcontent" style="padding-top:60px;">
             <div id="strategy-container">
@@ -307,7 +334,7 @@ $(function() {
                 </div>
                 @endif
             @endfor
-            <button class="btn btn-sm btn-primary" style="margin-top: 10px;" data-toggle="modal" data-target="#modal-numbers-confirm">Actualizar dorsales</button>
+            <button class="btn btn-sm btn-primary" style="margin-top: 10px;" data-toggle="modal" data-target="#modal-numbers-confirm">@lang('labels.update_numbers')</button>
         </div>
     </div>
 </div>
@@ -316,9 +343,9 @@ $(function() {
         <thead>
             <tr>
                 <th>#</th>
-                <th style="width:50%">Nombre</th>
-                <th><span data-placement="top" data-toggle="tooltip" data-original-title="Posición">POS</span></th>
-                <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
+                <th style="width:50%">@lang('labels.name')</th>
+                <th><span data-placement="top" data-toggle="tooltip" data-original-title="@lang('attributes.position')">@lang('attributes.position_short')</span></th>
+                <th><span data-placement="top" data-toggle="tooltip" data-original-title="@lang('attributes.average')">@lang('attributes.average_short')</span></th>
             </tr>
         </thead>
         <tbody>
@@ -365,7 +392,7 @@ $(function() {
         <div class="headtitle">
             <h4 id="player-header" class="widgettitle"></h4>
         </div>
-        <div class="widgetcontent"></div>
+        <div class="widgetcontent text-uppercase"></div>
     </div>
 </div>
 <div class="modal fade" id="modal-numbers-confirm" tabindex="-1">
@@ -373,15 +400,15 @@ $(function() {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Confirmar acción</h4>
+                <h4 class="modal-title">@lang('labels.confirm_action')</h4>
             </div>
             <div class="modal-body">
-                <p>¿Está seguro que quiere actualizar los dorsales de los jugadores usando la formación actual?</p>
+                <p>@lang('messages.confirm_update_numbers')</p>
             </div>
             <div class="modal-footer">
                 <form id="form-numbers-update" method="POST" action="{{ route('team.numbers.update') }}">
                     {{ csrf_field() }}
-                    <input type="submit" class="btn btn-primary" value="Actualizar" />
+                    <input type="submit" class="btn btn-primary" value="@lang('labels.update')" />
                     <button type="reset" data-dismiss="modal" class="btn">Cancelar</button>
                 </form>
             </div>

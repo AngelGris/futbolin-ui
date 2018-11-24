@@ -17,8 +17,8 @@ class AccountSettingsController extends Controller
     {
         $vars = [
             'icon' => 'fa fa-user',
-            'title' => 'Editar Perfil',
-            'subtitle' => 'Dime quién eres'
+            'title' => __('headers.profile_edit_title'),
+            'subtitle' => __('headers.profile_edit_subtitle')
         ];
 
         return view('accountsettings.index', $vars);
@@ -62,8 +62,8 @@ class AccountSettingsController extends Controller
     {
         $vars = [
             'icon' => 'fa fa-user',
-            'title' => 'Cambiar Contraseña',
-            'subtitle' => 'La palabrita mágica'
+            'title' => __('headers.profile_password_edit_title'),
+            'subtitle' => __('headers.profile_password_edit_subtitle')
         ];
 
         return view('accountsettings.password', $vars);
@@ -105,7 +105,7 @@ class AccountSettingsController extends Controller
             } else {
                 return redirect()
                         ->route('profile.password')
-                        ->withErrors(['old_password' => 'Contraseña Actual incorrecta'])
+                        ->withErrors(['old_password' => __('errors.current_password_incorrect')])
                         ->withInput($request->only('old_password', 'new_password', 'new_password_confirmation'));
             }
         }

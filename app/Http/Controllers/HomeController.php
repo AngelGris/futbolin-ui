@@ -84,8 +84,8 @@ class HomeController extends Controller
 
         $vars = [
             'icon' => 'fa fa-home',
-            'title' => 'Vestuario',
-            'subtitle' => 'Aquí comienza todo',
+            'title' => __('headers.locker_room_title'),
+            'subtitle' => __('headers.locker_room_subtitle'),
             'formation' => $team->formation,
             'strategy' => $strategy,
             'overlay' => TRUE,

@@ -233,7 +233,7 @@ class HomeController extends Controller
         } else {
             return redirect()
                     ->route('profile.password')
-                    ->withErrors(['old_password' => 'Contraseña Actual incorrecta'])
+                    ->withErrors(['old_password' => __('errors.current_password_incorrect')])
                     ->withInput($request->only('old_password', 'new_password', 'new_password_confirmation'));
         }
     }

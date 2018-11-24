@@ -50,12 +50,12 @@ class ResetPassword extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Nueva contraseña para Futbolin')
-            ->greeting('Hola, ' . $this->user->first_name)
-            ->line('¿Te olvidaste la contraseña? ¿También olvidas las canciones de tu equipo?.')
-            ->action('Nueva Contraseña', route('password.reset', $this->token))
-            ->line('Haciendo click en el botón puedes crear una contraseña nueva y seguir jugando')
-            ->salutation('¡A aguantar los trapos!');
+            ->subject(__('emails.forgot_password_subject'))
+            ->greeting(__('emails.forgot_password_greeting', ['name' => $this->user->first_name]))
+            ->line(__('emails.forgot_password_line_1'))
+            ->action(__('emails.forgot_password_action'), route('password.reset', $this->token))
+            ->line(__('emails.forgot_password_line_2'))
+            ->salutation(__('emails.forgot_password_salutation'));
     }
 
     /**
