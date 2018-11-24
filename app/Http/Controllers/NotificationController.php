@@ -20,8 +20,8 @@ class NotificationController extends Controller
         } else {
             $vars = [
                 'icon' => 'fa fa-envelope',
-                'title' => 'Notificaciones',
-                'subtitle' => 'Las notificaciones no se autodestruirán'
+                'title' => __('headers.notifications_title'),
+                'subtitle' => __('headers.notifications_subtitle')
             ];
 
             return view('notification.index', $vars);

@@ -58,16 +58,16 @@
                             </a>
                             <ul class="dropdown-menu">
                                 @if (count($_notifications))
-                                <li class="nav-header">Notificaciones</li>
+                                <li class="nav-header">@lang('labels.notifications')</li>
                                 @foreach ($_notifications as $notification)
                                 <li><a href="#" class="admin-messages open-notification{{ is_null($notification->read_on) ? ' unread' : '' }}" data-id="{{ $notification['id'] }}">{{ $notification['title'] }}<small class="muted"> - {{ $notification['published'] }}</small></a></li>
                                 @endforeach
                                 <li class="viewmore">
-                                    <a href="{{ route('notifications') }}">Ver todas las notificaciones</a>
+                                    <a href="{{ route('notifications') }}">@lang('labels.view_all_notifications')</a>
                                 </li>
                                 @endif
                                 @if (count($_messages))
-                                <li class="nav-header">Mensajes</li>
+                                <li class="nav-header">@lang('labels.messages')</li>
                                 @foreach ($_messages as $message)
                                 <li><a href="#" class="admin-messages" onclick="loadAdminMessage({{ $message['id'] }});">{{ $message['title'] }}<small class="muted"> - {{ $message['published'] }}</small></a></li>
                                 @endforeach
@@ -87,47 +87,47 @@
                             </a>
                             <ul class="dropdown-menu">
                                 @if (count($_transferables) > 0)
-                                <li class="nav-header">Jugadores transferibles</li>
+                                <li class="nav-header">@lang('labels.transferable_players')</li>
                                 @foreach ($_transferables as $player)
                                 <li>
                                     <a href="{{ route('player', $player->id) }}">
                                         <strong>{{ $player->number }} {{ $player->first_name }} {{ $player->last_name }}</strong>
                                         <small>{{ $player->position }}</small><br>
                                         @if ($player->best_offer_team)
-                                        <span>Mejor oferta: {{ formatCurrency($player->best_offer_value) }}</span>
+                                        <span>@lang('labels.best_offer'): {{ formatCurrency($player->best_offer_value) }}</span>
                                         @else
-                                        <span>SIN OFERTAS</span>
+                                        <span class="text-uppercase">@lang('labels.no_offers')</span>
                                         @endif
                                     </a>
                                 </li>
                                 @endforeach
                                 @endif
                                 @if (count($_suspensions) > 0)
-                                <li class="nav-header">Suspendidos</li>
+                                <li class="nav-header">@lang('labels.suspended')</li>
                                 @foreach ($_suspensions as $player)
                                 <li>
                                     <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small><br>
-                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} fechas</span>
+                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} @choice('enums.rounds', $player['suspension'])</span>
                                     </a>
                                 </li>
                                 @endforeach
                                 @endif
                                 @if (count($_injuries) > 0)
-                                <li class="nav-header">Lesionados</li>
+                                <li class="nav-header">@lang('labels.injured')</li>
                                 @foreach ($_injuries as $player)
                                 <li>
                                     <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small><br>
-                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} fechas</span>
+                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} @choice('enums.rounds', $player['recovery'])</span>
                                     </a>
                                 </li>
                                 @endforeach
                                 @endif
                                 @if (count($_upgraded) > 0)
-                                <li class="nav-header">Mejorados</li>
+                                <li class="nav-header">@lang('labels.improved')</li>
                                 @foreach ($_upgraded as $player)
                                 <li>
                                     <a href="{{ route('player', $player['id']) }}">
@@ -138,7 +138,7 @@
                                 @endforeach
                                 @endif
                                 @if (count($_retiring) > 0)
-                                <li class="nav-header">Por retirarse</li>
+                                <li class="nav-header">@lang('labels.retiring')</li>
                                 @foreach ($_retiring as $player)
                                 <li>
                                     <a href="{{ route('player', $player['id']) }}">
@@ -191,20 +191,20 @@
                                 <span class="count">{{ $_messagesCount }}</span>
                                 @endif
                                 <span class="head-icon head-message"></span>
-                                <span class="headmenu-label">Mensajes</span>
+                                <span class="headmenu-label">@lang('labels.messages')</span>
                             </a>
                             <ul class="dropdown-menu">
                                 @if (count($_notifications))
-                                <li class="nav-header">Notificaciones</li>
+                                <li class="nav-header">@lang('labels.notifications')</li>
                                 @foreach ($_notifications as $notification)
                                 <li><a href="#" class="admin-messages open-notification{{ is_null($notification->read_on) ? ' unread' : '' }}" data-id="{{ $notification['id'] }}">{{ $notification['title'] }}<small class="muted"> - {{ $notification['published'] }}</small></a></li>
                                 @endforeach
                                 <li class="viewmore">
-                                    <a href="{{ route('notifications') }}">Ver todas las notificaciones</a>
+                                    <a href="{{ route('notifications') }}">@lang('labels.view_all_notifications')</a>
                                 </li>
                                 @endif
                                 @if (count($_messages))
-                                <li class="nav-header">Mensajes</li>
+                                <li class="nav-header">@lang('labels.messages')</li>
                                 @foreach ($_messages as $message)
                                 <li><a href="#" class="admin-messages" onclick="loadAdminMessage({{ $message['id'] }});">{{ $message['title'] }}<small class="muted"> - {{ $message['published'] }}</small></a></li>
                                 @endforeach
@@ -221,51 +221,51 @@
                             <span class="count">{{ $_playersAlertsCount }}</span>
                             @endif
                             <span class="head-icon head-users"></span>
-                            <span class="headmenu-label">Jugadores</span>
+                            <span class="headmenu-label">@lang('labels.players')</span>
                             </a>
                             <ul class="dropdown-menu newusers">
                                 @if (count($_transferables) > 0)
-                                <li class="nav-header">Jugadores transferibles</li>
+                                <li class="nav-header">@lang('labels.transferable_players')</li>
                                 @foreach ($_transferables as $player)
                                 <li>
                                     <a href="{{ route('player', $player->id) }}">
                                         <strong>{{ $player->number }} {{ $player->first_name }} {{ $player->last_name }}</strong>
                                         <small>{{ $player->position }}</small><br>
                                         @if ($player->best_offer_team)
-                                        <span>Mejor oferta: {{ formatCurrency($player->best_offer_value) }}</span>
+                                        <span>@lang('labels.best_offer'): {{ formatCurrency($player->best_offer_value) }}</span>
                                         @else
-                                        <span>SIN OFERTAS</span>
+                                        <span class="text-uppercase">@lang('labels.no_offers')</span>
                                         @endif
                                     </a>
                                 </li>
                                 @endforeach
                                 @endif
                                 @if (count($_suspensions) > 0)
-                                <li class="nav-header">Jugadores suspendidos</li>
+                                <li class="nav-header">@lang('labels.suspended_players')</li>
                                 @foreach ($_suspensions as $player)
                                 <li>
                                     <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small><br>
-                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} fechas</span>
+                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} @choice('enums.rounds', $player['suspension'])</span>
                                     </a>
                                 </li>
                                 @endforeach
                                 @endif
                                 @if (count($_injuries) > 0)
-                                <li class="nav-header">Jugadores lesionados</li>
+                                <li class="nav-header">@lang('labels.injured_players')</li>
                                 @foreach ($_injuries as $player)
                                 <li>
                                     <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small><br>
-                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} fechas</span>
+                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} @choice('enums.rounds', $player['recovery'])</span>
                                     </a>
                                 </li>
                                 @endforeach
                                 @endif
                                 @if (count($_upgraded) > 0)
-                                <li class="nav-header">Jugadores mejorados</li>
+                                <li class="nav-header">@lang('labels.improved_players')</li>
                                 @foreach ($_upgraded as $player)
                                 <li>
                                     <a href="{{ route('player', $player['id']) }}">
@@ -276,7 +276,7 @@
                                 @endforeach
                                 @endif
                                 @if (count($_retiring) > 0)
-                                <li class="nav-header">Jugadores por retirarse</li>
+                                <li class="nav-header">@lang('labels.players_retiring')</li>
                                 @foreach ($_retiring as $player)
                                 <li>
                                     <a href="{{ route('player', $player['id']) }}">
@@ -299,7 +299,7 @@
                                 @else
                                 <button class="trainning-button"{!! ($_team->trainable ? '' : ' style="display:none;"') !!} data-token="{{ csrf_token() }}">
                                     <img src="{{ asset('img/train.svg') }}" />
-                                    <p>Entrenar</p>
+                                    <p>@lang('labels.train')</p>
                                 </button>
                                 <button class="trainning-button-disabled"{!! ($_team->trainable ? ' style="display:none;"' : '') !!} disabled>
                                     <img src="{{ asset('img/train-disabled.svg') }}" />
@@ -312,8 +312,8 @@
                                         <small>{{ $_user['email'] }}</small>
                                     </h5>
                                     <ul>
-                                        <li><a href="{{ route('profile.edit') }}">Editar Perfil</a></li>
-                                        <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Salir</a></li>
+                                        <li><a href="{{ route('profile.edit') }}">@lang('labels.edit_profile')</a></li>
+                                        <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">@lang('labels.exit')</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -329,12 +329,12 @@
     <div class="leftpanel">
         <nav class="leftmenu collapse" id="bs-navbar-collapse">
             <ul class="nav nav-tabs nav-stacked">
-                <li class="nav-header">Navegación</li>
-                <li class="nav-extras{{ (Request::path() == 'perfil/editar') ? ' active' : '' }}"><a href="{{ route('profile.edit') }}"><span class="fa fa-user"></span> Editar perfil</a></li>
+                <li class="nav-header">@lang('labels.navigation')</li>
+                <li class="nav-extras{{ (Request::path() == 'perfil/editar') ? ' active' : '' }}"><a href="{{ route('profile.edit') }}"><span class="fa fa-user"></span> @lang('labels.edit_profile')</a></li>
                 @foreach ($_navigation as $link)
                 <li{!! (Request::path() == $link['url']) ? ' class="active"' : '' !!}><a href="{{ url('/' . $link['url']) }}"><span class="{{ $link['icon'] }}"></span> {{ $link['name'] }}</a></li>
                 @endforeach
-                <li class="nav-extras"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="fa fa-sign-out"></span> Salir</a></li>
+                <li class="nav-extras"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><span class="fa fa-sign-out"></span> @lang('labels.exit')</a></li>
             </ul>
         </nav>
     </div>
@@ -378,8 +378,8 @@
                 <div class="footer">
                     <div class="footer-left">
                         <span style="font-weight:bold;">Futbolin</span><br />
-                        <a href="{{ route('user-guide') }}">Guía de Usuario</a><br />
-                        <a href="{{ route('contact') }}" target="_blank">Formulario de Contacto</a><br />
+                        <a href="{{ route('user-guide') }}">@lang('labels.users_guide')</a><br />
+                        <a href="{{ route('contact') }}" target="_blank">@lang('labels.contact_form')</a><br />
                     </div>
                 </div>
             </div>

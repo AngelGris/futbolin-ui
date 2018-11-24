@@ -22,8 +22,8 @@ class TeamController extends Controller
     {
         $vars = [
             'icon' => 'fa fa-shield',
-            'title' => Auth::user()->team->name,
-            'subtitle' => 'El club de tus amores'
+            'title' => __('headers.team_title', ['team_name' => Auth::user()->team->name]),
+            'subtitle' => __('headers.team_subtitle')
         ];
 
         return view('team.index', $vars);
@@ -205,8 +205,8 @@ class TeamController extends Controller
         } else {
             $vars = [
                 'icon'                  => 'fa fa-shield',
-                'title'                 => $team->name,
-                'subtitle'              => 'Estudiando al rival',
+                'title'                 => __('headers.other_team_title', ['team_name' => $team->name]),
+                'subtitle'              => __('headers.other_team_subtitle'),
                 'team'                  => $team,
                 'matches'               => $games,
                 'goals'                 => $goals,
@@ -230,8 +230,8 @@ class TeamController extends Controller
     {
         $vars = [
             'icon' => 'fa fa-shield',
-            'title' => Auth::user()->team->name,
-            'subtitle' => 'El club de tus amores'
+            'title' => __('headers.team_title', ['team_name' => Auth::user()->team->name]),
+            'subtitle' => __('headers.team_subtitle')
         ];
 
         return view('team.edit', $vars);
@@ -273,8 +273,8 @@ class TeamController extends Controller
         } else {
             $vars = [
                 'icon' => 'fa fa-handshake-o',
-                'title' => 'Amistosos',
-                'subtitle' => 'Hora de ponernos a prueba',
+                'title' => __('headers.friendlies_title'),
+                'subtitle' => __('headers.friendlies_subtitle'),
                 'sparrings' => Team::where('user_id', '=', 1)->orderBy('name')->get(),
                 'teams' => $teams,
                 'playable' => $user->team->playable,
@@ -348,8 +348,8 @@ class TeamController extends Controller
 
         $vars = [
             'icon' => 'fa fa-gears',
-            'title' => 'Estrategia',
-            'subtitle' => 'Aceitando las piezas',
+            'title' => __('headers.strategy_title'),
+            'subtitle' => __('headers.strategy_subtitle'),
             'strategy' => $team->strategy->id,
             'formation' => $team->formation,
         ];

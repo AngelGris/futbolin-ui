@@ -15,8 +15,8 @@ class TournamentController extends Controller
     {
         $vars = [
             'icon' => 'fa fa-trophy',
-            'title' => 'Torneos',
-            'subtitle' => 'A demostrar quién manda'
+            'title' => __('headers.tournaments_title'),
+            'subtitle' => __('headers.tournaments_subtitle')
         ];
 
         if ($request->expectsJson()) {

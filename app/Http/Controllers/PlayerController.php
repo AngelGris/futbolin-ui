@@ -116,8 +116,8 @@ class PlayerController extends Controller
         } else {
             $vars = [
                 'icon' => 'fa fa-user',
-                'title' => $player['first_name'] . ' ' . $player['last_name'],
-                'subtitle' => 'Una parte del todo',
+                'title' => __('headers.player_title', ['player_name' => $player['first_name'] . ' ' . $player['last_name']]),
+                'subtitle' => __('headers.player_subtitle'),
                 'header_team' => $player['team'],
                 'following'     => json_encode($following),
                 'player' => $player
@@ -251,8 +251,8 @@ class PlayerController extends Controller
         } else {
             $vars = [
                 'icon'      => 'fa fa-group',
-                'title'     => 'Jugadores',
-                'subtitle'  => 'Los engranajes de la máquina',
+                'title'     => __('headers.players_title'),
+                'subtitle'  => __('headers.players_subtitle'),
                 'players'   => Auth::user()->team->players
             ];
 

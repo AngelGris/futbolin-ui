@@ -83,8 +83,8 @@ class MarketController extends Controller
         } else {
             $vars = [
                 'icon'          => 'fa fa-retweet',
-                'title'         => 'Mercado de pases',
-                'subtitle'      => 'A buscar refuerzos',
+                'title'         => __('headers.transfers_market_title'),
+                'subtitle'      => __('headers.transfers_market_subtitle'),
                 'transferables' => $players,
                 'following'     => json_encode($following),
                 'offers'        => TRUE
@@ -136,8 +136,8 @@ class MarketController extends Controller
 
         $vars = [
             'icon'          => 'fa fa-retweet',
-            'title'         => 'Mercado de pases',
-            'subtitle'      => 'A buscar refuerzos',
+            'title'         => __('headers.transfers_market_title'),
+            'subtitle'      => __('headers.transfers_market_subtitle'),
             'transferables' => $players->orderBy('player_sellings.updated_at', 'DESC')->paginate(30),
             'following'     => json_encode($following),
             'filters'       => $filters,
@@ -251,8 +251,8 @@ class MarketController extends Controller
         } else {
             $vars = [
                 'icon'          => 'fa fa-retweet',
-                'title'         => 'Mercado de pases',
-                'subtitle'      => 'A buscar refuerzos',
+                'title'         => __('headers.transfers_market_title'),
+                'subtitle'      => __('headers.transfers_market_subtitle'),
                 'transferables' => $players->paginate(30),
                 'following'     => json_encode($user->followingList),
                 'filter'        => '',
@@ -275,8 +275,8 @@ class MarketController extends Controller
         } else {
             $vars = [
                 'icon'          => 'fa fa-retweet',
-                'title'         => 'Transacciones finalizadas',
-                'subtitle'      => 'Compras y ventas',
+                'title'         => __('headers.transfers_market_title'),
+                'subtitle'      => __('headers.transfers_market_subtitle'),
                 'transactions'  => $transactions,
             ];
 
