@@ -113,6 +113,13 @@ class Player extends Model
     ];
 
     /**
+     * Attributes list for the players
+     *
+     * @var array
+     */
+    const ATTRIBUTES = ['goalkeeping', 'defending', 'dribbling', 'heading', 'jumping', 'passing', 'precision', 'speed', 'strength', 'tackling'];
+
+    /**
      * Boot model
      */
     protected static function boot() {
@@ -585,7 +592,6 @@ class Player extends Model
     public function upgrade($force = FALSE)
     {
         if ($force || $this->experience >= 100) {
-            $points = 0;
             $age_limit = 7;
             $age_diff = $this->age - 17;
             if ($age_diff <= $age_limit) {
@@ -603,57 +609,23 @@ class Player extends Model
             }
 
             $last_upgrade = [];
-            $upgraded = '';
+            $upgraded = null;
             for ($i = 0; $i < $points; $i++) {
-                switch (mt_rand(0, 9)) {
-                    case 0:
-                        $this->goalkeeping = min($this->goalkeeping + 1, 100);
-                        $upgraded = 'goalkeeping';
-                        break;
-                    case 1:
-                        $this->defending = min($this->defending + 1, 100);
-                        $upgraded = 'defending';
-                        break;
-                    case 2:
-                        $this->dribbling = min($this->dribbling + 1, 100);
-                        $upgraded = 'dribbling';
-                        break;
-                    case 3:
-                        $this->heading = min($this->heading + 1, 100);
-                        $upgraded = 'heading';
-                        break;
-                    case 4:
-                        $this->jumping = min($this->jumping + 1, 100);
-                        $upgraded = 'jumping';
-                        break;
-                    case 5:
-                        $this->passing = min($this->passing + 1, 100);
-                        $upgraded = 'passing';
-                        break;
-                    case 6:
-                        $this->precision = min($this->precision + 1, 100);
-                        $upgraded = 'precision';
-                        break;
-                    case 7:
-                        $this->speed = min($this->speed + 1, 100);
-                        $upgraded = 'speed';
-                        break;
-                    case 8:
-                        $this->strength = min($this->strength + 1, 100);
-                        $upgraded = 'strength';
-                        break;
-                    case 9:
-                        $this->tackling = min($this->tackling + 1, 100);
-                        $upgraded = 'tackling';
-                        break;
-
+                $attribute = Player::ATTRIBUTES[mt_rand(0, 9)];
+                if ($this->$attribute < 100) {
+                    $this->$attribute++;
+                    $upgraded = $attribute;
                 }
 
-                if (empty($last_upgrade[$upgraded])) {
-                    $last_upgrade[$upgraded] = 1;
-                } else {
-                    $last_upgrade[$upgraded]++;
+                if ($upgraded) {
+                    if (empty($last_upgrade[$upgraded])) {
+                        $last_upgrade[$upgraded] = 1;
+                    } else {
+                        $last_upgrade[$upgraded]++;
+                    }
                 }
+
+                $upgraded = null;
             }
 
             if (!$force) {
