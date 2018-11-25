@@ -220,7 +220,7 @@ function movePager(id) {
         </div>
     </div>
 </div>
-@if ($tournament['id'] > 1 and count($category['scorers']) > 0)
+@if ($tournament->id > 1 and count($category->scorers) > 0)
 <div class="col-xs-12 col-md-6" style="clear:left;float:left;">
     <h4>Goleadores</h4>
     <table class="table table-bordered responsive">
@@ -233,13 +233,13 @@ function movePager(id) {
         </thead>
         <tbody>
             @foreach ($category->scorers as $scorer)
-            <tr{!! ($scorer->player->team->id == $_team->id) ? ' style="background-color:#ddd;"' : '' !!}>
+            <tr{!! ($scorer->team->id == $_team->id) ? ' style="background-color:#ddd;"' : '' !!}>
                 @if (is_null($scorer->player->deleted_at))
                 <td><a href="{{ route('player', $scorer->player->id) }}">{{ $scorer->player->short_name }}</a></td>
-                <td><a href="{{ route('team.show', $scorer->player->team->id) }}">{{ $scorer->player->team->name }}</a></td>
+                <td><a href="{{ route('team.show', $scorer->team->id) }}">{{ $scorer->team->name }}</a></td>
                 @else
                 <td>{{ $scorer->player->short_name }} <span class="fa fa-user-times" style="color:#f00;" data-toggle="tooltip" title="" data-original-title="Retirado"></span></td>
-                <td><a href="{{ route('team.show', $scorer->player->team->id) }}">{{ $scorer->player->team->name }}</a></td>
+                <td><a href="{{ route('team.show', $scorer->team->id) }}">{{ $scorer->team->name }}</a></td>
                 @endif
                 <td style="text-align:right;">{{ $scorer->goals }}</td>
             </tr>

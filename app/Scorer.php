@@ -24,8 +24,16 @@ class Scorer extends Model
         'player'
     ];
 
+    /**
+     * @return mixed
+     */
     public function player()
     {
         return $this->belongsTo(Player::class)->withTrashed();
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 }

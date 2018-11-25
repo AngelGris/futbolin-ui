@@ -374,6 +374,20 @@ class Player extends Model
     }
 
     /**
+     * Get the player's team ID (0 for free players)
+     *
+     * @return int
+     */
+    public function getTeamNameAttribute()
+    {
+        if ($this->team_id > 0) {
+            return $this->team->name;
+        } else {
+            return 'Jugador libre';
+        }
+    }
+
+    /**
      * If stamina <= 50 then the player is tired
      *
      * @return boolean
