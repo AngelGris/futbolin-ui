@@ -164,7 +164,7 @@ $(function(){
             if (data.remaining > 0) {
                 $('button.trainning-button').hide();
                 $('li.trainning').hide();
-                $('div.trainning-button-disabled').show();
+                $('button.trainning-button-disabled').show();
                 $('li.trainning-disabled').show();
                 startRemainingTimer(data.remaining);
             }
@@ -248,7 +248,7 @@ $(function(){
             $('.remaining-timer').text(hours + ':' + minutes + ':' + seconds);
         } else {
             clearInterval(remaining_timer);
-            $('div.trainning-button-disabled').hide();
+            $('button.trainning-button-disabled').hide();
             $('li.trainning-disabled').hide();
             $('button.trainning-button').show();
             $('li.trainning').show();
