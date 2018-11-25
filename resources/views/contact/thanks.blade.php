@@ -3,8 +3,8 @@
 @section('content')
 <div class="loginpanel" style="width:500px;">
     <div class="loginpanelinner">
-        <h1>¡Mensaje enviado!</h1>
-        <p>Muchas gracias por ponerse en contacto con <strong>Futbolin</strong>, nos pondremos en contacto a la brevedad.</p>
+        <h1>@lang('messages.message_sent_title')</h1>
+        <p>@lang('messages.message_sent_content')</p>
     </div>
 </div>
 @endsection
