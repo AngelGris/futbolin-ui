@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'credits_title'                     => 'Fúlbos',
+    'credits_subtitle'                  => 'Un empujoncito no viene mal',
     'finances.title'                    => 'Finanzas',
     'finances_subtitle'                 => 'Money, money, money',
     'friendlies_title'                  => 'Amistosos',
