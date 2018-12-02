@@ -17,6 +17,7 @@
 <script src="{{ asset('js/jquery.ui.touch-punch.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/spectrum.js') }}"></script>
+<script src="{{ asset('js/translations.js') }}"></script>
 @yield('javascript-inner')
 <script type="text/javascript">
     var trainable_remaining = {{ $_team['trainable_remaining'] }}
