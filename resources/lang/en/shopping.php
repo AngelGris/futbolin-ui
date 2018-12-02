@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'item_description_1'        => 'Recover 20 energy points for your players.',
+    'item_description_1'        => 'Recover 20 stamina points for your players.',
     'item_name_1'               => 'In-filtrum',
-    'item_description_2'        => 'Recover ALL energy points for your players.',
+    'item_description_2'        => 'Recover ALL stamina points for your players.',
     'item_name_2'               => 'In-filtrum Plus',
     'item_description_3'        => 'Automatically train your team for one week.',
     'item_name_3'               => 'Personal trainer',
