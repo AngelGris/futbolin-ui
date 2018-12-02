@@ -109,7 +109,7 @@
                                     <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small><br>
-                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} @choice('enums.rounds', $player['suspension'])</span>
+                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} @choice('countables.rounds', $player['suspension'])</span>
                                     </a>
                                 </li>
                                 @endforeach
@@ -121,7 +121,7 @@
                                     <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small><br>
-                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} @choice('enums.rounds', $player['recovery'])</span>
+                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} @choice('countables.rounds', $player['recovery'])</span>
                                     </a>
                                 </li>
                                 @endforeach
@@ -247,7 +247,7 @@
                                     <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small><br>
-                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} @choice('enums.rounds', $player['suspension'])</span>
+                                        <span style="color:#f00;">{{ $player['suspension_type'] }} - {{ $player['suspension'] }} @choice('countables.rounds', $player['suspension'])</span>
                                     </a>
                                 </li>
                                 @endforeach
@@ -259,7 +259,7 @@
                                     <a href="{{ route('player', $player['id']) }}">
                                         <strong>{{ $player['number'] }} {{ $player['first_name'] }} {{ $player['last_name'] }}</strong>
                                         <small>{{ $player['position'] }}</small><br>
-                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} @choice('enums.rounds', $player['recovery'])</span>
+                                        <span style="color:#f00;">{{ $player['injury']['name'] }} - {{ $player['recovery'] }} @choice('countables.rounds', $player['recovery'])</span>
                                     </a>
                                 </li>
                                 @endforeach

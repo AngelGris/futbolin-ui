@@ -35,7 +35,7 @@
     <div class="col-sm-4">
         <div class="shopping-item-wrapper" data-id="{{ $item->id }}">
             <h3>@lang('credits.item_name_' . $item->id)</h3>
-            <h4>{{ $item->quantity }} @choice('enums.credits', $item->quantity)</h4>
+            <h4>{{ $item->quantity }} @choice('countables.credits', $item->quantity)</h4>
             <span class="fa fa-soccer-ball-o"></span>
             <p>@lang('credits.item_description_' . $item->id)</p>
             <div class="shopping-item-price">{{ config('constants.CURRENCY') . ' ' . number_format($item->price, 2) }}</div>

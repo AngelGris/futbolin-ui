@@ -106,20 +106,12 @@ function randomGauss($min, $max, $std_deviation, $step=1)
  */
 function readableTime($seconds, $short = FALSE)
 {
-    if ($short) {
-        $hours_label = ['h', 'h'];
-        $minutes_label = ['m', 'm'];
-    } else {
-        $hours_label = ['hora', 'horas'];
-        $minutes_label = ['minute', 'minutes'];
-    }
-
     if ($seconds > 3600) {
         $hours = (int)($seconds / 3600);
-        $output = $hours . ' ' . ($hours > 1 ? $hours_label[1] : $hours_label[0]);
+        $output = $hours . ' ' . trans_choice('countables.hours' . ($short ? '_short' : ''), $hours);
     } else {
         $minutes = (int)($seconds / 60);
-        $output = $minutes . ' ' . ($minutes > 1 ? $minutes_label[1] : $minutes_label[0]);
+        $output = $minutes . ' ' . trans_choice('countables.minutes' . ($short ? '_short' : ''), $minutes);
     }
     return $output;
 }
