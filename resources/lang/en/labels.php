@@ -92,6 +92,7 @@ return [
     'salary'                    => 'Salary',
     'save'                      => 'Save',
     'season'                    => 'Season',
+    'select_your_teams_shield'  => 'Select your team\'s shield',
     'seller'                    => 'Seller',
     'send'                      => 'Send',
     'send_email'                => 'Send e-mail',

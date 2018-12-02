@@ -92,6 +92,7 @@ return [
     'salary'                    => 'Salario',
     'save'                      => 'Guardar',
     'season'                    => 'Temporada',
+    'select_your_teams_shield'  => 'Elige el escudo de tu equipo',
     'seller'                    => 'Vendedor',
     'send'                      => 'Enviar',
     'send_email'                => 'Enviar e-mail',
