@@ -150,8 +150,9 @@ $(function() {
         });
 
         // Display new positions
-        $('#live-positions').hide().empty();
-        $('<div class="col-xs-12"><div class="col-xs-3 col-sm-2" style="font-weight:bold;text-align:center;">Pos</div><div class="col-xs-5 col-sm-6" style="font-weight:bold;text-align:center;">Equipo</div><div class="col-xs-2" style="font-weight:bold;text-align:right;">PTS</div><div class="col-xs-2" style="font-weight:bold;text-align:right;">DG</div><div class="clear"></div></div>').appendTo('#live-positions');
+        $('#live-positions').hide();
+        $('#live-positions-teams').empty();
+
         positions.forEach(function(item, index) {
             item.position = index + 1;
             var icon = '<span class="fa fa-chevron-right position-full-right"></span>';
@@ -160,7 +161,7 @@ $(function() {
             } else if (item.position < item.base_position) {
                 icon = '<span class="fa fa-chevron-up position-full-up"></span>';
             }
-            $('<div class="col-xs-12"><div class="col-xs-3 col-sm-2" style="text-align:right;">' + item.position + ' ' + icon + '</div><div class="col-xs-5 col-sm-6"><span class="live-positions-name">' + item.team_name + '</span><span class="live-positions-shortname">' + item.team_short_name + '</span></div><div class="col-xs-2" style="text-align:right;">' + item.points + '</div><div class="col-xs-2" style="text-align:right;">' + (item.goals_favor - item.goals_against) + '</div><div class="clear"></div></div>').appendTo('#live-positions');
+            $('<div class="col-xs-12"><div class="col-xs-3 col-sm-2" style="text-align:right;">' + item.position + ' ' + icon + '</div><div class="col-xs-5 col-sm-6"><span class="live-positions-name">' + item.team_name + '</span><span class="live-positions-shortname">' + item.team_short_name + '</span></div><div class="col-xs-2" style="text-align:right;">' + item.points + '</div><div class="col-xs-2" style="text-align:right;">' + (item.goals_favor - item.goals_against) + '</div><div class="clear"></div></div>').appendTo('#live-positions-teams');
         });
         $('#live-positions').show();
     }
@@ -338,12 +339,12 @@ $(function() {
             clearInterval(time_interval);
             $('#jplayer-final-whistle').jPlayer('play');
             if (time_current == time_total / 2) {
-                $('#match-timer').text('Descanso');
+                $('#match-timer').text(text_half_time);
                 setTimeout(function() {
                     time_interval = setInterval(update_broadcast, 1000);
                 }, 10000);
             } else {
-                $('#match-timer').text('Finalizado');
+                $('#match-timer').text(text_full_time);
                 setTimeout(function() {
                     document.location = '/vestuario/';
                 }, 10000);

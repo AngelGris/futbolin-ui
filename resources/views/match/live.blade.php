@@ -14,6 +14,8 @@ var match_others = {!! $match_others !!};
 var match_duration = {{ config('constants.LIVE_MATCH_DURATION') * 60 }};
 var positions = {!! $positions !!};
 var rivals = { {{ $match->local->id }} : {{ $match->visit->id }}, {{ $match->visit->id }} : {{ $match->local->id }} };
+var text_half_time = '@lang('labels.half_time')';
+var text_full_time = '@lang('labels.full_time')';
 </script>
 @endsection
 
@@ -25,9 +27,9 @@ var rivals = { {{ $match->local->id }} : {{ $match->visit->id }}, {{ $match->vis
     <div class="col-xs-12">
         <h1>
             {{ $match->category->name }}<br>
-            Fecha {{ $match->round->number }}
+            @lang('labels.round_number', ['number' => $match->round->number])
         </h1>
-        <h4 class="assistance">{{ number_format($match->assistance) }} espectadores - recaudación: {{ formatCurrency($match->incomes) }}</h4>
+        <h4 class="assistance">@lang('labels.number_spectators', ['number' => number_format($match->assistance)]) - @lang('labels.collection_value', ['value' => formatCurrency($match->incomes)])</h4>
     </div>
     <div class="col-xs-4 col-sm-5 title-local">
         <span class="title-local-name">{{ $match->local->name }}</span>
@@ -65,27 +67,27 @@ var rivals = { {{ $match->local->id }} : {{ $match->visit->id }}, {{ $match->vis
             </div>
             <div class="col-xs-12">
                 <div class="col-xs-4 local-goals goals" id="goals-{{ $match->local->id }}">0</div>
-                <div class="col-xs-4">Goles</div>
+                <div class="col-xs-4">@lang('labels.goals')</div>
                 <div class="col-xs-4 visit-goals goals" id="goals-{{ $match->visit->id }}">0</div>
             </div>
             <div class="col-xs-12">
                 <div class="col-xs-4"><span class="local-shots">0</span> (<span class="local-shots-on-goal">0</span>)</div>
-                <div class="col-xs-4">Disparos</div>
+                <div class="col-xs-4">@lang('labels.shots')</div>
                 <div class="col-xs-4"><span class="visit-shots">0</span> (<span class="visit-shots-on-goal">0</span>)</div>
             </div>
             <div class="col-xs-12">
                 <div class="col-xs-4"><span class="local-fouls">0</span></div>
-                <div class="col-xs-4">Faltas cometidas</div>
+                <div class="col-xs-4">@lang('labels.fouls_made')</div>
                 <div class="col-xs-4"><span class="visit-fouls">0</span></div>
             </div>
             <div class="col-xs-12">
                 <div class="col-xs-4"><span class="local-yellow-cards">0</span> / <span class="local-red-cards">0</span></div>
-                <div class="col-xs-4">Tarjetas</div>
+                <div class="col-xs-4">@lang('labels.cards')</div>
                 <div class="col-xs-4"><span class="visit-yellow-cards">0</span> / <span class="visit-red-cards">0</span></div>
             </div>
             <div class="col-xs-12">
                 <div class="col-xs-4"><span class="local-substitutions">0</span></div>
-                <div class="col-xs-4">Cambios</div>
+                <div class="col-xs-4">@lang('labels.substitutions')</div>
                 <div class="col-xs-4"><span class="visit-substitutions">0</span></div>
             </div>
             <div class="clear"></div>
@@ -93,7 +95,7 @@ var rivals = { {{ $match->local->id }} : {{ $match->visit->id }}, {{ $match->vis
     </div>
     <div class="col-sm-0 col-md-2"></div>
     <div class="col-sm-12 col-md-8">
-        <h2>Alineaciones</h2>
+        <h2>@lang('labels.line_ups')</h2>
         <div class="col-xs-12 modal-match-result-formations">
             <div class="col-sm-3 col-xs-6">
                 <ul id="formation-local">
@@ -115,11 +117,19 @@ var rivals = { {{ $match->local->id }} : {{ $match->visit->id }}, {{ $match->vis
         <div id="match-other-wrapper">
         </div>
         <div id="live-positions" class="zebra">
+            <div class="col-xs-12">
+                <div class="col-xs-3 col-sm-2" style="font-weight:bold;text-align:center;">@lang('labels.position_short')</div>
+                <div class="col-xs-5 col-sm-6" style="font-weight:bold;text-align:center;">@lang('labels.team')</div>
+                <div class="col-xs-2" style="font-weight:bold;text-align:right;">@lang('labels.points_short')</div>
+                <div class="col-xs-2" style="font-weight:bold;text-align:right;">@lang('labels.goals_difference_short')</div>
+                <div class="clear"></div>
+            </div>
+            <div id="live-positions-teams"></div>
         </div>
     </div>
 </div>
 <div id="live-loading">
     <img src="{{ asset('img/connecting.gif') }}" style="width:60px;"><br>
-    Iniciando transmisión...
+    @lang('labels.starting_transmission')
 </div>
 @endsection
