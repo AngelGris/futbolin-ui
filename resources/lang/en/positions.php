@@ -1,8 +1,12 @@
 <?php
 
 return [
-    'arq'   => 'Goalkeeper',
-    'def'   => 'Defender',
-    'med'   => 'Midfielder',
-    'ata'   => 'Forward'
+    'arq'       => 'Goalkeeper',
+    'arq_short' => 'GOA',
+    'ata'       => 'Forward',
+    'ata_short' => 'FOR',
+    'def'       => 'Defender',
+    'def_short' => 'DEF',
+    'med'       => 'Midfielder',
+    'med_short' => 'MID',
 ];

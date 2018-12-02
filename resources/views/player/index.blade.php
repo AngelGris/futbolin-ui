@@ -2,49 +2,49 @@
 
 @section('content-inner')
 @if ($player->team && $player->treatable && $player->team->id == $_team->id)
-<h3>{{ $player->number }} - {!! $player->name !!} <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-treatment">Tratar jugador</button></h3>
+<h3>{{ $player->number }} - {!! $player->name !!} <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-treatment">@lang('labels.treat_player')</button></h3>
 @else
 <h3>{{ $player->number }} - {!! $player->name !!}</h3>
 @endif
-<h4>{{ $player->position }} - {{ $player->age }} años</h4>
+<h4>@lang('positions.' . strtolower($player->position) . '_short') - @lang('labels.number_years', ['number' => $player->age])</h4>
 <h4>
-    Valor: {!! formatCurrency($player->value) !!}
+    @lang('labels.value'): {!! formatCurrency($player->value) !!}
 @if ($player->team && $player->team->id == $_team->id && empty($player->selling->id))
-    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-value">Mejorar contrato</button>
-    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-selling">Declarar transferible</button>
-    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-free">Dejar libre</button>
+    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-value">@lang('labels.improve_contract')</button>
+    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-selling">@lang('labels.declare_transferable')</button>
+    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-free">@lang('labels.set_free')</button>
 @elseif (!empty($player->selling->id))
     <br>
     @if ($player->selling->best_offer_team)
-    Mejor oferta: {{ formatCurrency($player->selling->best_offer_value) }} ({{ $player->selling->offeringTeam->name }})
+    @lang('labels.best_offer'): {{ formatCurrency($player->selling->best_offer_value) }} ({{ $player->selling->offeringTeam->name }})
     @else
-    SIN OFERTAS
+    {{ strtoupper(trans('labels.no_offers')) }}
     @endif
     @if (!$player->team || $player->team->id != $_team->id)
-    <button class="btn btn-primary btn-sm btn-offer" data-transfer="{{ $player->selling->id }}" data-id="{{ $player->id }}" data-name="{{ $player->first_name . ' ' . $player->last_name }}" data-value="{{ $player->selling->offer_value + 1 }}" data-offer="{{ (int)($player->selling->offer_value * 1.05) }}">Ofertar</button>
+    <button class="btn btn-primary btn-sm btn-offer" data-transfer="{{ $player->selling->id }}" data-id="{{ $player->id }}" data-name="{{ $player->first_name . ' ' . $player->last_name }}" data-value="{{ $player->selling->offer_value + 1 }}" data-offer="{{ (int)($player->selling->offer_value * 1.05) }}">@lang('labels.offer')</button>
     @endif
-    <br>Transferible hasta el {{ $player->selling->closes_at->format('d/m/Y H:i') }}
+    <br>@lang('labels.transferable_until_date', ['date' => $player->selling->closes_at->format('d/m/Y H:i')])
 @endif
 </h4>
 <div class="col-xs-12 col-sm-6 col-md-3 zebra">
-    @foreach (['Media' => 'average', 'Arquero' => 'goalkeeping', 'Defensa' => 'defending', 'Gambeta' => 'dribbling', 'Cabeceo' => 'heading', 'Salto' => 'jumping', 'Pase' => 'passing', 'Precisión' => 'precision', 'Velocidad' => 'speed', 'Fuerza' => 'strength', 'Quite' => 'tackling'] as $k => $v)
+    @foreach (['average', 'goalkeeping', 'defending', 'dribbling', 'heading', 'jumping', 'passing', 'precision', 'speed', 'strength', 'tackling'] as $attribute)
     <div class="col-xs-12">
-        <label class="col-xs-9 control-label">{{ $k }}</label>
+        <label class="col-xs-9 control-label">@lang('attributes.' . $attribute)</label>
         <div class="col-xs-3">
-            @if ($player->upgraded && !empty($player->last_upgrade->{$v}))
-            <span style="color:#009900;">{{ $player->{$v} }}<sub>+{{ $player->last_upgrade->{$v} }}</sub></span>
+            @if ($player->upgraded && !empty($player->last_upgrade->{$attribute}))
+            <span style="color:#009900;">{{ $player->{$attribute} }}<sub>+{{ $player->last_upgrade->{$attribute} }}</sub></span>
             @else
-            {{ $player->{$v} }}
+            {{ $player->{$attribute} }}
             @endif
         </div>
     </div>
     @endforeach
     <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Energía</label>
+        <label class="col-xs-9 control-label">@lang('attributes.stamina')</label>
         <div class="col-xs-3">{{ $player->stamina }}</div>
     </div>
     <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Experiencia</label>
+        <label class="col-xs-9 control-label">@lang('attributes.experience')</label>
         <div class="col-xs-3">{{ $player->experience }}</div>
     </div>
 </div>
