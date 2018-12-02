@@ -396,7 +396,7 @@
             <div id="modal-admin-message-body" class="modal-body">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@lang('labels.close')</button>
             </div>
         </div>
     </div>
