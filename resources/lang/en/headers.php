@@ -31,4 +31,6 @@ return [
     'tournaments_subtitle'              => 'let\'s show who is the boss',
     'transfers_market_title'            => 'Transfers Market',
     'transfers_market_subtitle'         => 'Looking for reinforcement',
+    'users_guide_title'                 => 'User\'s Guide',
+    'users_guide_subtitle'              => 'Keep it clear',
 ];

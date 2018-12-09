@@ -31,4 +31,6 @@ return [
     'tournaments_subtitle'              => 'A demostrar quién manda',
     'transfers_market_title'            => 'Mercado de pases',
     'transfers_market_subtitle'         => 'A buscar refuerzos',
+    'users_guide_title'                 => 'Guía de Usuario',
+    'users_guide_subtitle'              => 'Las cosas claras',
 ];
