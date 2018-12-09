@@ -471,6 +471,7 @@ class MatchController extends Controller
                 'datetime'              => $match->created_at->timestamp,
                 'stadium'               => $data['stadium'],
                 'local' => [
+                    'team_id'           => $local->id,
                     'name'              => $local->name,
                     'primary_color'     => $local->primary_color,
                     'secondary_color'   => $local->secondary_color,
@@ -487,6 +488,7 @@ class MatchController extends Controller
                     'substitutions'     => (isset($data['local']['substitutions']) ? $data['local']['substitutions'] : -1),
                 ],
                 'visit' => [
+                    'team_id'           => $visit->id,
                     'name'              => $visit->name,
                     'primary_color'     => $visit->primary_color,
                     'secondary_color'   => $visit->secondary_color,
