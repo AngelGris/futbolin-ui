@@ -9,6 +9,8 @@ return [
     'back_to_market'            => 'Back to market',
     'best_offer'                => 'Best offer',
     'between'                   => 'Between',
+    'buy_credits'               => 'Buy Fúlbos',
+    'buy_item'                  => 'Buy ":item_name"',
     'buyer'                     => 'Buyer',
     'cancel'                    => 'Cancel',
     'cards'                     => 'Cards',

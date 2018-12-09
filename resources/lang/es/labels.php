@@ -9,6 +9,8 @@ return [
     'back_to_market'            => 'Volver al mercado',
     'best_offer'                => 'Mejor oferta',
     'between'                   => 'Entre',
+    'buy_credits'               => 'Comprar Fúlbos',
+    'buy_item'                  => 'Comprar ":item_name"',
     'buyer'                     => 'Comprador',
     'cancel'                    => 'Cancelar',
     'cards'                     => 'Tarjetas',
