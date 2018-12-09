@@ -9,4 +9,6 @@ return [
     'def_short' => 'DEF',
     'med'       => 'Midfielder',
     'med_short' => 'MID',
+    'spa'       => 'Sparring',
+    'spa_short' => 'SPA',
 ];

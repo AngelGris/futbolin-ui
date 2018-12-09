@@ -309,24 +309,7 @@ class Player extends Model
      */
     public function getPositionLongAttribute()
     {
-        switch ($this->position)
-        {
-            case 'ARQ':
-                return 'Arquero';
-                break;
-            case 'DEF':
-                return 'Defensor';
-                break;
-            case 'MED':
-                return 'Mediocampista';
-                break;
-            case 'ATA':
-                return 'Atacante';
-                break;
-            default:
-                return 'Sparring';
-                break;
-        }
+        return __('positions.' . strtolower($this->position));
     }
 
     /**
