@@ -5,10 +5,10 @@
 <table class="table table-bordered responsive">
     <thead>
         <tr>
-            <th>Fecha</th>
-            <th>Cond.</th>
-            <th>Res.</th>
-            <th>Det.</th>
+            <th>@lang('labels.round')</th>
+            <th>@lang('labels.condition_short')</th>
+            <th>@lang('labels.result_short')</th>
+            <th>@lang('labels.details_short')</th>
         </tr>
     </thead>
     <tbody>
