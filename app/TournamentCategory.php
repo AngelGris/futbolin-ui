@@ -119,7 +119,7 @@ class TournamentCategory extends Model
      */
     public function getNameBrAttribute()
     {
-        return $this->tournament->name . '<br> (' . __('labels.zone_and_category', ['zone' => $this->zone_name, 'category' => $this->category_name]) . ')';
+        return str_replace('Temporada', __('labels.season'),$this->tournament->name) . '<br> (' . __('labels.zone_and_category', ['zone' => $this->zone_name, 'category' => $this->category_name]) . ')';
     }
 
     /**
