@@ -322,7 +322,7 @@ class TeamController extends Controller
 
                 $last_matches[] = [
                     'date' => date('d/m/Y', strtotime($match->created_at)),
-                    'condition' => ($pos == 0 ? 'Local' : 'Visitante'),
+                    'condition' => __($pos == 0 ? 'labels.home' : 'labels.away'),
                     'score' => $score,
                     'logfile' => $match->logfile,
                 ];

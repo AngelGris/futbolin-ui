@@ -1,7 +1,7 @@
-<h4>Estadísticas contra {{ $rival['name'] }}</h4>
+<h4>@lang('labels.matches_against_team', ['team' => $rival['name']])</h4>
 @include('modules.statsmatches')
 @if (!empty($last_matches))
-<h4>Últimos partidos</h4>
+<h4>@lang('labels.last_matches')</h4>
 <table class="table table-bordered responsive">
     <thead>
         <tr>
