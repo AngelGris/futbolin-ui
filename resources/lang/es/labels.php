@@ -39,6 +39,7 @@ return [
     'details_short'             => 'Det.',
     'draw_short'                => 'Emp',
     'edit_profile'              => 'Editar perfil',
+    'edit_team'                 => 'Editar equipo',
     'email'                     => 'E-mail',
     'email_address'             => 'Dirección de e-mail',
     'enter'                     => 'Entrar',

@@ -39,6 +39,7 @@ return [
     'details_short'             => 'Det.',
     'draw_short'                => 'Dra',
     'edit_profile'              => 'Edit profile',
+    'edit_team'                 => 'Edit team',
     'email'                     => 'E-mail',
     'email_address'             => 'E-mail address',
     'enter'                     => 'Enter',
