@@ -409,7 +409,7 @@ $(function() {
                 <form id="form-numbers-update" method="POST" action="{{ route('team.numbers.update') }}">
                     {{ csrf_field() }}
                     <input type="submit" class="btn btn-primary" value="@lang('labels.update')" />
-                    <button type="reset" data-dismiss="modal" class="btn">Cancelar</button>
+                    <button type="reset" data-dismiss="modal" class="btn">@lang('labels.cancel')</button>
                 </form>
             </div>
         </div>
