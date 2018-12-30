@@ -17,6 +17,7 @@ return [
     'not_enough_credits_confirmation'   => 'Do you want to buy more Fúlbos?',
     'not_enough_credits_title'          => 'Not enough Fúlbos',
     'offer_must_be_between'             => 'The offer must be between :min and :max.',
+    'player_can_be_treated'             => ':player is injured and can be treated to recover faster.',
     'playing_match'                     => 'The match is been played, keep cheering!',
     'sparrings_description'             => 'Against the sparrings you can play all the matches you want, to test the different strategies for your team.',
     'wait_to_play_again'                => 'You can play a new friendly match against this team in :time'

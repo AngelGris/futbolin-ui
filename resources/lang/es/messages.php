@@ -17,6 +17,7 @@ return [
     'not_enough_credits_confirmation'   => '¿Quieres comprar más Fúlbos?',
     'not_enough_credits_title'          => 'No alcanzan los Fúlbos',
     'offer_must_be_between'             => 'La oferta tiene que ser entre :min y :max.',
+    'player_can_be_treated'             => ':player se ha lesionado y puede ser tratado para recuperarse más rápido.',
     'playing_match'                     => 'Se está disputando el encuentro, no dejen de alentar!',
     'sparrings_description'             => 'Con los sparrings pueden jugar todos los partidos de entrenamiento que quieras, para probar las diferentes estrategias de tu equipo.',
     'wait_to_play_again'                => 'En :time podrás jugar un nuevo amistoso contra éste equipo',

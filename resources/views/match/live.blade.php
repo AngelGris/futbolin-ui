@@ -120,7 +120,7 @@ var text_full_time = '@lang('labels.full_time')';
             <div class="col-xs-12">
                 <div class="col-xs-3 col-sm-2" style="font-weight:bold;text-align:center;">@lang('labels.position_short')</div>
                 <div class="col-xs-5 col-sm-6" style="font-weight:bold;text-align:center;">@lang('labels.team')</div>
-                <div class="col-xs-2" style="font-weight:bold;text-align:right;">@lang('labels.points_short')</div>
+                <div class="col-xs-2" style="font-weight:bold;text-align:right;">{{ strtoupper(trans('labels.points_short')) }}</div>
                 <div class="col-xs-2" style="font-weight:bold;text-align:right;">@lang('labels.goals_difference_short')</div>
                 <div class="clear"></div>
             </div>
