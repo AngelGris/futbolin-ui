@@ -12,6 +12,7 @@ return [
     'message_sent_title'                => '¡Mensaje enviado!',
     'minimum_offer_is_too_high'         => 'La oferta mínima es de :minimum_offer pero sólo tienes :spencding_margin. No puedes hacer una oferta.',
     'no_credits_to_sell'                => 'No tienes Fúlbos para vender.',
+    'no_tournaments_to_show'            => 'No hay torneos para mostrar (todavía!!!)',
     'not_enough_credits_body'           => 'No tienes suficientes Fúlbos para realizar la compra.',
     'not_enough_credits_confirmation'   => '¿Quieres comprar más Fúlbos?',
     'not_enough_credits_title'          => 'No alcanzan los Fúlbos',

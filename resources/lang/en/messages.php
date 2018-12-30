@@ -12,6 +12,7 @@ return [
     'message_sent_title'                => 'Message sent!',
     'minimum_offer_is_too_high'         => 'The minimum offer is :minimum_offer but you only have :spending_margin. You can\'t make an offer.',
     'no_credits_to_sell'                => 'You have no Fúlbos to sell.',
+    'no_tournaments_to_show'            => 'No tournaments to show (yet!!!)',
     'not_enough_credits_body'           => 'You don\'t have enough Fúlbos for this purchase.',
     'not_enough_credits_confirmation'   => 'Do you want to buy more Fúlbos?',
     'not_enough_credits_title'          => 'Not enough Fúlbos',

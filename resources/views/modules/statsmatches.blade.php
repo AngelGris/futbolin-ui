@@ -2,10 +2,10 @@
     <thead>
         <tr>
             <th></th>
-            <th>@lang('labels.played_short')</th>
-            <th>@lang('labels.won_short')</th>
-            <th>@lang('labels.draw_short')</th>
-            <th>@lang('labels.lost_short')</th>
+            <th>@lang('labels.matches_played_short')</th>
+            <th>@lang('labels.matches_won_short')</th>
+            <th>@lang('labels.matches_draw_short')</th>
+            <th>@lang('labels.matches_lost_short')</th>
             <th>@lang('labels.goals_for_short')</th>
             <th>@lang('labels.goals_against_short')</th>
             <th>@lang('labels.goals_difference_short')</th>
