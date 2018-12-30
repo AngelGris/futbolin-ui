@@ -23,58 +23,62 @@ class PlayerController extends Controller
             $user = Auth::user();
         }
         if ($player->team->id != $user->team->id) {
+            $message = __('messages.cant_free_player_from_other_team');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_free',
-                        'message'   => 'No puedes liberar a un jugador de otro equipo.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'No puedes liberar a un jugador de otro equipo.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
 
         if (!empty($player->selling->id)) {
+            $message = __('messages.cant_free_transferable_player');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_free',
-                        'message'   => 'No se puede liberar a un jugador transferible.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'No se puede liberar a un jugador transferible.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
 
         if ($player->freeValue > $user->team->funds) {
+            $message = __('messages.not_enough_founds_to_free_player', ['player' => $player->short_name]);
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_free',
-                        'message'   => 'Faltan fondos para liberar a ' . $player->short_name . '.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'Faltan fondos para liberar a ' . $player->short_name . '.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
 
         $sellable_count = $player->team->sellabel_count;
         if ($sellable_count < 1) {
+            $message = __('messages.minimum_players_reached');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_free',
-                        'message'   => 'Ha alcanzado el mínimo de jugadores en su equipo.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'Ha alcanzado el mínimo de jugadores en su equipo.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
@@ -86,7 +90,7 @@ class PlayerController extends Controller
                 'player' => $player
             ], 200);
         } else {
-            Session::flash('flash_success', $player->short_name . ' ha sido liberado.');
+            Session::flash('flash_success', __('messages.player_freed', ['player' => $player->short_name]));
             return redirect()->back();
         }
     }
@@ -138,44 +142,47 @@ class PlayerController extends Controller
         ]);
 
         if ($validator->fails()) {
+            $message = __('messages.invalid_offer_value');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_offer',
-                        'message'   => 'Valor de la oferta inválido.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'Valor de la oferta inválido.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
 
         $player = Player::find($request->input('player_id'));
         if (!$player->selling) {
+            $message = __('messages.player_not_transferable', ['player' => $player->short_name]);
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_offer',
-                        'message'   => $player->short_name . ' no es transferible.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', $player->short_name . ' no es transferible.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
 
         if ($request->input('offer') <= $player->selling->offer_value) {
+            $message = __('messages.offer_must_be_greater', ['player' => $player->short_name, 'value' => formatCurrency($player->selling->offer_value)]);
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_offer',
-                        'message'   => 'La oferta por ' . $player->short_name . ' tiene que ser superior a '  . formatCurrency($player->selling->offer_value) . '.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'La oferta por ' . $player->short_name . ' tiene que ser superior a '  . formatCurrency($player->selling->offer_value) . '.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
@@ -186,15 +193,16 @@ class PlayerController extends Controller
             $user = Auth::user();
         }
         if ($request->input('offer') > $user->team->calculateSpendingMargin()) {
+            $message = __('messages.cant_offer_more_than', ['value' => formatCurrency($user->team->calculateSpendingMargin())]);
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_offer',
-                        'message'   => 'No puedes hacer una oferta mayor a ' . formatCurrency($user->team->calculateSpendingMargin()) . '.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'No puedes hacer una oferta mayor a ' . formatCurrency($user->team->calculateSpendingMargin()) . '.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
@@ -202,15 +210,16 @@ class PlayerController extends Controller
         $selling = PlayerSelling::where('player_id', $player->id)->first();
 
         if ($selling->best_offer_team != $user->team->id && !$user->team->canHire) {
+            $message = __('messages.maximum_players_reached');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_offer',
-                        'message'   => 'Ya alcanzaste el máximo de jugadores en un equipo, no puedes comprar más jugadores.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'Ya alcanzaste el máximo de jugadores en un equipo, no puedes comprar más jugadores.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
@@ -233,7 +242,7 @@ class PlayerController extends Controller
         if ($request->expectsJson()) {
             return response()->json([], 204);
         } else {
-            Session::flash('flash_success', 'Oferta realizada.');
+            Session::flash('flash_success', __('messages.offer_made'));
             return redirect()->back();
         }
     }
@@ -272,15 +281,16 @@ class PlayerController extends Controller
         }
         $selling = $player->selling;
         if ($player->team->id != $user->team->id) {
+            $message = __('messages.cant_make_transferable_other_team');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_value',
-                        'message'   => 'No se puede declarar transferible a un jugador de otro equipo.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'No se puede declarar transferible a un jugador de otro equipo.');
+                Session::flash('flash_warning', $message);
             }
         } elseif (empty($selling->id)) {
             $sellable_count = $player->team->sellabel_count;
@@ -291,30 +301,32 @@ class PlayerController extends Controller
                         'selling' => $selling
                     ], 200);
                 } else {
-                    Session::flash('flash_success', $player->shortName . ' es transferible hasta el ' . $selling->closes_at->format('d/m/Y H:i') . ' con un valor inicial de ' . formatCurrency($selling->value) . '.');
+                    Session::flash('flash_success', __('messages.transferable_until', ['player' => $player->shortName, 'end_date' => $selling->closes_at->format('d/m/Y H:i'), 'initial_value' => formatCurrency($selling->value)]));
                 }
             } else {
+                $message = __('messages.minimum_players_reached_cant_sell');
                 if ($request->expectsJson()){
                     return response()->json([
                         'errors' => [
                             'type'      => 'player_sell',
-                            'message'   => 'Ha alcanzado el mínimo de jugadores en su equipo, no puede vender mas jugadores hasta no aumentar la plantilla.'
+                            'message'   => $message
                         ]
                     ], 400);
                 } else {
-                    Session::flash('flash_warning', 'Ha alcanzado el mínimo de jugadores en su equipo, no puede vender mas jugadores hasta no aumentar la plantilla.');
+                    Session::flash('flash_warning', $message);
                 }
             }
         } else {
+            $message = __('messages.already_transferable', ['player' => $player->short_name, 'end_date' => $selling->closes_at->format('d/m/Y H:i')]);
             if ($request->expectsJson()){
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_sell',
-                        'message'   => $player->shortName . ' ya es transferible hasta el ' . $selling->closes_at->format('d/m/Y H:i') . '.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', $player->shortName . ' ya es transferible hasta el ' . $selling->closes_at->format('d/m/Y H:i') . '.');
+                Session::flash('flash_warning', $message);
             }
         }
         return redirect()->back();
@@ -330,15 +342,16 @@ class PlayerController extends Controller
         ]);
 
         if ($validator->fails()) {
+            $message = __('messages.invalid_market_value');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_value',
-                        'message'   => 'Nuevo valor de mercado inválido.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'Nuevo valor de mercado inválido.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
@@ -349,29 +362,31 @@ class PlayerController extends Controller
             $user = Auth::user();
         }
         if ($player->team->id != $user->team->id) {
+            $message = __('messages.cant_modify_value_other_team');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_value',
-                        'message'   => 'No se puede modificar el valor de mercado de un jugador de otro equipo.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'No se puede modificar el valor de mercado de un jugador de otro equipo.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
 
         if (!empty($player->selling->id)) {
+            $message = __('messages.cant_modify_value_transferable');
             if ($request->expectsJson()) {
                 return response()->json([
                     'errors' => [
                         'type'      => 'player_value',
-                        'message'   => 'No se puede modificar el valor de mercado de un jugador transferible.'
+                        'message'   => $message
                     ]
                 ], 400);
             } else {
-                Session::flash('flash_warning', 'No se puede modificar el valor de mercado de un jugador transferible.');
+                Session::flash('flash_warning', $message);
                 return redirect()->back();
             }
         }
@@ -384,7 +399,7 @@ class PlayerController extends Controller
                 'player' => $player
             ], 200);
         } else {
-            Session::flash('flash_success', 'Valor actualizado.');
+            Session::flash('flash_success', __('messages.value_updated'));
             return redirect()->back();
         }
     }

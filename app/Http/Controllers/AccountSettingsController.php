@@ -52,7 +52,7 @@ class AccountSettingsController extends Controller
                 'user'  => $user
             ], 200);
         } else {
-            \Session::flash('flash_success', 'Perfil actualizado');
+            \Session::flash('flash_success', __('messages.profile_updated'));
 
             return redirect()->route('profile.edit');
         }
@@ -90,7 +90,7 @@ class AccountSettingsController extends Controller
             if ($request->expectsJson()) {
                 return response()->json([], 204);
             } else {
-                \Session::flash('flash_success', 'Contraseña actualizada');
+                \Session::flash('flash_success', __('messages.password_updated'));
 
                 return redirect()->route('profile.edit');
             }

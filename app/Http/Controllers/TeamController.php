@@ -629,7 +629,7 @@ class TeamController extends Controller
                 'team'  => $team
             ], 200);
         } else {
-            \Session::flash('flash_success', 'Equipo actualizado');
+            \Session::flash('flash_success', __('messages.team_updated'));
 
             return redirect()->route('team');
         }
