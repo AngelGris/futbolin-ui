@@ -13,7 +13,7 @@
 
 @section('content-inner')
 <div class="col-sm-12" style="margin-bottom:20px;">
-    <h4 style="text-align: right;">@lang('labels.credits'): {{ $_user->credits }} <a href="#" data-toggle="modal" data-target="#modal-sell-credits" class="btn btn-xs btn-primary">@lang('labels.sell_credits')</a></h4>
+    <h4 style="text-align: right;">@lang('labels.credits_with_value', ['value' => $_user->credits]) <a href="#" data-toggle="modal" data-target="#modal-sell-credits" class="btn btn-xs btn-primary">@lang('labels.sell_credits')</a></h4>
 </div>
 @if (count($movements) == 0)
 <h3>@lang('labels.no_transactions')</h3>

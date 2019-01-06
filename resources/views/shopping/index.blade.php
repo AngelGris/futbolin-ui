@@ -21,7 +21,7 @@
 @section('content-inner')
 <div>
     <div class="col-sm-12" style="margin-bottom:20px;">
-        <h4 style="text-align: right;">@lang('labels.credits'): {{ $_user->credits }} <a href="{{ route('shopping.credits') }}" class="btn btn-xs btn-primary">@lang('labels.buy_credits')</a></h4>
+        <h4 style="text-align: right;">@lang('labels.credits_with_value', ['value' => $_user->credits]) <a href="{{ route('shopping.credits') }}" class="btn btn-xs btn-primary">@lang('labels.buy_credits')</a></h4>
     </div>
     @foreach($items as $item)
     <div class="col-sm-4">
@@ -35,7 +35,7 @@
             <h3>@lang('shopping.item_name_' . $item->id)</h3>
             <span class="{{ $item->icon }}"></span>
             <p>@lang('shopping.item_description_' . $item->id)</p>
-            <div class="shopping-item-price">{{ $item->price }} {{ str_plural('Fúlbo', $item->price) }}</div>
+            <div class="shopping-item-price">{{ $item->price }} @choice('countables.credits', $item->price)</div>
         </div>
     </div>
     @endforeach

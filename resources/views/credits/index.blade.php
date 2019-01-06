@@ -29,7 +29,7 @@
 @section('content-inner')
 <div>
     <div class="col-sm-12" style="margin-bottom:20px;">
-        <h4 style="text-align: right;">@lang('labels.credits'): {{ $_user->credits }}</h4>
+        <h4 style="text-align: right;">@lang('labels.credits_with_value', ['value' => $_user->credits])</h4>
     </div>
     @foreach($items as $item)
     <div class="col-sm-4">
