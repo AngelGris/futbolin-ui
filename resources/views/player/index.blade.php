@@ -21,7 +21,7 @@
     {{ strtoupper(trans('labels.no_offers')) }}
     @endif
     @if (!$player->team || $player->team->id != $_team->id)
-    <button class="btn btn-primary btn-sm btn-offer" data-transfer="{{ $player->selling->id }}" data-id="{{ $player->id }}" data-name="{{ $player->first_name . ' ' . $player->last_name }}" data-value="{{ $player->selling->offer_value + 1 }}" data-offer="{{ (int)($player->selling->offer_value * 1.05) }}">@lang('labels.offer')</button>
+    <button class="btn btn-primary btn-sm btn-offer" data-transfer="{{ $player->selling->id }}" data-id="{{ $player->id }}" data-name="{{ $player->full_name }}" data-value="{{ $player->selling->offer_value + 1 }}" data-offer="{{ (int)($player->selling->offer_value * 1.05) }}">@lang('labels.offer')</button>
     @endif
     <br>@lang('labels.transferable_until_date', ['date' => $player->selling->closes_at->format('d/m/Y H:i')])
 @endif
@@ -56,7 +56,7 @@
             <form method="post" action="{{ route('player.value', ['player' => $player->id]) }}">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Mejorar contrato de {{ $player->first_name }} {{ $player->last_name }}</h4>
+                    <h4 class="modal-title">Mejorar contrato de {{ $player->full_name }}</h4>
                 </div>
                 <div class="modal-body">
                     <p>Puedes incrementar el valor de venta de {{ $player->shortName }} hasta un valor de <strong>{!! formatCurrency($_team->calculateSpendingMargin($player->value, FALSE)) !!}</strong>.</p>
@@ -90,7 +90,7 @@
             <form method="post" action="{{ route('player.selling', ['player' => $player->id]) }}">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">@lang('labels.declare_player_transferable', ['player' => $player->first_name . ' ' . $player->last_name])</h4>
+                    <h4 class="modal-title">@lang('labels.declare_player_transferable', ['player' => $player->full_name])</h4>
                 </div>
                 <div class="modal-body">
                     <p>@lang('messages.do_you_want_to_make_player_transferable_until_date', ['player' => $player->short_name, 'date' => \Carbon\Carbon::now()->addDays(config('constants.PLAYERS_TRANSFERABLE_PERIOD'))->format('d/m/Y')])</p>
@@ -110,7 +110,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">@lang('labels.free_player_action', ['player' => $player->first_name . ' ' . $player->last_name])</h4>
+                <h4 class="modal-title">@lang('labels.free_player_action', ['player' => $player->full_name])</h4>
             </div>
             <div class="modal-body">
                 <p>@lang('messages.how_to_terminate_contract', ['player' => $player->short_name, 'clause_value' => formatCurrency($player->freeValue)])</p>
@@ -145,7 +145,7 @@
             </div>
             @if($_user->credits > 0)
             <div class="modal-body">
-                <p>@lang('messages.treatment_result', ['player' => $player->first_name . ' ' . $player->last_name, 'recovery' => $player->treatmentImprovement . ' ' . trans_choice('countables.rounds', $player->treatmentImprovement)])</p>
+                <p>@lang('messages.treatment_result', ['player' => $player->full_name, 'recovery' => $player->treatmentImprovement . ' ' . trans_choice('countables.rounds', $player->treatmentImprovement)])</p>
                 <p>@lang('messages.each_player_can_be_treated_once')</p>
                 <p>@lang('messages.do_you_want_to_treat_player', ['player' => $player->short_name])</p>
                 <p>@lang('labels.credits_with_value', ['value' => $_user->credits])</p>

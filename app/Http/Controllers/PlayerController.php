@@ -228,8 +228,8 @@ class PlayerController extends Controller
             // Notify team with previous offer
             Notification::create([
                 'user_id' => $selling->offeringTeam->user->id,
-                'title' => 'Tu oferta por ' . $selling->player->first_name . ' ' . $selling->player->last_name . ' ha sido superada.',
-                'message' => $user->team->name . ' hizo una mejor oferta por <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->first_name . ' ' . $selling->player->last_name . '</a>, ¿vas a dejar que se lo queden?',
+                'title' => 'Tu oferta por ' . $selling->player->full_name . ' ha sido superada.',
+                'message' => $user->team->name . ' hizo una mejor oferta por <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->full_name . '</a>, ¿vas a dejar que se lo queden?',
             ]);
         }
 

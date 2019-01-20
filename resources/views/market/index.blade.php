@@ -172,7 +172,7 @@ $(function() {
             </td>
             <td align="center">
                 @if (!$transferable->player->team || $transferable->player->team->id != $_team->id)
-                <button class="btn btn-primary btn-offer" data-transfer="{{ $transferable->id }}" data-id="{{ $transferable->player->id }}" data-name="{{ $transferable->player->first_name . ' ' . $transferable->player->last_name }}" data-value="{{ $transferable->offer_value + 1 }}" data-offer="{{ (int)($transferable->offer_value * 1.05) }}">@lang('labels.offer')</button>
+                <button class="btn btn-primary btn-offer" data-transfer="{{ $transferable->id }}" data-id="{{ $transferable->player->id }}" data-name="{{ $transferable->player->full_name }}" data-value="{{ $transferable->offer_value + 1 }}" data-offer="{{ (int)($transferable->offer_value * 1.05) }}">@lang('labels.offer')</button>
                 @endif
             </td>
         </tr>

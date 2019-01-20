@@ -69,8 +69,8 @@ class Kernel extends ConsoleKernel
                     // Notify selling team
                     Notification::create([
                         'user_id' => $selling->player->team->user->id,
-                        'title' => 'No hubo ninguna oferta por ' . $selling->player->first_name . ' ' . $selling->player->last_name,
-                        'message' => 'No has podido vender a <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->first_name . ' ' . $selling->player->last_name . '</a> y continua a disposición de tu cuerpo técnico.',
+                        'title' => 'No hubo ninguna oferta por ' . $selling->player->full_name,
+                        'message' => 'No has podido vender a <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->full_name . '</a> y continua a disposición de tu cuerpo técnico.',
                     ]);
                     $selling->delete();
                 } elseif ($selling->created_at > Carbon::now()->subWeeks(2)) {

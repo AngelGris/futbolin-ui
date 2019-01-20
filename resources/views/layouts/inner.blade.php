@@ -92,7 +92,7 @@
                                 @foreach ($_transferables as $player)
                                 <li>
                                     <a href="{{ route('player', $player->id) }}">
-                                        <strong>{{ $player->number }} {{ $player->first_name }} {{ $player->last_name }}</strong>
+                                        <strong>{{ $player->number }} {{ $player->full_name }}</strong>
                                         <small>{{ $player->position }}</small><br>
                                         @if ($player->best_offer_team)
                                         <span>@lang('labels.best_offer'): {{ formatCurrency($player->best_offer_value) }}</span>
@@ -230,7 +230,7 @@
                                 @foreach ($_transferables as $player)
                                 <li>
                                     <a href="{{ route('player', $player->id) }}">
-                                        <strong>{{ $player->number }} {{ $player->first_name }} {{ $player->last_name }}</strong>
+                                        <strong>{{ $player->number }} {{ $player->full_name }}</strong>
                                         <small>{{ $player->position }}</small><br>
                                         @if ($player->best_offer_team)
                                         <span>@lang('labels.best_offer'): {{ formatCurrency($player->best_offer_value) }}</span>

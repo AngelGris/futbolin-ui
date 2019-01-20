@@ -589,8 +589,8 @@ class Team extends Model
 
             Notification::create([
                 'user_id' => $this->user->id,
-                'title' => $player->first_name . ' ' . $player->last_name . ' se ha retirado',
-                'message' => $player->first_name . ' ' . $player->last_name . ' ha decidido dejar las canchas y <a href="/jugador/' . $newbie->id . '/">' . $newbie->first_name . ' ' . $newbie->last_name . '</a> ha sido incorporado al equipo.',
+                'title' => $player->full_name . ' se ha retirado',
+                'message' => $player->full_name . ' ha decidido dejar las canchas y <a href="/jugador/' . $newbie->id . '/">' . $newbie->full_name . '</a> ha sido incorporado al equipo.',
             ]);
         } else {
             $pos = array_search($player->id, $this->formation);
@@ -604,8 +604,8 @@ class Team extends Model
 
             Notification::create([
                 'user_id' => $this->user->id,
-                'title' => $player->first_name . ' ' . $player->last_name . ' se ha retirado',
-                'message' => $player->first_name . ' ' . $player->last_name . ' ha decidido dejar las canchas con ' . $player->age . ' años.',
+                'title' => $player->full_name . ' se ha retirado',
+                'message' => $player->full_name . ' ha decidido dejar las canchas a los ' . $player->age . ' años.',
             ]);
         }
 

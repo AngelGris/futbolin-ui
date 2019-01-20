@@ -30,7 +30,7 @@
         <tr class="{{ strtolower($transaction->player->position) }}">
             <td>{{ $transaction->created_at->format('d/m/Y H:i') }}</td>
             @if (is_null($transaction->player->deleted_at))
-            <td><a href="{{ route('player', $transaction->player->id) }}">{{ $transaction->player->first_name . ' ' . $transaction->player->last_name  }}</a></td>
+            <td><a href="{{ route('player', $transaction->player->id) }}">{{ $transaction->player->full_name }}</a></td>
             @else
             <td>{!! $transaction->player->name !!}</td>
             @endif
