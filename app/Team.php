@@ -488,11 +488,11 @@ class Team extends Model
     /**
      * Process money income
      *
-     * @param integer $incomes
-     * @param String $description
-     * @return integer
+     * @param $amount
+     * @param $movement_type
+     * @param array $variables
      */
-    public function moneyMovement($amount, $description)
+    public function moneyMovement($amount, $movement_type, $variables = [])
     {
         // Limit the funds in the team
         $amount = min($amount, \Config::get('constants.MAX_TEAM_FUNDS') - $this->funds);
@@ -503,7 +503,8 @@ class Team extends Model
             'team_id'       => $this->id,
             'amount'        => $amount,
             'balance'       => $this->funds,
-            'description'   => $description
+            'movement_type' => $movement_type,
+            'variables'     => $variables
         ]);
     }
 
@@ -515,7 +516,7 @@ class Team extends Model
     public function paySalaries()
     {
         $salaries = (int)($this->players()->sum('value') * \Config::get('constants.PLAYERS_SALARY'));
-        $this->moneyMovement(-$salaries, 'Pago de salarios');
+        $this->moneyMovement(-$salaries, \Config::get('constants.MONEY_MOVEMENTS_OUTCOME_SALARIES_PAID'));
     }
 
     /**

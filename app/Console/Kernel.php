@@ -52,9 +52,9 @@ class Kernel extends ConsoleKernel
                     $selling_team = $selling->player->team;
                     if ($selling->player->transfer($selling->offeringTeam, $selling->best_offer_value)) {
                         if ($selling_team) {
-                            $selling_team->moneyMovement($selling->best_offer_value, 'Venta de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+                            $selling_team->moneyMovement($selling->best_offer_value, \Config::get('constants.MONEY_MOVEMENTS_INCOME_SELLING_PLAYER'), ['player' => $selling->player->full_name]);
                         }
-                        $selling->offeringTeam->moneyMovement(-$selling->best_offer_value, 'Compra de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+                        $selling->offeringTeam->moneyMovement(-$selling->best_offer_value, \Config::get('constants.MONEY_MOVEMENTS_OUTCOME_BUYING_PLAYER'), ['player' => $selling->player->full_name]);
 
                         MarketTransaction::create([
                             'player_id'     => $selling->player->id,
@@ -152,11 +152,11 @@ class Kernel extends ConsoleKernel
                             $incomes = (int)($match->incomes / 2);
                             if ($match->local_id >= 27) {
                                 $local = Team::find($match->local_id);
-                                $local->moneyMovement($incomes, 'Ingresos por venta de entradas');
+                                $local->moneyMovement($incomes, \Config::get('constants.MONEY_MOVEMENTS_INCOME_SELLING_TICKETS'));
                             }
                             if ($match->visit_id >= 27) {
                                 $visit = Team::find($match->visit_id);
-                                $visit->moneyMovement($incomes, 'Ingresos por venta de entradas');
+                                $visit->moneyMovement($incomes, \Config::get('constants.MONEY_MOVEMENTS_INCOME_SELLING_TICKETS'));
                             }
                         }
                     }

@@ -171,7 +171,7 @@ class ShoppingController extends Controller
                     }
                 }
 
-                $user->team->moneyMovement($value, 'Venta de Fúlbos');
+                $user->team->moneyMovement($value, \Config::get('constants.MONEY_MOVEMENTS_INCOME_SELLING_CREDITS'));
                 $success_message = __('messages.credits_sold', ['credits' => $shopping_item->price, 'value' => formatCurrency($value)]);
                 $redirect = redirect()->route('finances');
                 break;

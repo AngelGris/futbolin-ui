@@ -83,7 +83,7 @@ class PlayerController extends Controller
             }
         }
 
-        $user->team->moneyMovement(-$player->freeValue, 'Rescisión de contrato de ' . $player->first_name . ' ' . $player->last_name);
+        $user->team->moneyMovement(-$player->freeValue, \Config::get('constants.MONEY_MOVEMENTS_OUTCOME_CONTRACT_TERMINATED'), ['player' => $player->full_name]);
         $player = $player->setFree();
         if ($request->expectsJson()) {
             return response()->json([

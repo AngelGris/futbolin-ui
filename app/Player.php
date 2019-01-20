@@ -292,14 +292,19 @@ class Player extends Model
         }
     }
 
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     /**
-     * Get player's name
+     * Get player's name with HTML icons
      *
      * @return string
      */
     public function getNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name . ' ' . $this->iconsHtml();
+        return $this->full_name . ' ' . $this->iconsHtml();
     }
 
     /**

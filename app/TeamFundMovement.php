@@ -14,6 +14,15 @@ class TeamFundMovement extends Model
     protected $guarded = ['id', 'created_on'];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'variables' => 'array'
+    ];
+
+    /**
      * Carbon instance fields
      */
     protected $dates = ['created_at'];
@@ -46,5 +55,13 @@ class TeamFundMovement extends Model
         static::creating(function ($model) {
             $model->created_at = $model->freshTimestamp();
         });
+    }
+
+    public function getDescriptionAttribute($value)
+    {
+        if (!empty($value)) {
+            return $value;
+        }
+        return __('messages.fund_movements_' . $this->movement_type, $this->variables);
     }
 }
