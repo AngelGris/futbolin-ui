@@ -14,6 +14,15 @@ class Notification extends Model
     protected $guarded = ['id'];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'variables' => 'array'
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -31,6 +40,11 @@ class Notification extends Model
         'published', 'unread'
     ];
 
+    public function getMessageAttribute()
+    {
+        return __('notifications.message_' . $this->notification_type, $this->variables);
+    }
+
     /**
      * Get published as human readable
      *
@@ -42,6 +56,14 @@ class Notification extends Model
     }
 
     /**
+     * @return \Illuminate\Contracts\Translation\Translator|string
+     */
+    public function getTitleAttribute()
+    {
+        return __('notifications.title_' . $this->notification_type, $this->variables);
+    }
+
+    /**
      * Get if the notification is unread
      *
      * @return boolean
@@ -49,5 +71,21 @@ class Notification extends Model
     public function getUnreadAttribute()
     {
         return is_null($this->read_on);
+    }
+
+    /**
+     * @param int $user_id
+     * @param int $notification_type
+     * @param array $variables
+     * @return Notification|Model
+     */
+    public static function create(int $user_id, int $notification_type, array $variables) {
+        $notification = new Notification();
+        $notification->user_id = $user_id;
+        $notification->notification_type = $notification_type;
+        $notification->variables = $variables;
+        $notification->save();
+
+        return $notification;
     }
 }

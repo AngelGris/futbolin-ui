@@ -67,10 +67,9 @@ class Kernel extends ConsoleKernel
                     $selling->delete();
                 } elseif ($selling->player->team) {
                     // Notify selling team
-                    Notification::create([
-                        'user_id' => $selling->player->team->user->id,
-                        'title' => 'No hubo ninguna oferta por ' . $selling->player->full_name,
-                        'message' => 'No has podido vender a <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->full_name . '</a> y continua a disposición de tu cuerpo técnico.',
+                    Notification::create($selling->player->team->user->id, 5, [
+                        'player'        => $selling->player->full_name,
+                        'player_html'   => '<a href="/jugador/' . $selling->player->id . '/">' . $selling->player->full_name . '</a>',
                     ]);
                     $selling->delete();
                 } elseif ($selling->created_at > Carbon::now()->subWeeks(2)) {
@@ -85,6 +84,9 @@ class Kernel extends ConsoleKernel
         })
         ->appendOutputTo('/var/log/futbolin/every_minute.log');
 
+        /**
+         * Hourly generate new free players in the market
+         */
         $schedule->call(function() {
             // Generate free players
             $generation_rate = \Config::get('constants.FREE_PLAYERS_GENERATE') * 41.67; // (41.67 = 1000 / 24)

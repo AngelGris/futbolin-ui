@@ -520,18 +520,19 @@ class Player extends Model
 
         // Notify selling team
         if ($this->team) {
-            Notification::create([
-                'user_id' => $this->team->user->id,
-                'title' => $this->full_name . ' ha sido transferido',
-                'message' => '<a href="/jugador/' . $this->id . '/">' . $this->full_name . '</a> ha sido transferido a <a href="/equipo/' . $team->id . '">' . $team->name . '</a> por ' . formatCurrency($value) . '.',
+            Notification::create($this->team->user->id, 6, [
+                'player'        => $this->full_name,
+                'player_html'   => '<a href="/jugador/' . $this->id . '/">' . $this->full_name . '</a>',
+                'buyer'         => '<a href="/equipo/' . $team->id . '">' . $team->name . '</a>',
+                'value'         => formatCurrency($value)
             ]);
         }
 
         // Notify buying team
-        Notification::create([
-            'user_id' => $team->user->id,
-            'title' => 'Has comprado a ' . $this->full_name,
-            'message' => 'Has comprado a <a href="/jugador/' . $this->id . '/">' . $this->full_name . '</a> por ' . formatCurrency($value) . ' y ya está a disposición del cuerpo técnico.',
+        Notification::create($team->user->id, 4, [
+            'player'        => $this->full_name,
+            'player_html'   => '<a href="/jugador/' . $this->id . '/">' . $this->full_name . '</a>',
+            'value'         => formatCurrency($value)
         ]);
 
         $this->team_id = $team->id;
