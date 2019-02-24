@@ -22,6 +22,8 @@ class MatchController extends Controller
     {
         $data = getMatchLog($logfile);
 
+        $version = isset($data['version']) ? $data['version'] : '0.0';
+
         $local = Team::find($data['local']['id']);
         $visit = Team::find($data['visit']['id']);
 
@@ -30,6 +32,13 @@ class MatchController extends Controller
         $data['time'] = (time() - $match->created_at->timestamp) * 5400 / (\Config::get('constants.LIVE_MATCH_DURATION') * 60);
 
         $data['logfile'] = $logfile;
+
+        // Make translations
+        if ($version != '0.0') {
+            foreach ($data['plays'] as &$play) {
+                $play[3] = __('highlights.play_' . $play[2], $play[3]);
+            }
+        }
 
         $data['local']['id'] = $local->id;
         $data['local']['short_name'] = $local->short_name;
@@ -63,6 +72,8 @@ class MatchController extends Controller
 
         $data = getMatchLog($request->input('file'));
 
+        $version = isset($data['version']) ? $data['version'] : '0.0';
+
         $local = Team::find($data['local']['id']);
         $visit = Team::find($data['visit']['id']);
 
@@ -83,6 +94,13 @@ class MatchController extends Controller
             }
         }
 
+        // Make translations
+        if ($version != '0.0') {
+            foreach ($data['plays'] as &$play) {
+                $play[3] = __('highlights.play_' . $play[2], $play[3]);
+            }
+        }
+
         if ($request->expectsJson() && !empty(Auth::guard('api')->user())) {
             $scorers = [
                 'local'     => [],
@@ -91,7 +109,7 @@ class MatchController extends Controller
 
             $highlights = [];
             foreach ($data['plays'] as $play) {
-                if (in_array($play[2], [1, 2, 5, 6, 7, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34])) {
+                if (in_array($play[2], [1, 2, 5, 6, 7, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34, 35, 36])) {
                     $highlights[] = [
                         'type'          => $play[2],
                         'minutes'       => substr($play[0], 0, 2),
@@ -171,7 +189,7 @@ class MatchController extends Controller
 
             $actions = [];
             foreach ($data['plays'] as $play) {
-                if (in_array($play[2], [1, 2, 5, 6, 7, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34])) {
+                if (in_array($play[2], [1, 2, 5, 6, 7, 8, 9, 11, 12, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34, 35, 36])) {
                     if (in_array($play[2], [6, 19, 23, 25, 26, 27])) {
                         $play[3] = '<strong>' . $play[3] . '</strong>';
                     }
@@ -425,6 +443,8 @@ class MatchController extends Controller
         foreach ($matches as $logfile) {
             $data = getMatchLog($logfile);
 
+            $version = isset($data['version']) ? $data['version'] : '0.0';
+
             $local = Team::find($data['local']['id']);
             $visit = Team::find($data['visit']['id']);
 
@@ -432,6 +452,13 @@ class MatchController extends Controller
 
             $local_rgb_primary = sscanf($local->primary_color, "#%02x%02x%02x");
             $visit_rgb_primary = sscanf($visit->primary_color, "#%02x%02x%02x");
+
+            // Make translations
+            if ($version != '0.0') {
+                foreach ($data['plays'] as &$play) {
+                    $play[3] = __('highlights.play_' . $play[2], $play[3]);
+                }
+            }
 
             $scorers = [
                 'local' => [],
