@@ -6,13 +6,20 @@
         <h1>@lang('labels.register')</h1>
         <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
             {{ csrf_field() }}
+            <div class="inputwrapper{{ $errors->has('language') ? ' has-error' : '' }}">
+                <select name="language">
+                    @foreach($supported_languages AS $key => $language)
+                    <option value="{{ $key }}" {{ $current_language == $key ? 'selected' : '' }}>@lang('labels.' . $language['label'])</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="inputwrapper{{ $errors->has('first_name') ? ' has-error' : '' }}">
                 <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" placeholder="@lang('labels.first_name')" class="form-control" required autofocus />
 
                 @if ($errors->has('first_name'))
-                <label class="error">
-                    <strong>{{ $errors->first('first_name') }}</strong>
-                </label>
+                    <label class="error">
+                        <strong>{{ $errors->first('first_name') }}</strong>
+                    </label>
                 @endif
             </div>
             <div class="inputwrapper{{ $errors->has('last_name') ? ' has-error' : '' }}">

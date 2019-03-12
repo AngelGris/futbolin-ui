@@ -30,7 +30,7 @@
             @endif
         </div>
     </div>
-    <div class="form-group{{ $errors->has('language') ? ' language' : '' }}">
+    <div class="form-group{{ $errors->has('language') ? ' has-error' : '' }}">
         <label for="last_name" class="col-md-2 control-label">@lang('labels.language')</label>
         <div class="col-md-10">
             <select name="language">

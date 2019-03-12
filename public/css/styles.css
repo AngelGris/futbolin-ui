@@ -94,6 +94,11 @@ h1,h2,h3,h4,h5 { font-weight: normal; line-height: normal; }
 .inputwrapper label input { width: auto; margin: -3px 5px 0 0; vertical-align: middle; }
 .inputwrapper .remember { padding: 0; background: none; }
 
+.inputwrapper select {
+	color: rgb(85, 85, 85);
+	width: 100%;
+}
+
 .login-alert { display: none; }
 .login-alert .alert { font-size: 11px; text-align: center; padding: 5px 0; border: 0; }
 

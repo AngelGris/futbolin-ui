@@ -44,15 +44,21 @@ class RegisterController extends Controller
     /**
      * Show the application registration form.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
         $params['title'] = config('app.name') . ' - ' . __('labels.affiliate');
         $params['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);
         $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
+
+        $params['supported_languages'] = config('app.supported_locales');
+        $params['current_language'] = $request->old('language') ? $request->old('language') : app('translator')->getLocale();
+
+        app('translator')->setLocale($params['current_language']);
 
         return view('auth.register', $params);
     }
@@ -69,6 +75,7 @@ class RegisterController extends Controller
             'first_name'    => 'required|max:255',
             'last_name'     => 'required|max:255',
             'email'         => 'required|email|max:255|unique:users',
+            'language'      => 'required|max:2',
             'password'      => 'required|min:6|confirmed',
         ]);
     }
@@ -85,6 +92,7 @@ class RegisterController extends Controller
             'first_name'    => 'required|max:255',
             'last_name'     => 'required|max:255',
             'email'         => 'required|email|max:255|unique:users',
+            'language'      => 'required|max:2',
             'password'      => 'required|min:6|confirmed',
             'device_id'     => 'required|string',
             'device_name'   => 'required|string'
@@ -101,6 +109,7 @@ class RegisterController extends Controller
             'first_name'    => $user->first_name,
             'last_name'     => $user->last_name,
             'email'         => $user->email,
+            'language'      => $user->language,
             'token'         => $token
         ], 201);
     }
@@ -115,10 +124,11 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'first_name'    => $data['first_name'],
+            'last_name'     => $data['last_name'],
+            'email'         => $data['email'],
+            'language'      => $data['language'],
+            'password'      => bcrypt($data['password']),
         ]);
     }
 }

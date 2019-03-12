@@ -25,17 +25,16 @@ class Locale
             $language = $user->language;
         } else {
             if (\Auth::check()) {
-                if ($user = \Auth::user()) {
-                    $language = $user->language;
-                } else {
-                    $user_locales = $request->getLanguages();
-                    if(!empty($user_locales)) {
-                        foreach ($user_locales as $lang) {
-                            $lang = explode('_', $lang);
-                            if(in_array($lang[0], $supported_locales)) {
-                                $language = $lang[0];
-                                break;
-                            }
+                $user = \Auth::user();
+                $language = $user->language;
+            } else {
+                $user_locales = $request->getLanguages();
+                if(!empty($user_locales)) {
+                    foreach ($user_locales as $lang) {
+                        $lang = explode('_', $lang);
+                        if(in_array($lang[0], $supported_locales)) {
+                            $language = $lang[0];
+                            break;
                         }
                     }
                 }
