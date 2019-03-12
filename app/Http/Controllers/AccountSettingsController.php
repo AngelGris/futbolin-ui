@@ -18,7 +18,8 @@ class AccountSettingsController extends Controller
         $vars = [
             'icon' => 'fa fa-user',
             'title' => __('headers.profile_edit_title'),
-            'subtitle' => __('headers.profile_edit_subtitle')
+            'subtitle' => __('headers.profile_edit_subtitle'),
+            'supported_languages' => config('app.supported_locales'),
         ];
 
         return view('accountsettings.index', $vars);
@@ -33,8 +34,9 @@ class AccountSettingsController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, [
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255'
+            'first_name'    => 'required|max:255',
+            'last_name'     => 'required|max:255',
+            'language'      => 'required|max:2',
         ]);
 
         if ($request->expectsJson()) {
@@ -45,7 +47,10 @@ class AccountSettingsController extends Controller
 
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
+        $user->language = $request->input('language');
         $user->save();
+
+        app('translator')->setLocale($user->language);
 
         if ($request->expectsJson()) {
             return response()->json([

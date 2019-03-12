@@ -30,6 +30,16 @@
             @endif
         </div>
     </div>
+    <div class="form-group{{ $errors->has('language') ? ' language' : '' }}">
+        <label for="last_name" class="col-md-2 control-label">@lang('labels.language')</label>
+        <div class="col-md-10">
+            <select name="language">
+                @foreach($supported_languages AS $key => $language)
+                <option value="{{ $key }}" {{ $_user->language == $key ? 'selected' : '' }}>@lang('labels.' . $language['label'])</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
     <div class="form-group">
         <label class="col-md-2 control-label">@lang('labels.password')</label>
         <div class="col-md-10">

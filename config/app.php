@@ -103,12 +103,14 @@ return [
     */
     'supported_locales' => [
         'en' => [
-            'name' => 'English',
-            'dir'  => 'ltr',
+            'name'  => 'English',
+            'dir'   => 'ltr',
+            'label' => 'english',
         ],
         'es' => [
-            'name' => 'Spanish',
-            'dir'  => 'ltr'
+            'name'  => 'Spanish',
+            'dir'   => 'ltr',
+            'label' => 'spanish',
         ],
     ],
 
