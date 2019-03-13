@@ -17,8 +17,9 @@ class AccountSettingsController extends Controller
     {
         $vars = [
             'icon' => 'fa fa-user',
-            'title' => 'Editar Perfil',
-            'subtitle' => 'Dime quién eres'
+            'title' => __('headers.profile_edit_title'),
+            'subtitle' => __('headers.profile_edit_subtitle'),
+            'supported_languages' => config('app.supported_locales'),
         ];
 
         return view('accountsettings.index', $vars);
@@ -33,8 +34,9 @@ class AccountSettingsController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, [
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255'
+            'first_name'    => 'required|max:255',
+            'last_name'     => 'required|max:255',
+            'language'      => 'required|max:2',
         ]);
 
         if ($request->expectsJson()) {
@@ -45,14 +47,17 @@ class AccountSettingsController extends Controller
 
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
+        $user->language = $request->input('language');
         $user->save();
+
+        app('translator')->setLocale($user->language);
 
         if ($request->expectsJson()) {
             return response()->json([
                 'user'  => $user
             ], 200);
         } else {
-            \Session::flash('flash_success', 'Perfil actualizado');
+            \Session::flash('flash_success', __('messages.profile_updated'));
 
             return redirect()->route('profile.edit');
         }
@@ -62,8 +67,8 @@ class AccountSettingsController extends Controller
     {
         $vars = [
             'icon' => 'fa fa-user',
-            'title' => 'Cambiar Contraseña',
-            'subtitle' => 'La palabrita mágica'
+            'title' => __('headers.profile_password_edit_title'),
+            'subtitle' => __('headers.profile_password_edit_subtitle')
         ];
 
         return view('accountsettings.password', $vars);
@@ -90,7 +95,7 @@ class AccountSettingsController extends Controller
             if ($request->expectsJson()) {
                 return response()->json([], 204);
             } else {
-                \Session::flash('flash_success', 'Contraseña actualizada');
+                \Session::flash('flash_success', __('messages.password_updated'));
 
                 return redirect()->route('profile.edit');
             }
@@ -105,7 +110,7 @@ class AccountSettingsController extends Controller
             } else {
                 return redirect()
                         ->route('profile.password')
-                        ->withErrors(['old_password' => 'Contraseña Actual incorrecta'])
+                        ->withErrors(['old_password' => __('errors.current_password_incorrect')])
                         ->withInput($request->only('old_password', 'new_password', 'new_password_confirmation'));
             }
         }

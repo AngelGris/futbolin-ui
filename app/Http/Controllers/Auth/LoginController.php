@@ -89,7 +89,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        $params['title'] = 'Entrar al vestuario';
+        $params['title'] = __('labels.enter_locker_room');
         $params['bodyclass'] = 'class="loginpage"';
 
         $num = rand(1, 9);

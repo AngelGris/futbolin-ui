@@ -1,14 +1,14 @@
-<h4>Estadísticas contra {{ $rival['name'] }}</h4>
+<h4>@lang('labels.matches_against_team', ['team' => $rival['name']])</h4>
 @include('modules.statsmatches')
 @if (!empty($last_matches))
-<h4>Últimos partidos</h4>
+<h4>@lang('labels.last_matches')</h4>
 <table class="table table-bordered responsive">
     <thead>
         <tr>
-            <th>Fecha</th>
-            <th>Cond.</th>
-            <th>Res.</th>
-            <th>Det.</th>
+            <th>@lang('labels.round')</th>
+            <th>@lang('labels.condition_short')</th>
+            <th>@lang('labels.result_short')</th>
+            <th>@lang('labels.details_short')</th>
         </tr>
     </thead>
     <tbody>

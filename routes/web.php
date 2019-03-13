@@ -155,8 +155,8 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
 
     Route::get('/guia-de-usuario/', ['as' => 'user-guide', 'uses' => function() {
         return view('static.userguide', [
-            'title'     => 'Guía de Usuario',
-            'subtitle'  => 'Las cosas claras',
+            'title'     => __('headers.users_guide_title'),
+            'subtitle'  => __('headers.users_guide_subtitle'),
             'icon'      => 'fa fa-book'
         ]);
     }]);

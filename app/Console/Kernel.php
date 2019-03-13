@@ -52,9 +52,9 @@ class Kernel extends ConsoleKernel
                     $selling_team = $selling->player->team;
                     if ($selling->player->transfer($selling->offeringTeam, $selling->best_offer_value)) {
                         if ($selling_team) {
-                            $selling_team->moneyMovement($selling->best_offer_value, 'Venta de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+                            $selling_team->moneyMovement($selling->best_offer_value, \Config::get('constants.MONEY_MOVEMENTS_INCOME_SELLING_PLAYER'), ['player' => $selling->player->full_name]);
                         }
-                        $selling->offeringTeam->moneyMovement(-$selling->best_offer_value, 'Compra de ' . $selling->player->first_name . ' ' . $selling->player->last_name);
+                        $selling->offeringTeam->moneyMovement(-$selling->best_offer_value, \Config::get('constants.MONEY_MOVEMENTS_OUTCOME_BUYING_PLAYER'), ['player' => $selling->player->full_name]);
 
                         MarketTransaction::create([
                             'player_id'     => $selling->player->id,
@@ -67,10 +67,9 @@ class Kernel extends ConsoleKernel
                     $selling->delete();
                 } elseif ($selling->player->team) {
                     // Notify selling team
-                    Notification::create([
-                        'user_id' => $selling->player->team->user->id,
-                        'title' => 'No hubo ninguna oferta por ' . $selling->player->first_name . ' ' . $selling->player->last_name,
-                        'message' => 'No has podido vender a <a href="/jugador/' . $selling->player->id . '/">' . $selling->player->first_name . ' ' . $selling->player->last_name . '</a> y continua a disposición de tu cuerpo técnico.',
+                    Notification::create($selling->player->team->user->id, 5, [
+                        'player'        => $selling->player->full_name,
+                        'player_html'   => '<a href="/jugador/' . $selling->player->id . '/">' . $selling->player->full_name . '</a>',
                     ]);
                     $selling->delete();
                 } elseif ($selling->created_at > Carbon::now()->subWeeks(2)) {
@@ -85,6 +84,9 @@ class Kernel extends ConsoleKernel
         })
         ->appendOutputTo('/var/log/futbolin/every_minute.log');
 
+        /**
+         * Hourly generate new free players in the market
+         */
         $schedule->call(function() {
             // Generate free players
             $generation_rate = \Config::get('constants.FREE_PLAYERS_GENERATE') * 41.67; // (41.67 = 1000 / 24)
@@ -152,11 +154,11 @@ class Kernel extends ConsoleKernel
                             $incomes = (int)($match->incomes / 2);
                             if ($match->local_id >= 27) {
                                 $local = Team::find($match->local_id);
-                                $local->moneyMovement($incomes, 'Ingresos por venta de entradas');
+                                $local->moneyMovement($incomes, \Config::get('constants.MONEY_MOVEMENTS_INCOME_SELLING_TICKETS'));
                             }
                             if ($match->visit_id >= 27) {
                                 $visit = Team::find($match->visit_id);
-                                $visit->moneyMovement($incomes, 'Ingresos por venta de entradas');
+                                $visit->moneyMovement($incomes, \Config::get('constants.MONEY_MOVEMENTS_INCOME_SELLING_TICKETS'));
                             }
                         }
                     }

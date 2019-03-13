@@ -37,15 +37,15 @@ class ComposerServiceProvider extends ServiceProvider
                         ->with('_navigation', $navigation);
                 } else {
                     $navigation = [
-                        ['url' => 'vestuario', 'icon' => 'fa fa-home', 'name' => 'Vestuario'],
-                        ['url' => 'equipo', 'icon' => 'fa fa-shield', 'name' => 'Equipo'],
-                        ['url' => 'finanzas', 'icon' => 'fa fa-money', 'name' => 'Finanzas'],
-                        ['url' => 'jugadores', 'icon' => 'fa fa-group', 'name' => 'Jugadores'],
-                        ['url' => 'mercado', 'icon' => 'fa fa-retweet', 'name' => 'Mercado de pases'],
-                        ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => 'Estrategia'],
-                        ['url' => 'amistosos', 'icon' => 'fa fa-handshake-o', 'name' => 'Amistosos'],
-                        ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => 'Torneos'],
-                        ['url' => 'shopping', 'icon' => 'fa fa-shopping-cart', 'name' => 'Shopping'],
+                        ['url' => 'vestuario', 'icon' => 'fa fa-home', 'name' => __('labels.locker_room')],
+                        ['url' => 'equipo', 'icon' => 'fa fa-shield', 'name' => __('labels.team')],
+                        ['url' => 'finanzas', 'icon' => 'fa fa-money', 'name' => __('labels.finances')],
+                        ['url' => 'jugadores', 'icon' => 'fa fa-group', 'name' => __('labels.players')],
+                        ['url' => 'mercado', 'icon' => 'fa fa-retweet', 'name' => __('labels.transfers_market')],
+                        ['url' => 'estrategia', 'icon' => 'fa fa-gears', 'name' => __('labels.strategy')],
+                        ['url' => 'amistosos', 'icon' => 'fa fa-handshake-o', 'name' => __('labels.friendlies')],
+                        ['url' => 'torneos', 'icon' => 'fa fa-trophy', 'name' => __('labels.tournaments')],
+                        ['url' => 'shopping', 'icon' => 'fa fa-shopping-cart', 'name' => __('labels.shopping')],
                     ];
 
                     $user = Auth::user();

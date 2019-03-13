@@ -12,8 +12,9 @@ $(function() {
     $('.btn-offer').click(function() {
         var limit = {{ $_team->calculateSpendingMargin() }};
         $('#modal-make-offer-player-id').val($(this).data('id'));
-        $('#modal-make-offer-player-name').text($(this).data('name'));
-        $('.modal-make-offer-value').text(formatCurrency($(this).data('value')));
+        $('#modal-make-offer-player-name').html(Lang.get('labels.make_an_offer_for_player', { player: $(this).data('name') }));
+        $('#modal-make-offer-enabled').text(Lang.get('messages.offer_must_be_between', { min: formatCurrency($(this).data('value')), max: '{{ formatCurrency($_team->calculateSpendingMargin()) }}' }));
+        $('#modal-make-offer-disabled').text(Lang.get('messages.minimum_offer_is_too_high', { minimum_offer: formatCurrency($(this).data('offer')), spending_margin: '{{ formatCurrency($_team->calculateSpendingMargin()) }}'}));
         $('#modal-make-offer-input').val($(this).data('offer'));
         updateSalary();
         if ($(this).data('value') <= limit) {
@@ -80,21 +81,21 @@ function updateSalary() {
             <form method="post" action="{{ route('player.offer') }}">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Hacer oferta</h4>
+                    <h4 class="modal-title">@lang('labels.make_an_offer')</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Hacer una oferta por <span id="modal-make-offer-player-name" style="font-weight: bold;"></span></p>
-                    <p id="modal-make-offer-enabled">La oferta tiene que ser entre <span class="modal-make-offer-value"></span> y {{ formatCurrency($_team->calculateSpendingMargin()) }}.</p>
-                    <p id="modal-make-offer-disabled">La oferta mínima es de <span class="modal-make-offer-value"></span> pero sólo tienes {{ formatCurrency($_team->calculateSpendingMargin()) }}. No puedes hacer una oferta.</p>
+                    <p id="modal-make-offer-player-name"></p>
+                    <p id="modal-make-offer-enabled"></p>
+                    <p id="modal-make-offer-disabled"></p>
                     <div class="col-sm-12">
                         <div class="col-sm-5">
-                            <label for="modal-make-offer-input">Valor de la oferta</label>
+                            <label for="modal-make-offer-input">@lang('labels.value_of_the_offer')</label>
                         </div>
                         <div class="col-sm-7">
                             <input type="text" name="offer" id="modal-make-offer-input" value="" />
                         </div>
                         <div class="col-sm-5">
-                            <label>Salario</label>
+                            <label>@lang('labels.salary')</label>
                         </div>
                         <div class="col-sm-7"><span id="player-salary"></span></div>
                     </div>
@@ -103,10 +104,10 @@ function updateSalary() {
                 <div class="modal-footer">
                     {{ csrf_field() }}
                     <input type="hidden" name="player_id" id="modal-make-offer-player-id" value="">
-                    <button id="follow-player" class="btn btn-primary">Seguir</button>
-                    <button id="unfollow-player" class="btn btn-primary">Dejar de seguir</button>
-                    <button id="buy-item" class="btn btn-primary">Ofertar</button>
-                    <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
+                    <button id="follow-player" class="btn btn-primary">@lang('labels.follow')</button>
+                    <button id="unfollow-player" class="btn btn-primary">@lang('labels.unfollow')</button>
+                    <button id="buy-item" class="btn btn-primary">@lang('labels.offer')</button>
+                    <button type="button" data-dismiss="modal" class="btn">@lang('labels.cancel')</button>
                 </div>
             </form>
         </div>

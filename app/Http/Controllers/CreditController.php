@@ -19,8 +19,8 @@ class CreditController extends Controller
         } else {
             $vars = [
                 'icon'      => 'fa fa-soccer-ball-o',
-                'title'     => 'Fúlbos',
-                'subtitle'  => 'Un empujoncito no viene mal',
+                'title'     => __('headers.credits_title'),
+                'subtitle'  => __('headers.credits_subtitle'),
                 'items'     => CreditItem::get()
             ];
 

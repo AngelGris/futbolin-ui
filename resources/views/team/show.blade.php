@@ -1,17 +1,5 @@
 @extends('layouts.inner')
 
-@section('styles-inner')
-<style>
-#other-shield .shield-primary-color {
-    fill: {{ $team['primary_color'] }};
-}
-
-#other-shield .shield-secondary-color {
-    fill: {{ $team['secondary_color'] }};
-}
-</style>
-@endsection
-
 @section('javascript-inner')
 <script type="text/javascript">
 $(function() {
@@ -36,21 +24,21 @@ $(function() {
     <h2 style="text-align:center;width:auto;">{{ $team['name'] }}</h2>
 </div>
 <div class="col-md-12" style="height:30px;">
-    <label class="col-xs-4 control-label">Nombre corto</label>
+    <label class="col-xs-4 control-label">@lang('labels.short_name')</label>
     <div class="col-xs-8">{{ $team['short_name'] }}</div>
 </div>
 <div class="col-md-12" style="height:30px;">
-    <label class="col-xs-4 control-label">Entrenador</label>
+    <label class="col-xs-4 control-label">@lang('labels.trainer')</label>
     <div class="col-xs-8">{{ $team['user']['name'] }}</div>
 </div>
 <div class="col-md-12" style="height:30px;">
-    <label class="col-xs-4 control-label">Estadio</label>
+    <label class="col-xs-4 control-label">@lang('labels.stadium')</label>
     <div class="col-xs-8">{{ $team['stadium_name'] }}</div>
 </div>
 <div class="clear"></div>
 @if(!empty($team->trophies))
 <div class="col-sm-12">
-    <h2>Vitrina de trofeos</h2>
+    <h2>@lang('labels.trophy_cabinet')</h2>
     @foreach($team->trophies as $trophy)
     <div class="col-xs-6 col-sm-3 col-md-2" style="position:relative;text-align:center;">
         @if($trophy->position <= 3)
@@ -74,18 +62,18 @@ $(function() {
 <div class="clear"></div>
 @endif
 <div class="col-md-12">
-    <h2>Formación</h2>
+    <h2>@lang('labels.formation')</h2>
     @include('modules.formation')
 </div>
 <div class="col-md-6">
-    <h2>Estadísticas</h2>
+    <h2>@lang('labels.statistics')</h2>
     @include('modules.statsmatches')
 </div>
 @include('modules.lastmatches')
 <div class="clear"></div>
 @if ($_team->id != $team->id)
 <div class="col-md-6">
-    <h2>Contra {{ $_team['name'] }}</h2>
+    <h2>@lang('labels.against_team', ['team' => $_team->name])</h2>
     @include('modules.statsmatches', ['matches' => $matches_versus, 'goals' => $goals_versus])
 </div>
 @include('modules.lastmatches', ['last_matches' => $last_matches_versus])

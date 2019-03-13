@@ -68,6 +68,6 @@ class PlayerSelling extends Model
      */
     public function getPlayerNameAttribute()
     {
-        return $this->player->first_name . ' ' . $this->player->last_name;
+        return $this->player->full_name;
     }
 }

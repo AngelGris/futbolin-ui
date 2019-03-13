@@ -77,18 +77,18 @@ function movePager(id) {
 
 @section('content-inner')
 @if (empty($tournament))
-<h3>No hay torneos para mostrar (todavía!!!)</h3>
+<h3>@lang('messages.no_tournaments_to_show')</h3>
 @else
 <h3 style="margin-bottom:30px;">
     {{ $category['name'] }}
     @if(count($categories) > 1)
-    <a href="#" class="btn btn-primary" style="margin-left:20px;padding:2px 10px;" data-toggle="modal" data-target="#modal-categories">Otras categorías</a>
+    <a href="#" class="btn btn-primary" style="margin-left:20px;padding:2px 10px;" data-toggle="modal" data-target="#modal-categories">@lang('labels.other_categories')</a>
     <div class="modal fade" id="modal-categories">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Categorías</h4>
+                    <h4 class="modal-title">@lang('labels.categories')</h4>
                 </div>
                 <div class="modal-body">
                     <ul>
@@ -98,7 +98,7 @@ function movePager(id) {
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@lang('labels.close')</button>
                 </div>
             </div>
         </div>
@@ -128,8 +128,8 @@ function movePager(id) {
         <table class="table table-bordered responsive">
             <thead>
                 <tr>
-                    <th colspan="2" width="50%">Local</th>
-                    <th colspan="2" width="50%">Visitante</th>
+                    <th colspan="2" width="50%">@lang('lables.home')</th>
+                    <th colspan="2" width="50%">@lang('lables.away')</th>
                     @if ($round['datetime'] < $_SERVER['REQUEST_TIME'])
                     <th></th>
                     @endif
@@ -160,16 +160,16 @@ function movePager(id) {
     <table id="dyntable" class="table table-bordered responsive">
         <thead>
             <tr>
-                <th>Pos</th>
-                <th>Equipo</th>
-                <th>PTS</th>
-                <th>PJ</th>
-                <th>PG</th>
-                <th>PE</th>
-                <th>PP</th>
-                <th>GF</th>
-                <th>GC</th>
-                <th>DG</th>
+                <th>@lang('labels.position_short')</th>
+                <th>@lang('labels.team')</th>
+                <th>@lang('labels.points_short')</th>
+                <th>@lang('labels.matches_played_short')</th>
+                <th>@lang('labels.matches_won_short')</th>
+                <th>@lang('labels.matches_draw_short')</th>
+                <th>@lang('labels.matches_lost_short')</th>
+                <th>@lang('labels.goals_for_short')</th>
+                <th>@lang('labels.goals_against_short')</th>
+                <th>@lang('labels.goals_difference_short')</th>
             </tr>
         </thead>
         <tbody>
@@ -195,7 +195,7 @@ function movePager(id) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Cargando resumen del partido</h4>
+                <h4 class="modal-title">@lang('labels.loading_match_summary')</h4>
             </div>
             <div class="modal-body modal-match-result" id="modal-match-loading-content">
                 <img src="{{ asset('img/loader.gif') }}" />
@@ -210,25 +210,25 @@ function movePager(id) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Resumen del partido</h4>
+                <h4 class="modal-title">@lang('labels.match_summary')</h4>
             </div>
             <div class="modal-body modal-match-result" id="modal-match-result-content">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@lang('labels.close')</button>
             </div>
         </div>
     </div>
 </div>
 @if ($tournament->id > 1 and count($category->scorers) > 0)
 <div class="col-xs-12 col-md-6" style="clear:left;float:left;">
-    <h4>Goleadores</h4>
+    <h4>@lang('labels.scorers')</h4>
     <table class="table table-bordered responsive">
         <thead>
             <tr>
-                <th>Jugador</th>
-                <th>Equipo</th>
-                <th>Goles</th>
+                <th>@lang('labels.player')</th>
+                <th>@lang('labels.team')</th>
+                <th>@lang('labels.goals')</th>
             </tr>
         </thead>
         <tbody>
@@ -238,7 +238,7 @@ function movePager(id) {
                 <td><a href="{{ route('player', $scorer->player->id) }}">{{ $scorer->player->short_name }}</a></td>
                 <td><a href="{{ route('team.show', $scorer->team->id) }}">{{ $scorer->team->name }}</a></td>
                 @else
-                <td>{{ $scorer->player->short_name }} <span class="fa fa-user-times" style="color:#f00;" data-toggle="tooltip" title="" data-original-title="Retirado"></span></td>
+                <td>{{ $scorer->player->short_name }} <span class="fa fa-user-times" style="color:#f00;" data-toggle="tooltip" title="" data-original-title="@lang('labels.retired')"></span></td>
                 <td><a href="{{ route('team.show', $scorer->team->id) }}">{{ $scorer->team->name }}</a></td>
                 @endif
                 <td style="text-align:right;">{{ $scorer->goals }}</td>

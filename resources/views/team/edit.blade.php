@@ -9,7 +9,7 @@
     <input type="hidden" name="_method" value="PATCH">
     {{ csrf_field() }}
     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-        <label for="name" class="col-md-2 control-label">Nombre del equipo</label>
+        <label for="name" class="col-md-2 control-label">@lang('labels.team_name')</label>
         <div class="col-md-10">
             <input type="text" class="form-control input-default" name="name" value="{{ old('name', $_team['name']) }}" required />
             @if ($errors->has('name'))
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="form-group{{ $errors->has('short_name') ? ' has-error' : '' }}">
-        <label for="short_name" class="col-md-2 control-label">Nombre corto del equipo</label>
+        <label for="short_name" class="col-md-2 control-label">@lang('labels.team_short_name')</label>
         <div class="col-md-10">
             <input type="text" class="form-control input-default" name="short_name" maxlength="5" value="{{ old('short_name', $_team['short_name']) }}" required />
             @if ($errors->has('short_name'))
@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="form-group{{ $errors->has('stadium_name') ? ' has-error' : '' }}">
-        <label class="col-md-2 control-label">Nombre del estadio</label>
+        <label class="col-md-2 control-label">@lang('labels.stadium_name')</label>
         <div class="col-md-10">
             <input type="text" class="form-control input-default" name="stadium_name" value="{{ old('stadium_name', $_team['stadium_name']) }}" required />
             @if ($errors->has('stadium_name'))
@@ -42,14 +42,14 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-2 control-label">Colores</label>
+        <label class="col-md-2 control-label">@lang('labels.colors')</label>
         <div class="col-md-10">
             <input type="text" class="colorpicker" name="primary_color" id="primary_color_picker" value="{{ old('primary_color', $_team['primary_color']) }}" />
             <input type="text" class="colorpicker" name="secondary_color" id="secondary_color_picker" value="{{ old('secondary_color', $_team['secondary_color']) }}" />
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-2 control-label">Escudo</label>
+        <label class="col-md-2 control-label">@lang('labels.shield')</label>
         <div class="col-md-10">
             <input id="shield-value" type="hidden" name="shield" value="{{ $_team['shield'] }}" />
             <a href="#" id="shield-select"><img class="svg" id="shield-svg" src="{{ $_team['shieldFile'] }}"  data-color-primary="{{ $_team['primary_color'] }}" data-color-secondary="{{ $_team['secondary_color'] }}" style="width:70px;" /></a>
@@ -57,7 +57,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-default">Guardar</button>
+            <button type="submit" class="btn btn-default">@lang('labels.save')</button>
         </div>
     </div>
 </form>

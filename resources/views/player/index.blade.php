@@ -2,49 +2,49 @@
 
 @section('content-inner')
 @if ($player->team && $player->treatable && $player->team->id == $_team->id)
-<h3>{{ $player->number }} - {!! $player->name !!} <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-treatment">Tratar jugador</button></h3>
+<h3>{{ $player->number }} - {!! $player->name !!} <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-treatment">@lang('labels.treat_player')</button></h3>
 @else
 <h3>{{ $player->number }} - {!! $player->name !!}</h3>
 @endif
-<h4>{{ $player->position }} - {{ $player->age }} años</h4>
+<h4>@lang('positions.' . strtolower($player->position) . '_short') - @lang('labels.number_years', ['number' => $player->age])</h4>
 <h4>
-    Valor: {!! formatCurrency($player->value) !!}
+    @lang('labels.value'): {!! formatCurrency($player->value) !!}
 @if ($player->team && $player->team->id == $_team->id && empty($player->selling->id))
-    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-value">Mejorar contrato</button>
-    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-selling">Declarar transferible</button>
-    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-free">Dejar libre</button>
+    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-value">@lang('labels.improve_contract')</button>
+    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-selling">@lang('labels.declare_transferable')</button>
+    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-free">@lang('labels.set_free')</button>
 @elseif (!empty($player->selling->id))
     <br>
     @if ($player->selling->best_offer_team)
-    Mejor oferta: {{ formatCurrency($player->selling->best_offer_value) }} ({{ $player->selling->offeringTeam->name }})
+    @lang('labels.best_offer'): {{ formatCurrency($player->selling->best_offer_value) }} ({{ $player->selling->offeringTeam->name }})
     @else
-    SIN OFERTAS
+    {{ strtoupper(trans('labels.no_offers')) }}
     @endif
     @if (!$player->team || $player->team->id != $_team->id)
-    <button class="btn btn-primary btn-sm btn-offer" data-transfer="{{ $player->selling->id }}" data-id="{{ $player->id }}" data-name="{{ $player->first_name . ' ' . $player->last_name }}" data-value="{{ $player->selling->offer_value + 1 }}" data-offer="{{ (int)($player->selling->offer_value * 1.05) }}">Ofertar</button>
+    <button class="btn btn-primary btn-sm btn-offer" data-transfer="{{ $player->selling->id }}" data-id="{{ $player->id }}" data-name="{{ $player->full_name }}" data-value="{{ $player->selling->offer_value + 1 }}" data-offer="{{ (int)($player->selling->offer_value * 1.05) }}">@lang('labels.offer')</button>
     @endif
-    <br>Transferible hasta el {{ $player->selling->closes_at->format('d/m/Y H:i') }}
+    <br>@lang('labels.transferable_until_date', ['date' => $player->selling->closes_at->format('d/m/Y H:i')])
 @endif
 </h4>
 <div class="col-xs-12 col-sm-6 col-md-3 zebra">
-    @foreach (['Media' => 'average', 'Arquero' => 'goalkeeping', 'Defensa' => 'defending', 'Gambeta' => 'dribbling', 'Cabeceo' => 'heading', 'Salto' => 'jumping', 'Pase' => 'passing', 'Precisión' => 'precision', 'Velocidad' => 'speed', 'Fuerza' => 'strength', 'Quite' => 'tackling'] as $k => $v)
+    @foreach (['average', 'goalkeeping', 'defending', 'dribbling', 'heading', 'jumping', 'passing', 'precision', 'speed', 'strength', 'tackling'] as $attribute)
     <div class="col-xs-12">
-        <label class="col-xs-9 control-label">{{ $k }}</label>
+        <label class="col-xs-9 control-label">@lang('attributes.' . $attribute)</label>
         <div class="col-xs-3">
-            @if ($player->upgraded && !empty($player->last_upgrade->{$v}))
-            <span style="color:#009900;">{{ $player->{$v} }}<sub>+{{ $player->last_upgrade->{$v} }}</sub></span>
+            @if ($player->upgraded && !empty($player->last_upgrade->{$attribute}))
+            <span style="color:#009900;">{{ $player->{$attribute} }}<sub>+{{ $player->last_upgrade->{$attribute} }}</sub></span>
             @else
-            {{ $player->{$v} }}
+            {{ $player->{$attribute} }}
             @endif
         </div>
     </div>
     @endforeach
     <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Energía</label>
+        <label class="col-xs-9 control-label">@lang('attributes.stamina')</label>
         <div class="col-xs-3">{{ $player->stamina }}</div>
     </div>
     <div class="col-xs-12">
-        <label class="col-xs-9 control-label">Experiencia</label>
+        <label class="col-xs-9 control-label">@lang('attributes.experience')</label>
         <div class="col-xs-3">{{ $player->experience }}</div>
     </div>
 </div>
@@ -56,7 +56,7 @@
             <form method="post" action="{{ route('player.value', ['player' => $player->id]) }}">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Mejorar contrato de {{ $player->first_name }} {{ $player->last_name }}</h4>
+                    <h4 class="modal-title">Mejorar contrato de {{ $player->full_name }}</h4>
                 </div>
                 <div class="modal-body">
                     <p>Puedes incrementar el valor de venta de {{ $player->shortName }} hasta un valor de <strong>{!! formatCurrency($_team->calculateSpendingMargin($player->value, FALSE)) !!}</strong>.</p>
@@ -90,16 +90,16 @@
             <form method="post" action="{{ route('player.selling', ['player' => $player->id]) }}">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Declarar a {{ $player->first_name }} {{ $player->last_name }} como transferible</h4>
+                    <h4 class="modal-title">@lang('labels.declare_player_transferable', ['player' => $player->full_name])</h4>
                 </div>
                 <div class="modal-body">
-                    <p>¿Quieres poner a <strong>{{ $player->shortName }}</strong> como transferible hasta el <strong>{{ \Carbon\Carbon::now()->addWeek()->format('d/m/Y') }}</strong>?</p>
-                    <p>El jugador será vendido al mejor postor con un valor inicial de <strong>{!! formatCurrency($player->value) !!}</strong>.</p>
+                    <p>@lang('messages.do_you_want_to_make_player_transferable_until_date', ['player' => $player->short_name, 'date' => \Carbon\Carbon::now()->addDays(config('constants.PLAYERS_TRANSFERABLE_PERIOD'))->format('d/m/Y')])</p>
+                    <p>@lang('messages.make_transferable_selling_conditions', ['value' => formatCurrency($player->value)])</p>
                 </div>
                 <div class="modal-footer">
                     {{ csrf_field() }}
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
-                    <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">@lang('labels.accept')</button>
+                    <button type="button" data-dismiss="modal" class="btn">@lang('labels.cancel')</button>
                 </div>
             </form>
         </div>
@@ -110,26 +110,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Liberar a {{ $player->first_name }} {{ $player->last_name }}</h4>
+                <h4 class="modal-title">@lang('labels.free_player_action', ['player' => $player->full_name])</h4>
             </div>
             <div class="modal-body">
-                <p>Para rescindir el contrato de {{ $player->short_name }} debe pagar una cláusula de {{ formatCurrency($player->freeValue) }}, o puedes hacerlo utilizando 1 Fúlbo.</p>
-                <p>¿Quieres liberar a <strong>{{ $player->shortName }}</strong>?</p>
-                <p>Fondos: {{ formatCurrency($_team->funds) }}</p>
-                <p>Fúlbos: {{ $_user->credits }}</p>
+                <p>@lang('messages.how_to_terminate_contract', ['player' => $player->short_name, 'clause_value' => formatCurrency($player->freeValue)])</p>
+                <p>@lang('messages.do_you_want_to_let_player_free', ['player' => $player->shortName])</p>
+                <p>@lang('labels.funds_with_value', ['value' => formatCurrency($_team->funds)])</p>
+                <p>@lang('labels.credits_with_value', ['value' => $_user->credits])</p>
             </div>
             <div class="modal-footer">
                 <form method="post" action="{{ route('player.free', ['player' => $player->id]) }}" style="display: inline;">
                     {{ csrf_field() }}
-                    <button type="submit" class="btn btn-primary">Pagar {{ formatCurrency($player->freeValue) }}</button>
+                    <button type="submit" class="btn btn-primary">@lang('labels.pay_value', ['value' => formatCurrency($player->freeValue)])</button>
                 </form>
                 <form method="post" action="{{ route('shopping.buy') }}" style="display: inline;">
                     <input type="hidden" name="id" value="5">
                     <input type="hidden" name="player_id" value="{{ $player->id }}">
                     {{ csrf_field() }}
-                    <button type="submit" class="btn btn-primary">Utilizar 1 Fúlbo</button>
+                    <button type="submit" class="btn btn-primary">@lang('labels.use_1_credit')</button>
                 </form>
-                <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
+                <button type="button" data-dismiss="modal" class="btn">@lang('labels.cancel')</button>
             </div>
         </div>
     </div>
@@ -141,32 +141,32 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Tratar jugador</h4>
+                <h4 class="modal-title">@lang('labels.treat_player')</h4>
             </div>
             @if($_user->credits > 0)
             <div class="modal-body">
-                <p>Si tratas a <b>{{ $player->first_name }} {{ $player->last_name }}</b> ahora recuperará <b>{{ $player->treatmentImprovement }} {{ str_plural('fecha', $player->treatmentImprovement) }}</b></p>
-                <p>Cada jugador puede ser tratado una sóla vez por cada lesión.</p>
-                <p>¿Quieres tratar a {{ $player->short_name }} por 1 Fúlbo?</p>
-                <p>Fúlbos: {{ $_user->credits }}</p>
+                <p>@lang('messages.treatment_result', ['player' => $player->full_name, 'recovery' => $player->treatmentImprovement . ' ' . trans_choice('countables.rounds', $player->treatmentImprovement)])</p>
+                <p>@lang('messages.each_player_can_be_treated_once')</p>
+                <p>@lang('messages.do_you_want_to_treat_player', ['player' => $player->short_name])</p>
+                <p>@lang('labels.credits_with_value', ['value' => $_user->credits])</p>
             </div>
             <div class="modal-footer">
                 <form method="post" action="{{ route('shopping.buy') }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="id" value="4">
                     <input type="hidden" name="player_id" value="{{ $player->id }}">
-                    <button id="buy-item" class="btn btn-primary">Tratar</button>
-                    <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
+                    <button id="buy-item" class="btn btn-primary">@lang('labels.treat')</button>
+                    <button type="button" data-dismiss="modal" class="btn">@lang('labels.cancel')</button>
                 </form>
             </div>
             @else
             <div class="modal-body">
-                <p>No tienes suficientes Fúlbos para tratar a {{ $player->shot_name }}.</p>
-                <p>¿Quieres comprar más Fúlbos?</p>
+                <p>@lang('messages.not_enough_credits_for_treatment', ['player' => $player->short_name])</p>
+                <p>@lang('messages.not_enough_credits_confirmation')</p>
             </div>
             <div class="modal-footer">
-                <a href="{{ route('shopping.credits') }}" class="btn btn-primary">Comprar Fúlbos</a>
-                <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
+                <a href="{{ route('shopping.credits') }}" class="btn btn-primary">@lang('labels.buy_credits')</a>
+                <button type="button" data-dismiss="modal" class="btn">@lang('labels.cancel')</button>
             </div>
             @endif
         </div>

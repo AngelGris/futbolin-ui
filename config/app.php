@@ -77,7 +77,7 @@ return [
     |
     */
 
-    'locale' => 'es',
+    'locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -91,6 +91,28 @@ return [
     */
 
     'fallback_locale' => 'en',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Application Locales
+    |--------------------------------------------------------------------------
+    |
+    | Our supported locales will have available frontend and model
+    | translations.
+    |
+    */
+    'supported_locales' => [
+        'en' => [
+            'name'  => 'English',
+            'dir'   => 'ltr',
+            'label' => 'english',
+        ],
+        'es' => [
+            'name'  => 'Spanish',
+            'dir'   => 'ltr',
+            'label' => 'spanish',
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -177,6 +199,7 @@ return [
         App\Providers\ComposerServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Mariuzzo\LaravelJsLocalization\LaravelJsLocalizationServiceProvider::class,
 
         /*
          * Debugbar

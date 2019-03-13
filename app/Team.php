@@ -488,11 +488,11 @@ class Team extends Model
     /**
      * Process money income
      *
-     * @param integer $incomes
-     * @param String $description
-     * @return integer
+     * @param $amount
+     * @param $movement_type
+     * @param array $variables
      */
-    public function moneyMovement($amount, $description)
+    public function moneyMovement($amount, $movement_type, $variables = [])
     {
         // Limit the funds in the team
         $amount = min($amount, \Config::get('constants.MAX_TEAM_FUNDS') - $this->funds);
@@ -503,7 +503,8 @@ class Team extends Model
             'team_id'       => $this->id,
             'amount'        => $amount,
             'balance'       => $this->funds,
-            'description'   => $description
+            'movement_type' => $movement_type,
+            'variables'     => $variables
         ]);
     }
 
@@ -515,7 +516,7 @@ class Team extends Model
     public function paySalaries()
     {
         $salaries = (int)($this->players()->sum('value') * \Config::get('constants.PLAYERS_SALARY'));
-        $this->moneyMovement(-$salaries, 'Pago de salarios');
+        $this->moneyMovement(-$salaries, \Config::get('constants.MONEY_MOVEMENTS_OUTCOME_SALARIES_PAID'));
     }
 
     /**
@@ -586,10 +587,9 @@ class Team extends Model
                 $this->save();
             }
 
-            Notification::create([
-                'user_id' => $this->user->id,
-                'title' => $player->first_name . ' ' . $player->last_name . ' se ha retirado',
-                'message' => $player->first_name . ' ' . $player->last_name . ' ha decidido dejar las canchas y <a href="/jugador/' . $newbie->id . '/">' . $newbie->first_name . ' ' . $newbie->last_name . '</a> ha sido incorporado al equipo.',
+            Notification::create($this->user->id, 1, [
+                'player' => $player->full_name,
+                'replacement' => '<a href="/jugador/' . $newbie->id . '/">' . $newbie->full_name . '</a>',
             ]);
         } else {
             $pos = array_search($player->id, $this->formation);
@@ -601,10 +601,9 @@ class Team extends Model
                 $this->save();
             }
 
-            Notification::create([
-                'user_id' => $this->user->id,
-                'title' => $player->first_name . ' ' . $player->last_name . ' se ha retirado',
-                'message' => $player->first_name . ' ' . $player->last_name . ' ha decidido dejar las canchas con ' . $player->age . ' años.',
+            Notification::create($this->user->id, 2, [
+                'player'    => $player->full_name,
+                'age'       => $player->age,
             ]);
         }
 

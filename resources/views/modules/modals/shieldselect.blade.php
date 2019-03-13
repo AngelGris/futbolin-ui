@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Elige el escudo de tu equipo</h4>
+                <h4 class="modal-title">@lang('labels.select_your_teams_shield')</h4>
             </div>
             <div class="modal-body">
                 @for ($i = 1; $i <= 16; $i++)
@@ -14,7 +14,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@lang('labels.close')</button>
             </div>
         </div>
     </div>

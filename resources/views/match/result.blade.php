@@ -1,10 +1,10 @@
 <div class="col-xs-12 modal-match-result-teams">
     @if ($show_remaining)
-    <div class="alert alert-danger" role="alert">En {{ $remaining_time }} podrás jugar un nuevo amistoso contra éste equipo</div>
+    <div class="alert alert-danger" role="alert">@lang('messages.wait_to_play_again', ['time' => $remaining_time])</div>
     @endif
     <h4>{{ $stadium }} ({{ $datetime }})</h4>
     @if ($assistance > 0)
-    <p>{{ number_format($assistance) }} espectadores - {{ number_format($incomes) }} $</p>
+    <p>@lang('labels.number_spectators', ['number' => number_format($assistance)]) - @lang('labels.collection_value', ['value' => formatCurrency($incomes)])</p>
     @endif
     <div class="col-xs-4">
         <img class="svg" id="shield-local-res" src="{{ $local['shield_file'] }}"  data-color-primary="{{ $local['primary_color'] }}" data-color-secondary="{{ $local['secondary_color'] }}" style="height:70px;">
@@ -32,7 +32,7 @@
         </ul>
     </div>
 </div>
-<h3>Alineaciones</h3>
+<h3>@lang('labels.line_ups')</h3>
 <div class="col-xs-12 modal-match-result-formations">
     <div class="col-sm-3 col-xs-6">
         <ul>
@@ -72,7 +72,7 @@
         @endfor
     </div>
 </div>
-<h3>Resumen</h3>
+<h3>@lang('labels.highlights')</h3>
 <div class="col-xs-12 modal-match-result-actions">
     @foreach ($actions as $action)
     <div style="background-color:{{ $action[1] }};color:{{ $action[2] }};">
@@ -82,34 +82,34 @@
     </div>
     @endforeach
 </div>
-<h3>Estadísticas</h3>
+<h3>@lang('labels.statistics')</h3>
 <div class="col-xs-12 modal-match-result-statistics">
     <div class="col-xs-12">
         <div class="col-xs-4 {{ $local['goals'] > $visit['goals'] ? 'best' : '' }}">{{ $local['goals'] }}</div>
-        <div class="col-xs-4">Goles</div>
+        <div class="col-xs-4">@lang('labels.goals')</div>
         <div class="col-xs-4 {{ $local['goals'] < $visit['goals'] ? 'best' : '' }}">{{ $visit['goals'] }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-4 {{ $local['posession'] > $visit['posession'] ? 'best' : '' }}">{{ $local['posession'] }}</div>
-        <div class="col-xs-4">Posesión</div>
+        <div class="col-xs-4">@lang('labels.possession')</div>
         <div class="col-xs-4 {{ $local['posession'] < $visit['posession'] ? 'best' : '' }}">{{ $visit['posession'] }}</div>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-4 {{ $local['shots'] > $visit['shots'] ? 'best' : '' }}">{{ $local['shots'] }} ({{ $local['shots_goal'] }})</div>
-        <div class="col-xs-4">Disparos</div>
+        <div class="col-xs-4">@lang('labels.shots')</div>
         <div class="col-xs-4 {{ $local['shots'] < $visit['shots'] ? 'best' : '' }}">{{ $visit['shots'] }} ({{ $visit['shots_goal'] }})</div>
     </div>
     @if ($local['substitutions'] >= 0)
     <div class="col-xs-12">
         <div class="col-xs-4">{{ $local['substitutions'] }}</div>
-        <div class="col-xs-4">Cambios</div>
+        <div class="col-xs-4">@lang('labels.substitutions')</div>
         <div class="col-xs-4">{{ $visit['substitutions'] }}</div>
     </div>
     @endif
     @if ($local['yellow_cards'] >= 0)
     <div class="col-xs-12">
         <div class="col-xs-4">{{ $local['yellow_cards'] }} / {{ $local['red_cards'] }}</div>
-        <div class="col-xs-4">Tarjetas</div>
+        <div class="col-xs-4">@lang('labels.cards')</div>
         <div class="col-xs-4">{{ $visit['yellow_cards'] }} / {{ $visit['red_cards'] }}</div>
     </div>
     @endif

@@ -91,7 +91,7 @@ class HomeController extends Controller
         }
         $injury_stats['total'] = $total;
 
-        $players_energy = DB::table('players')
+        $players_stamina = DB::table('players')
             ->select(DB::raw('`stamina`, COUNT(*) AS `count`'))
             ->where('team_id', '>', 1)
             ->groupBy('stamina')
@@ -100,16 +100,16 @@ class HomeController extends Controller
         for ($i = 0; $i <= 100; $i += 5) {
             $aux[$i] = 0;
         }
-        foreach ($players_energy as $value) {
+        foreach ($players_stamina as $value) {
             $index = ((int)($value->stamina / 5) *5);
             $aux[$index] += $value->count;
         }
-        $players_energy = [];
+        $players_stamina = [];
         foreach ($aux as $k => $v) {
-            $players_energy[] = [$k, $v];
+            $players_stamina[] = [$k, $v];
         }
 
-        $teams_energy = DB::table('players')
+        $teams_stamina = DB::table('players')
             ->select(DB::raw('`team_id`, ROUND(AVG(`stamina`)) AS `stamina`'))
             ->where('team_id', '>', 1)
             ->groupBy('team_id')
@@ -118,13 +118,13 @@ class HomeController extends Controller
         for ($i = 0; $i <= 100; $i += 5) {
             $aux[$i] = 0;
         }
-        foreach ($teams_energy as $value) {
+        foreach ($teams_stamina as $value) {
             $index = ((int)($value->stamina / 5) *5);
             $aux[$index]++;
         }
-        $teams_energy = [];
+        $teams_stamina = [];
         foreach ($aux as $k => $v) {
-            $teams_energy[] = [$k, $v];
+            $teams_stamina[] = [$k, $v];
         }
 
         $stats_date = Carbon::create(2018, 8, 22, 0, 0, 0);
@@ -200,9 +200,9 @@ class HomeController extends Controller
             'injured_players'       => Player::where('recovery', '>', 0)->orderBy('recovery')->limit(10)->get(),
             'injury_stats'          => $injury_stats,
             'injury_types'          => $injury_types,
-            'players_energy'        => json_encode($players_energy),
+            'players_stamina'       => json_encode($players_stamina),
             'players_retiring'      => Player::where('retiring', 1)->limit(10)->get(),
-            'teams_energy'          => json_encode($teams_energy),
+            'teams_stamina'         => json_encode($teams_stamina),
             'match_stats'           => $match_stats
         ];
 
@@ -233,7 +233,7 @@ class HomeController extends Controller
         } else {
             return redirect()
                     ->route('profile.password')
-                    ->withErrors(['old_password' => 'Contraseña Actual incorrecta'])
+                    ->withErrors(['old_password' => __('errors.current_password_incorrect')])
                     ->withInput($request->only('old_password', 'new_password', 'new_password_confirmation'));
         }
     }

@@ -26,5 +26,20 @@ return [
     'PLAYERS_SALARY' => 0.015, // Rate of the player value that is his salary
     'PLAYERS_TRANSFERABLE_PERIOD' => 3, // Number of days a player remains transferable
     'FREE_PLAYERS_GENERATE' => 3, // Number of free players to generate each day
+
+    // Money movements
+    'MONEY_MOVEMENTS_INCOME_SELLING_TICKETS'        => 1,
+    'MONEY_MOVEMENTS_INCOME_SELLING_PLAYER'         => 2,
+    'MONEY_MOVEMENTS_INCOME_SELLING_CREDITS'        => 3,
+    'MONEY_MOVEMENTS_OUTCOME_SALARIES_PAID'         => 4,
+    'MONEY_MOVEMENTS_OUTCOME_CONTRACT_TERMINATED'   => 5,
+    'MONEY_MOVEMENTS_OUTCOME_BUYING_PLAYER'         => 6,
+
+    // Notifications
+    'NOTIFICATIONS_PLAYER_RETIRED_AND_REPLACED'     => 1,
+    'NOTIFICATIONS_PLAYER_RETIRED'                  => 2,
+    'NOTIFICATIONS_OFFER_EXCEEDED'                  => 3,
+    'NOTIFICATIONS_YOU_BOUGHT_PLAYER'               => 4,
+    'NOTIFICATIONS_NO_OFFER_FOR_PLAYER'             => 5,
+    'NOTIFICATIONS_PLAYER_TRANSFERRED'              => 6,
 ];
-?>

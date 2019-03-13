@@ -24,11 +24,11 @@ $(function() {
 @section('content-inner')
 @foreach($_team->injured_players as $player)
 @if($player->treatable)
-<div class="alert alert-warning" role="alert">{{ $player->short_name }} se ha lesionado y puede ser tratado para recuperarse más rápido. <div style="float:right;"><a class="btn btn-primary btn-xs" href="{{ route('player', $player->id) }}">Ver jugador</a></div></div>
+<div class="alert alert-warning" role="alert">@lang('messages.player_can_be_treated', ['player' => $player->short_name]) <div style="float:right;"><a class="btn btn-primary btn-xs" href="{{ route('player', $player->id) }}">@lang('labels.view_player')</a></div></div>
 @endif
 @endforeach
 @if(isset($tournament))
-<h3>{{ $tournament['category']['name'] }} <a href="{{ route('tournaments') }}" class="btn btn-primary" style="margin-left:20px;padding: 2px 10px;">Ver todo</a></h3>
+<h3>{{ $tournament['category']['name'] }} <a href="{{ route('tournaments') }}" class="btn btn-primary" style="margin-left:20px;padding: 2px 10px;">@lang('labels.view_all')</a></h3>
 <div class="col-md-6 zebra" style="float:right;margin-bottom:40px;">
     @if (isset($tournament['next_match']))
     <div class="col-xs-12" id="home-next-match">
@@ -44,7 +44,7 @@ $(function() {
     <div class="clear"></div>
     @endif
     @if (!empty($tournament['last_matches']))
-    <h4 style="margin-top:20px;">Últimos partidos</h4>
+    <h4 style="margin-top:20px;">@lang('labels.last_matches')</h4>
     @foreach ($tournament['last_matches'] as $match)
     <div class="col-xs-12">
         <div class="col-xs-2">{{ $match['date'] }}</div>
@@ -56,12 +56,12 @@ $(function() {
     @endif
 </div>
 <div class="col-md-6" style="float:left;margin-bottom:40px;">
-    <h3 style="margin-bottom:10px;text-align:center">Posiciones</h3>
+    <h3 style="margin-bottom:10px;text-align:center">@lang('labels.positions')</h3>
     <div class="col-md-12 zebra">
         <div class="col-xs-12">
-            <div class="col-xs-2" style="font-weight:bold;text-align:center;">Pos</div>
-            <div class="col-xs-7" style="font-weight:bold;text-align:center;">Equipo</div>
-            <div class="col-xs-3" style="font-weight:bold;text-align:right;">Pts</div>
+            <div class="col-xs-2" style="font-weight:bold;text-align:center;">@lang('labels.position_short')</div>
+            <div class="col-xs-7" style="font-weight:bold;text-align:center;">@lang('labels.team')</div>
+            <div class="col-xs-3" style="font-weight:bold;text-align:right;">@lang('labels.points_short')</div>
         </div>
         @for ($i = 0; $i < 10; $i++)
         <div class="col-xs-12" style="padding:0;{{ ($_team['id'] == $tournament['category']['positions'][$i]['team_id']) ? 'background-color:#f99;' : ''}}">

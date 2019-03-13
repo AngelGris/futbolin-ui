@@ -177,11 +177,11 @@ EOD;
                     switch($payment_status_id) {
                         case 2:
                             $credits = $user->addCreditItem($payment->transactions[0]->item_list->items[0]->sku);
-                            Session::flash('flash_success', $credits . ' Fúlbos fueron acreditados. Transacción finalizada.');
+                            Session::flash('flash_success', __('messages.credits_bought_success', ['credits' => $credits]));
                             return redirect()->route('shopping');
                             break;
                         case 3:
-                            Session::flash('flash_warning', 'Pago rechazado por PayPal.');
+                            Session::flash('flash_warning', __('messages.payment_rejected_by_paypal'));
                             return redirect()->route('shopping.credits');
                             break;
                         default:
@@ -194,7 +194,7 @@ EOD;
                 dd($ex);
             }
         } else {
-            Session::flash('flash_danger', 'Operación cancelada.');
+            Session::flash('flash_danger', __('messages.operation_canceled'));
             return redirect()->route('shopping.credits');
         }
     }

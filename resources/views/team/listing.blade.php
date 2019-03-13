@@ -41,7 +41,7 @@ $(function(){
     $('.stats').click(function(event) {
         event.preventDefault();
 
-        $('#modal-stats-versus-content').html('Cargando las estadísticas');
+        $('#modal-stats-versus-content').html('@lang('lables.loading_statistics')');
         $('#modal-stats-versus-loading').show();
         $('#modal-stats-versus').modal('show');
 
@@ -58,7 +58,7 @@ $(function(){
     $('.play').click(function(event) {
         event.preventDefault();
 
-        $('#modal-playing-message').text('Se está disputando el encuentro, no dejen de alentar!');
+        $('#modal-playing-message').text('@lang('messages.playing_match')');
         $('#modal-playing').modal({
             'backdrop' : 'static',
             'keyboard' : false
@@ -70,7 +70,7 @@ $(function(){
             'dataType' : 'json',
             'data' : {rival : $(this).data('id'), _token : '{{ csrf_token() }}'},
         }).done(function(data){
-            $('#modal-playing-message').text('Cargando el resultado...');
+            $('#modal-playing-message').text('@lang('labels.loading_result')');
             $('#btn-play-' + data.id).hide();
             $('#span-play-' + data.id).show();
             loadResult(data.file);
@@ -97,19 +97,19 @@ function loadResult(fileName) {
 
 @section('content-inner')
 @if (!$playable)
-<div class="alert alert-danger" role="alert">Para poder jugar partidos necesita completar su formación en la página de <a href="{{ route('strategy') }}">Estrategia</a></div>
+<div class="alert alert-danger" role="alert">@lang('messages.complete_lineup', ['url' => route('strategy')])</div>
 @endif
-<h3>Sparrings <a href="#" class="sparring-toggle"><span class="fa fa-plus-circle"></span></a></h3>
-<p style="margin-bottom:10px;">Con los sparrings pueden jugar todos los partidos de entrenamiento que quieras, para probar las diferentes estrategias de tu equipo</p>
+<h3>@lang('labels.sparrings') <a href="#" class="sparring-toggle"><span class="fa fa-plus-circle"></span></a></h3>
+<p style="margin-bottom:10px;">@lang('messages.sparrings_description')</p>
 <div id="dynsparrings-container" style="display:none;">
     <table id="dynsparrings" class="table table-bordered responsive">
         <thead>
             <tr>
-                <th style="width:100%">Equipo</th>
-                <th>Formacion</th>
-                <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
-                <th>Estad.</th>
-                <th>Jugar</th>
+                <th style="width:100%">@lang('labels.team')</th>
+                <th>@lang('labels.formation')</th>
+                <th><span data-placement="top" data-toggle="tooltip" data-original-title="@lang('attributes.average')">@lang('attributes.average_short')</span></th>
+                <th>@lang('labels.statistics_short')</th>
+                <th>@lang('labels.play')</th>
             </tr>
         </thead>
         <tbody>
@@ -118,10 +118,10 @@ function loadResult(fileName) {
                 <td>{{ $team['name'] }}</td>
                 <td align="center">{{ $team['strategy']['name'] }}</td>
                 <td align="center">{{ $team['average'] }}</td>
-                <td align="center"><a href="#" class="stats" data-id="{{ $team['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></span></a></td>
+                <td align="center"><a href="#" class="stats" data-id="{{ $team['id'] }}"><span class="fa fa-bar-chart" title="@lang('labels.statistics')"></span></a></td>
                 <td align="center">
                     @if ($playable)
-                    <a href="#" class="play" data-id="{{ $team['id'] }}"><span class="fa fa-futbol-o" title="Entrenamiento"></span></a>
+                    <a href="#" class="play" data-id="{{ $team['id'] }}"><span class="fa fa-futbol-o" title="@lang('labels.training')"></span></a>
                     @endif
                 </td>
             </tr>
@@ -129,17 +129,17 @@ function loadResult(fileName) {
         </tbody>
     </table>
 </div>
-<h3>Amistosos <a href="#" class="teams-toggle"><span class="fa fa-minus-circle"></span></a></h3>
-<p style="margin-bottom:10px;">Sólo podrás jugar un amistoso con cada equipo cada 24 horas.</p>
+<h3>@lang('labels.friendlies') <a href="#" class="teams-toggle"><span class="fa fa-minus-circle"></span></a></h3>
+<p style="margin-bottom:10px;">@lang('messages.friendlies_description')</p>
 <div id="dynteams-container">
     <table id="dynteams" class="table table-bordered responsive">
         <thead>
             <tr>
-                <th style="width:50%">Equipo</th>
-                <th style="width:50%">Entrenador</th>
-                <th><span data-placement="top" data-toggle="tooltip" data-original-title="Media">MED</span></th>
-                <th>Estad.</th>
-                <th>Jugar</th>
+                <th style="width:50%">@lang('labels.team')</th>
+                <th style="width:50%">@lang('labels.trainer')</th>
+                <th><span data-placement="top" data-toggle="tooltip" data-original-title="@lang('attributes.average')">@lang('attributes.average_short')</span></th>
+                <th>@lang('labels.statistics_short')</th>
+                <th>@lang('labels.play')</th>
             </tr>
         </thead>
         <tbody>
@@ -150,12 +150,12 @@ function loadResult(fileName) {
                 <td align="center">{{ $team['average'] }}</td>
                 <td align="center">
                     @if ($team['id'] != $_team['id'])
-                    <a href="#" class="stats" data-id="{{ $team['id'] }}"><span class="fa fa-bar-chart" title="Estadísticas"></a>
+                    <a href="#" class="stats" data-id="{{ $team['id'] }}"><span class="fa fa-bar-chart" title="@lang('labels.statistics')"></a>
                     @endif
                 </td>
                 <td align="center">
                     @if ($playable && $team['playable'] && $team['id'] != $_team['id'])
-                    <a href="#" id="btn-play-{{ $team['id'] }}" class="play" data-id="{{ $team['id'] }}"{!! !empty($team->played) ? ' style="display:none;"' : '' !!}><span class="fa fa-handshake-o" title="Amistoso"></span></a>
+                    <a href="#" id="btn-play-{{ $team['id'] }}" class="play" data-id="{{ $team['id'] }}"{!! !empty($team->played) ? ' style="display:none;"' : '' !!}><span class="fa fa-handshake-o" title="@lang('labels.friendlies')"></span></a>
                     <span id="span-play-{{ $team['id'] }}" data-id="{{ $team['id'] }}" {!! empty($team->played) ? ' style="display:none;"' : '' !!}>{{ !empty($team->played) ? $team->played : '24 h' }}</span>
                     @endif
                 </td>
@@ -169,14 +169,14 @@ function loadResult(fileName) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Estadísticas de enfrentamientos</h4>
+                <h4 class="modal-title">@lang('labels.match_statistics')</h4>
             </div>
             <div class="modal-body">
-                <p id="modal-stats-versus-content">Cargando las estadísticas</p>
+                <p id="modal-stats-versus-content">@lang('labels.loading_statistics')</p>
                 <div id="modal-stats-versus-loading" style="margin-top:20px;"><img src="{{ asset('img/loader.gif') }}" /></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@lang('labels.close')</button>
             </div>
         </div>
     </div>
@@ -185,10 +185,10 @@ function loadResult(fileName) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Hora de partido</h4>
+                <h4 class="modal-title">@lang('labels.match_time')</h4>
             </div>
             <div class="modal-body">
-                <p id="modal-playing-message">Se está disputando el encuentro, no dejen de alentar!</p>
+                <p id="modal-playing-message">@lang('messages.playing_match')</p>
             </div>
             <div class="modal-footer">
                 <img src="{{ asset('img/loader.gif') }}" />
@@ -201,7 +201,7 @@ function loadResult(fileName) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Cargando resumen del partido</h4>
+                <h4 class="modal-title">@lang('labels.loading_match_summary')</h4>
             </div>
             <div class="modal-body modal-match-result" id="modal-match-loading-content">
                 <img src="{{ asset('img/loader.gif') }}" />
@@ -216,12 +216,12 @@ function loadResult(fileName) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Resumen del partido</h4>
+                <h4 class="modal-title">@lang('labels.match_summary')</h4>
             </div>
             <div class="modal-body modal-match-result" id="modal-match-result-content">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@lang('labels.close')</button>
             </div>
         </div>
     </div>

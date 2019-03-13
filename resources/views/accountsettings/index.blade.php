@@ -5,11 +5,11 @@
     <input type="hidden" name="_method" value="PATCH">
     {{ csrf_field() }}
     <div class="form-group">
-        <label class="col-md-2 control-label">Email</label>
+        <label class="col-md-2 control-label">@lang('labels.email')</label>
         <div class="col-md-10">{{ $_user['email'] }}</div>
     </div>
     <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
-        <label for="first_name" class="col-md-2 control-label">Nombre</label>
+        <label for="first_name" class="col-md-2 control-label">@lang('labels.first_name')</label>
         <div class="col-md-10">
             <input type="text" class="form-control input-default" name="first_name" value="{{ old('first_name', $_user['first_name']) }}" required>
             @if ($errors->has('first_name'))
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
-        <label for="last_name" class="col-md-2 control-label">Apellido</label>
+        <label for="last_name" class="col-md-2 control-label">@lang('labels.last_name')</label>
         <div class="col-md-10">
             <input type="text" class="form-control input-default" name="last_name" value="{{ old('last_name', $_user['last_name']) }}" required>
             @if ($errors->has('last_name'))
@@ -30,15 +30,25 @@
             @endif
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-md-2 control-label">Contraseña</label>
+    <div class="form-group{{ $errors->has('language') ? ' has-error' : '' }}">
+        <label for="last_name" class="col-md-2 control-label">@lang('labels.language')</label>
         <div class="col-md-10">
-            <a href="{{ route('profile.password') }}">Cambiar contraseña</a>
+            <select name="language">
+                @foreach($supported_languages AS $key => $language)
+                <option value="{{ $key }}" {{ $_user->language == $key ? 'selected' : '' }}>@lang('labels.' . $language['label'])</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">@lang('labels.password')</label>
+        <div class="col-md-10">
+            <a href="{{ route('profile.password') }}">@lang('labels.change_password')</a>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-default">Guardar</button>
+            <button type="submit" class="btn btn-default">@lang('labels.save')</button>
         </div>
     </div>
 </form>

@@ -27,8 +27,8 @@ class ShoppingController extends Controller
         } else {
             $vars = [
                 'icon'      => 'fa fa-shopping-cart',
-                'title'     => 'Shopping',
-                'subtitle'  => 'Hora de hacer compras',
+                'title'     => __('headers.shopping_title'),
+                'subtitle'  => __('headers.shopping_subtitle'),
                 'items'     => ShoppingItem::where('in_shopping', TRUE)->get()
             ];
 
@@ -76,13 +76,14 @@ class ShoppingController extends Controller
         // If user doesn't have enough credit for the transaction
         // redirect to shopping with arning message
         if ($user->credits < $shopping_item->price) {
+            $message = __('messages.not_enough_credits');
             if ($request->expectsJson()) {
                 return response()->json([
                     'type'      => 'credit_insufficient',
-                    'message'   => 'Crédito insuficientes para la transacción'
+                    'message'   => $message
                 ], 400);
             } else {
-                Session::flash('flash_danger', 'No tienes suficientes Fúlbos.');
+                Session::flash('flash_danger', $message);
                 return redirect()->route('shopping');
             }
         }
@@ -97,51 +98,53 @@ class ShoppingController extends Controller
             case 1:
                 DB::table('players')->where('team_id', $user->team->id)->where('stamina', '>=', 80)->update(['stamina' => 100]);
                 DB::table('players')->where('team_id', $user->team->id)->where('stamina', '<', 80)->increment('stamina', 20);
-                $success_message = 'Tus jugadores han recuperado 20 puntos de energía.';
+                $success_message = __('messages.recovered_20_stamina');
                 break;
             case 2:
                 DB::table('players')->where('team_id', $user->team->id)->update(['stamina' => 100]);
-                $success_message = 'Tus jugadores han recuperado TODA su energía.';
+                $success_message = __('messages.recovered_all_stamina');
                 break;
             case 3:
                 $user->team->train();
                 $user->team->trainer = Carbon::now()->addWeeks(1);
                 $user->team->save();
-                $success_message = 'El entrenador ha sido contratado hasta el ' . $user->team->trainer->format('d/m/Y H:i:s') . '.';
+                $success_message = __('messages.personal_trainer_hired', ['hired_until' => $user->team->trainer->format('d/m/Y H:i:s')]);
                 break;
             case 4:
             case 5:
                 $player = Player::find($request->input('player_id'));
                 if ($player->team->id != $user->team->id) {
+                    $message = __('messages.player_not_yours', ['player' => $player->short_name]);
                     if ($request->expectsJson()) {
                         return response()->json([
                             'type'      => 'player_owner',
-                            'message'   => $player->short_name . ' no es de tu equipo'
+                            'message'   => $message
                         ], 400);
                     } else {
-                        Session::flash('flash_warning', $player->short_name . ' no es de tu equipo.');
+                        Session::flash('flash_warning', $message);
                         return redirect()->route('player', $player->id);
                     }
                 }
 
                 if ($shopping_item->id == 4) {
                     $player->treat();
-                    $success_message = $player->short_name . ' fue tratado por su lesión.';
+                    $success_message = __('messages.player_treated', ['player' => $player->short_name]);
                 } else {
                     $sellable_count = $player->team->sellabel_count;
                     if ($sellable_count < 1) {
+                        $message = __('messages.minimum_players_reached');
                         if ($request->expectsJson()) {
                             return response()->json([
                                 'type'      => 'players_limit',
-                                'message'   => 'Ha alcanzado el mínimo de jugadores en su equipo'
+                                'message'   => $message
                             ], 400);
                         } else {
-                            Session::flash('flash_warning', 'Ha alcanzado el mínimo de jugadores en su equipo.');
+                            Session::flash('flash_warning', $message);
                             return redirect()->route('player', $player->id);
                         }
                     }
                     $player->setFree();
-                    $success_message = $player->short_name . ' ha sido liberado.';
+                    $success_message = __('messages.player_freed', ['player' => $player->short_name]);
                 }
 
                 $redirect = redirect()->route('player', $player->id);
@@ -156,19 +159,20 @@ class ShoppingController extends Controller
                 }
 
                 if ($shopping_item->price == 0) {
+                    $message = __('messages.maximum_funds_reached', ['maximum_funds' => formatCurrency(\Config::get('constants.MAX_TEAM_FUNDS'))]);
                     if ($request->expectsJson()) {
                         return response()->json([
                             'type'      => 'funds_limits',
-                            'message'   => 'Has alcanzado el límite de ' . formatCurrency(\Config::get('constants.MAX_TEAM_FUNDS')) . ', no puedes tener más dinero.'
+                            'message'   => $message
                         ], 400);
                     } else {
-                        Session::flash('flash_warning', 'Has alcanzado el límite de ' . formatCurrency(\Config::get('constants.MAX_TEAM_FUNDS')) . ', no puedes tener más dinero.');
+                        Session::flash('flash_warning', $message);
                         return redirect()->route('finances');
                     }
                 }
 
-                $user->team->moneyMovement($value, 'Venta de Fúlbos');
-                $success_message = 'Has vendido ' . $shopping_item->price . ' Fúlbos por ' . formatCurrency($value);
+                $user->team->moneyMovement($value, \Config::get('constants.MONEY_MOVEMENTS_INCOME_SELLING_CREDITS'));
+                $success_message = __('messages.credits_sold', ['credits' => $shopping_item->price, 'value' => formatCurrency($value)]);
                 $redirect = redirect()->route('finances');
                 break;
             case 7:
@@ -182,7 +186,7 @@ class ShoppingController extends Controller
                 ];
                 break;
             default:
-                Session::flash('flash_danger', 'Item inválido.');
+                Session::flash('flash_danger', __('messages.invalid_item'));
                 return redirect()->route('shopping');
                 break;
         }

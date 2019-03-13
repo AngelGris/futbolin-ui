@@ -4,7 +4,7 @@
 <script src="{{ asset('js/jquery.flot.min.js') }}"></script>
 <script type="text/javascript">
 $(function(){
-    $.plot($("#graph-players-energy"), [ {{ $players_energy }} ], {
+    $.plot($("#graph-players-stamina"), [ {{ $players_stamina }} ], {
         series: {
             stack: false,
             lines: { show: false, fill: false, steps: false },
@@ -14,7 +14,7 @@ $(function(){
         colors: ["#666"]
     });
 
-    $.plot($("#graph-teams-energy"), [ {{ $teams_energy }} ], {
+    $.plot($("#graph-teams-stamina"), [ {{ $teams_stamina }} ], {
         series: {
             stack: false,
             lines: { show: false, fill: false, steps: false },
@@ -264,13 +264,13 @@ $(function(){
 <div class="col-md-6">
     <h3>Energía de los jugadores</h3>
     <div class="widgetcontent">
-        <div id="graph-players-energy" style="height:300px;"></div>
+        <div id="graph-players-stamina" style="height:300px;"></div>
     </div>
 </div>
 <div class="col-md-6">
     <h3>Energía de los equipos</h3>
     <div class="widgetcontent">
-        <div id="graph-teams-energy" style="height:300px;"></div>
+        <div id="graph-teams-stamina" style="height:300px;"></div>
     </div>
 </div>
 <div id="home-last-teams" class="col-md-6 zebra">

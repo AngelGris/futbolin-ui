@@ -109,7 +109,7 @@ class TournamentCategory extends Model
      */
     public function getNameAttribute()
     {
-        return $this->tournament->name . ' (Zona ' . $this->zone_name . ' Cat. ' . $this->category_name . ')';
+        return str_replace('Temporada', __('labels.season'),$this->tournament->name) . ' (' . __('labels.zone_and_category', ['zone' => $this->zone_name, 'category' => $this->category_name]) . ')';
     }
 
     /**
@@ -119,7 +119,7 @@ class TournamentCategory extends Model
      */
     public function getNameBrAttribute()
     {
-        return $this->tournament->name . '<br> (Zona ' . $this->zone_name . ' Cat. ' . $this->category_name . ')';
+        return str_replace('Temporada', __('labels.season'),$this->tournament->name) . '<br> (' . __('labels.zone_and_category', ['zone' => $this->zone_name, 'category' => $this->category_name]) . ')';
     }
 
     /**
