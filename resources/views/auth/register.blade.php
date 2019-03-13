@@ -7,7 +7,7 @@
         <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
             {{ csrf_field() }}
             <div class="inputwrapper{{ $errors->has('language') ? ' has-error' : '' }}">
-                <select name="language">
+                <select name="language" id="select-language">
                     @foreach($supported_languages AS $key => $language)
                     <option value="{{ $key }}" {{ $current_language == $key ? 'selected' : '' }}>@lang('labels.' . $language['label'])</option>
                     @endforeach

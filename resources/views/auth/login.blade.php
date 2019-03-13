@@ -12,6 +12,15 @@
 <div class="loginpanel">
     <div class="loginpanelinner">
         <h1>@lang('labels.login')</h1>
+        <form>
+            <div class="inputwrapper">
+                <select name="language" id="select-language">
+                    @foreach($supported_languages AS $key => $language)
+                    <option value="{{ $key }}" {{ $current_language == $key ? 'selected' : '' }}>@lang('labels.' . $language['label'])</option>
+                    @endforeach
+                </select>
+            </div>
+        </form>
         <form id="login" action="{{ route('login') }}" method="POST" role="form">
             {{ csrf_field() }}
             <div class="inputwrapper">

@@ -217,6 +217,10 @@ $(function(){
         }).modal('hide');
     });
 
+    $('#select-language').change(function() {
+        $(this).closest('form').submit();
+    });
+
     function startRemainingTimer(remaining = 0) {
         if (remaining > 0) {
             trainable_remaining = remaining;
