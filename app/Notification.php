@@ -28,7 +28,7 @@ class Notification extends Model
      * @var array
      */
     protected $hidden = [
-        'user', 'user_id', 'read_on', 'created_at', 'updated_at'
+        'user', 'user_id', 'read_on', 'variables', 'created_at', 'updated_at'
     ];
 
     /**
@@ -37,7 +37,7 @@ class Notification extends Model
      * @var array
      */
     protected $appends = [
-        'published', 'unread'
+        'title', 'message', 'published', 'unread'
     ];
 
     public function getMessageAttribute()
