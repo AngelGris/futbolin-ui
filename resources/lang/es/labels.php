@@ -126,6 +126,7 @@ return [
     'players'                       => 'Jugadores',
     'players_retiring'              => 'Jugadores por retirarse',
     'points_short'                  => 'Pts',
+    'portuguese'                    => 'Portugués',
     'position'                      => 'Posición',
     'position_short'                => 'Pos',
     'positions'                     => 'Posiciones',

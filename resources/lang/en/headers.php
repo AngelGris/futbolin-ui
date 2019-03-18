@@ -28,7 +28,7 @@ return [
     'team_title'                        => ':team_name',
     'team_subtitle'                     => 'The club in your heart',
     'tournaments_title'                 => 'Tournaments',
-    'tournaments_subtitle'              => 'let\'s show who is the boss',
+    'tournaments_subtitle'              => 'Let\'s show who is the boss',
     'transfers_market_title'            => 'Transfers Market',
     'transfers_market_subtitle'         => 'Looking for reinforcement',
     'users_guide_title'                 => 'User\'s Guide',

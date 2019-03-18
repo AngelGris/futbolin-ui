@@ -31,6 +31,7 @@ return [
     'invalid_item'                                          => 'Invalid item.',
     'invalid_market_value'                                  => 'New market value is not valid.',
     'invalid_offer_value'                                   => 'The value for the offer is invalid.',
+    'its_your_ordinal_training'                             => 'It\'s your :ordinal training!',
     'make_transferable_selling_conditions'                  => 'The player will be sold to the best bidder with a initial value of <strong>:value</strong>.',
     'maximum_funds_reached'                                 => 'You reached the limit of :maximum_funds, you can\'t have more money.',
     'maximum_players_reached'                               => 'You reached the maximum number of players for your team, you can\'t buy more players.',
@@ -65,8 +66,11 @@ return [
     'recovered_all_stamina'                                 => 'Your players recovered all their stamina.',
     'sparrings_description'                                 => 'Against the sparrings you can play all the matches you want, to test the different strategies for your team.',
     'team_updated'                                          => 'Team updated',
+    'today_your_players_gained_x_points'                    => 'Today your players won :training_points experience points and regained :training_points stamina points.',
+    'train_again_tomorrow_to_earn_more'                     => 'Training again tomorrow to earn :points more points',
     'transferable_until'                                    => ':player is transferable until :end_date with an initial value of :initial_value.',
     'treatment_result'                                      => 'If you treat <b>:player</b> now, he will recover <b>:recovery</b>',
     'value_updated'                                         => 'Value updated.',
-    'wait_to_play_again'                                    => 'You can play a new friendly match against this team in :time'
+    'wait_to_play_again'                                    => 'You can play a new friendly match against this team in :time',
+    'you_trained_your_team_days_in_a_row'                   => 'You trained your team :training_count days in a row!',
 ];

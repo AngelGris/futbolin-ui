@@ -112,6 +112,11 @@ return [
             'dir'   => 'ltr',
             'label' => 'spanish',
         ],
+        'pt' => [
+            'name'  => 'Portuguese',
+            'dir'   => 'ltr',
+            'label' => 'portuguese',
+        ],
     ],
 
     /*
