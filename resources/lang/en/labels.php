@@ -126,6 +126,7 @@ return [
     'players'                       => 'Players',
     'players_retiring'              => 'Players retiring',
     'points_short'                  => 'Pts',
+    'portuguese'                    => 'Portuguese',
     'position'                      => 'Position',
     'position_short'                => 'Pos',
     'positions'                     => 'Positions',

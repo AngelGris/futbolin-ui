@@ -8,8 +8,8 @@ return [
     'popup_5'   => '<p>In <i>Finances</i> you can see your team\\\'s money movements and exchange <i>Fúlbos</i> for money.</p>',
     'popup_6'   => '<p>In the <i>Transfers market</i> you will find players that are available for you to buy to reinforce your squad.</p>',
     'popup_7'   => '<p>When you have your team ready you can go to the <i>Friendlies</i> page to play against sparrings and other teams to see if your strategy is good or not.</p>',
-    'popup_8'   => '<p>You can go <i>Shopping</i> and use your <i>Fúlbos</i> to help your players recover stamina or hire a personal trainer to train them.',
+    'popup_8'   => '<p>You can go <i>Shopping</i> and use your <i>Fúlbos</i> to help your players recover stamina or hire a personal trainer to train them.</p>',
     'popup_9'   => '<p>For each tournament match you play, your players gain experience and when they reach 100 experience points they improve. But in those matches they lose stamina, and tired players don\\\'t perform so well.</p><p>(matches against sparrings and friendly matches don\\\'t give any experience but don\\\'t take stamina from the players either).</p>',
-    'popup_10'  => '<p>You can also help your players improve and recover stamina by training them everyday by clicking the <i>"Train"</i> button.</p>',
-    'popup_11'  => '<p>Now you are ready to start working on your team! Any other doubt you have you can always go to the "User\\\'s guide" at the bottom of the page.</p><p>Good luck!</p>',
+    'popup_10'  => '<p>You can also help your players improve and recover stamina by training them everyday by clicking the <i>Train</i> button.</p>',
+    'popup_11'  => '<p>Now you are ready to start working on your team! Any other doubt you have you can always go to the <i>User\\\'s guide</i> at the bottom of the page.</p><p>Good luck!</p>',
 ];

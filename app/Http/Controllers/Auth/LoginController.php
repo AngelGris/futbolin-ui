@@ -95,6 +95,9 @@ class LoginController extends Controller
         $num = rand(1, 9);
         $params['bodystyle'] = 'style="background-image:url(/img/back/' . sprintf("%03d", $num) . '.jpg);"';
 
+        $params['supported_languages'] = config('app.supported_locales');
+        $params['current_language'] = app('translator')->getLocale();
+
         return view('auth.login', $params);
     }
 }

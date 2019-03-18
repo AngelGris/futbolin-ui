@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Cookie;
 
 class Locale
 {
@@ -24,10 +25,20 @@ class Locale
 
             $language = $user->language;
         } else {
-            if (\Auth::check()) {
+            if (\Auth::check()) { // Get language from user profile
                 $user = \Auth::user();
                 $language = $user->language;
-            } else {
+            } elseif (
+                $request->get('language', null) &&
+                in_array($request->get('language'), $supported_locales)
+            ) { // Get language from request for when the user select a different language
+                $language = $request->get('language');
+            } elseif (
+                Cookie::has('language') &&
+                in_array(Cookie::get('language'), $supported_locales)
+            ) { // Get language from cookie
+                $language = Cookie::get('language');
+            } else { // Get default language from browser
                 $user_locales = $request->getLanguages();
                 if(!empty($user_locales)) {
                     foreach ($user_locales as $lang) {
@@ -41,6 +52,7 @@ class Locale
             }
         }
 
+        Cookie::queue('language', $language);
         app('translator')->setLocale($language);
 
         return $next($request);

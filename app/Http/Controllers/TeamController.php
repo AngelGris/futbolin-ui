@@ -513,37 +513,37 @@ class TeamController extends Controller
          */
         if ($team->trainning_count == 0 || $team->inTrainningSpam || $restart) {
             if ($team->train()) {
-                $trainning_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $team->trainning_count);
+                $training_points = \Config::get('constants.TRAINNING_POINTS') * min(5, $team->trainning_count);
 
                 if ($team->trainning_count < 5) {
                     switch ($team->trainning_count) {
                         case 1:
-                            $ordinal = 'primer';
+                            $ordinal = __('ordinals.first');
                             break;
                         case 2:
-                            $ordinal = 'segundo';
+                            $ordinal = __('ordinals.second');
                             break;
                         case 3:
-                            $ordinal = 'tercer';
+                            $ordinal = __('ordinals.third');
                             break;
                         default:
-                            $ordinal = 'cuarto';
+                            $ordinal = __('ordinals.fourth');
                             break;
                     }
-                    $message = '<p>¡Es tu ' . $ordinal . ' entrenamiento!</p>';
-                    $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
-                    $message .= '<p>Vuelve a entrenar mañana para ganar ' . ($trainning_points + \Config::get('constants.TRAINNING_POINTS')) . ' puntos mas</p>';
+                    $message = '<p>' . __('messages.its_your_ordinal_training', ['ordinal' => $ordinal]) . '</p>';
+                    $message .= '<p>' . __('messages.today_your_players_gained_x_points', ['training_points' => $training_points]) . '</p>';
+                    $message .= '<p>' . __('messages.train_again_tomorrow_to_earn_more', ['points' => ($training_points + \Config::get('constants.TRAINNING_POINTS'))]) . '</p>';
                 } else {
-                    $message = '<p>¡Entrenaste a tu equipo ' . $team->trainning_count . ' días seguidos!</p>';
-                    $message .= '<p>Hoy tus jugadores ganaron ' . $trainning_points . ' puntos de experiencia y recuperaron ' . $trainning_points . ' puntos de energía.</p>';
-                    $message .= '<p>Vuelve a entrenar mañana para ganar ' . $trainning_points . ' puntos mas</p>';
+                    $message = '<p>' . __('messages.you_trained_your_team_days_in_a_row', ['training_count' => $team->trainning_count]) . '</p>';
+                    $message .= '<p>' . __('messages.today_your_players_gained_x_points', ['training_points' => $training_points]) . '</p>';
+                    $message .= '<p>' . __('messages.train_again_tomorrow_to_earn_more', ['points' => $training_points]) . '</p>';
                 }
 
                 if ($api) {
                     return response()->json([
                         'trained'       => TRUE,
                         'count'         => $team->trainning_count,
-                        'points'        => $trainning_points,
+                        'points'        => $training_points,
                         'next'          => $team->trainable_remaining,
                         'show_options'  => FALSE
                     ], 200);
