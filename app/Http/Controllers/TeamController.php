@@ -549,7 +549,7 @@ class TeamController extends Controller
                     ], 200);
                 } else {
                     return response()->json([
-                        'title'     => 'Entrenamiento',
+                        'title'     => __('labels.training'),
                         'message'   => $message,
                         'remaining' => $team->trainable_remaining
                     ], 200);
@@ -565,8 +565,8 @@ class TeamController extends Controller
                     ], 200);
                 } else {
                     return response()->json([
-                        'title'     => 'Entrenamiento',
-                        'message'   => '<p>Debes esperar ' . readableTime($team->trainable_remaining) . ' para poder entrenar nuevamente.</p>',
+                        'title'     => __('labels.training'),
+                        'message'   => '<p>' . __('messages.must_wait_to_train', ['time_remaining' => readableTime($team->trainable_remaining)]) . '</p>',
                         'remaining' => $team->trainable_remaining
                     ], 200);
                 }
@@ -582,8 +582,8 @@ class TeamController extends Controller
                 ], 200);
             } else {
                 return response()->json([
-                    'title'     => 'Entrenamiento',
-                    'message'   => '<p>Has perdido tu racha de <strong>' . $team->trainning_count . ' entrenamientos</strong>, ¿quieres usar <strong>1 Fúlbo</strong> para mantenerla o iniciar una racha nueva?</p><button id="btn-trainning-keep" data-token="' . csrf_token() . '" class="btn btn-sm btn-primary" style="margin-right:10px;">Mantener racha por 1 Fúlbo</button><button id="btn-trainning-restart" data-token="' . csrf_token() . '" class="btn btn-sm btn-default">Iniciar nueva racha</button>',
+                    'title'     => __('labels.training'),
+                    'message'   => '<p>' . __('messages.training_streak_lost', ['training_count' => $team->trainning_count]) . '</p><button id="btn-trainning-keep" data-token="' . csrf_token() . '" class="btn btn-sm btn-primary" style="margin-right:10px;">' . __('labels.keep_training_streak') . '</button><button id="btn-trainning-restart" data-token="' . csrf_token() . '" class="btn btn-sm btn-default">' . __('labels.start_new_streak') . '</button>',
                     'remaining' => 0,
                 ]);
             }

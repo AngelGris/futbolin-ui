@@ -102,6 +102,11 @@ return [
     |
     */
     'supported_locales' => [
+//        'ca' => [
+//            'name'  => 'Catalan',
+//            'dir'   => 'ltr',
+//            'label' => 'catalan',
+//        ],
         'en' => [
             'name'  => 'English',
             'dir'   => 'ltr',
