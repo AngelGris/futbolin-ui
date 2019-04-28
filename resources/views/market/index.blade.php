@@ -60,7 +60,7 @@ $(function() {
     @endif
     <a class="btn btn-sm btn-primary" href="{{ route('market.offers') }}">@lang('labels.my_offers')</a>
     <a class="btn btn-sm btn-primary" href="{{ route('market.following') }}">@lang('labels.following')</a>
-    <a class="btn btn-sm btn-primary" href="{{ route('market.transactions') }}">@lang('Closed deals')</a>
+    <a class="btn btn-sm btn-primary" href="{{ route('market.transactions') }}">@lang('labels.closed_deals')</a>
 </div>
 <div class="col-sm-4" style="text-align:right;">
     Oferta máxima: {{ formatCurrency($_team->calculateSpendingMargin()) }}

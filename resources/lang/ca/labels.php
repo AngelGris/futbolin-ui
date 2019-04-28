@@ -196,5 +196,5 @@ return [
     'view_all'                      => 'Veure tot',
     'view_all_notifications'        => 'Veure totes les notificacions',
     'view_player'                   => 'Veure jugador',
-    'zone_and_category'             => 'Zona :zona Cat. :categoria',
+    'zone_and_category'             => 'Zona :zone Cat. :category',
 ];
