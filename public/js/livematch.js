@@ -180,10 +180,12 @@ $(function() {
                     player = false;
                     break;
                 case 23:
+                case 36:
                     icon = 'fa-plus-square fa-square-red';
                     player = false;
                     break;
                 case 24:
+                case 35:
                     icon = 'fa-square fa-square-yellow'
                     player = $('#jplayer-whistle');
                     break;
