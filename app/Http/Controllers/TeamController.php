@@ -112,6 +112,15 @@ class TeamController extends Controller
             $team_id = $user->team->id;
         }
 
+        // Last friendly match
+        $friendly = Matches::where('local_id', '=', $user->team->id)->where('visit_id', '=', $team->id)->where('type_id', '=', 2)->where('created_at', '>', date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'] - 86400))->orderBy('created_at', 'DESC')->first();
+
+        if ($friendly) {
+            $next_friendly = readableTime(86400 - ($_SERVER['REQUEST_TIME'] - strtotime($friendly['created_at'])), TRUE);
+        } else {
+            $next_friendly = null;
+        }
+
         $matches = Matches::whereIn('local_id', [$team_id, $team['id']])
             ->WhereIn('visit_id', [$team_id, $team['id']])
             ->latest()
@@ -158,6 +167,8 @@ class TeamController extends Controller
             return response()->json([
                 'team'                  => $team,
                 'strategy'              => $team->strategy_public,
+                'playable'              => ($user->team->playable && $team->playable && $team->id != $user->team->id),
+                'next_friendly'         => $next_friendly,
                 'matches'               => [
                     'local' => [
                         'tied'              => $games[0][0],
@@ -208,6 +219,8 @@ class TeamController extends Controller
                 'title'                 => __('headers.other_team_title', ['team_name' => $team->name]),
                 'subtitle'              => __('headers.other_team_subtitle'),
                 'team'                  => $team,
+                'playable'              => ($user->team->playable && $team->playable && $team->id != $user->team->id),
+                'next_friendly'         => $next_friendly,
                 'matches'               => $games,
                 'goals'                 => $goals,
                 'last_matches'          => $last_matches,

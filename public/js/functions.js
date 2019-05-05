@@ -72,7 +72,7 @@ function updateShieldColor() {
     $('#shield-svg .shield-secondary-color').css({ 'fill' : $('#secondary_color_picker').val() });
 }
 
-function refreshResultModal(data) {
+function refreshResultModal(data, refreshOnClose = false) {
     $('#modal-match-result-content').html(data);
     $('img.svg').each(function(){
         loadSVGintoIMG($(this), $(this).attr('src'));
@@ -84,6 +84,14 @@ function refreshResultModal(data) {
         }).modal('hide');
     } else {
         $('#modal-match-result').modal('show');
+    }
+
+    if (refreshOnClose) {
+        $('#modal-match-result').on('hidden.bs.modal', function () {
+            location.reload();
+        });
+    } else {
+        $('#modal-match-result').on('hidden.bs.modal', function () {});
     }
 }
 

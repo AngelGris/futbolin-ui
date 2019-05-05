@@ -124,6 +124,7 @@ return [
     'pay_using_paypal'              => 'Pagar usando PayPal',
     'pay_value'                     => 'Pagar :value',
     'play'                          => 'Jogar',
+    'play_friendly_match'           => 'Jogar amistoso',
     'player'                        => 'Jogador',
     'players'                       => 'Jogadores',
     'players_retiring'              => 'Jogadores se aposentando',

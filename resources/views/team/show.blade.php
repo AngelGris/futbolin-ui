@@ -14,7 +14,43 @@ $(function() {
             refreshResultModal(data);
         });
     });
+
+    @if ($playable)
+    $('.play').click(function(event) {
+        event.preventDefault();
+
+        $('#modal-playing-message').text('@lang('messages.playing_match')');
+        $('#modal-playing').modal({
+            'backdrop' : 'static',
+            'keyboard' : false
+        });
+
+        $.ajax({
+            'method' : 'POST',
+            'url' : '{{ route('match.play') }}',
+            'dataType' : 'json',
+            'data' : {rival : $(this).data('id'), _token : '{{ csrf_token() }}'},
+        }).done(function(data){
+            $('#modal-playing-message').text('@lang('labels.loading_result')');
+            loadResult(data.file);
+        });
+    });
+    @endif
 });
+
+function loadResult(fileName) {
+    $('#modal-match-loading').modal('show');
+
+    $.ajax({
+        'method' : 'GET',
+        'url' : '{{ route('match.load') }}',
+        'data' : {file : fileName, show_remaining : true, _token : '{{ csrf_token() }}'},
+    }).done(function(data){
+        $('#modal-match-loading').on('hidden.bs.modal', function () {
+            refreshResultModal(data, true);
+        }).modal('hide');
+    });
+}
 </script>
 @endsection
 
@@ -22,6 +58,13 @@ $(function() {
 <div class="col-xs-12" style="margin-bottom:20px;text-align:center;">
     <img id="other-shield" class="svg" src="{{ $team['shieldFile'] }}"  data-color-primary="{{ $team['primary_color'] }}" data-color-secondary="{{ $team['secondary_color'] }}" style="width:70px;" />
     <h2 style="text-align:center;width:auto;">{{ $team['name'] }}</h2>
+    @if ($playable)
+        @if (empty($next_friendly))
+            <button class="btn btn-primary play" data-id="{{ $team->id }}">@lang('labels.play_friendly_match')</button>
+        @else
+            <button class="btn btn-default disabled">@lang('labels.play_friendly_match') ({{ $next_friendly }})</button>
+        @endif
+    @endif
 </div>
 <div class="col-md-12" style="height:30px;">
     <label class="col-xs-4 control-label">@lang('labels.short_name')</label>
@@ -77,5 +120,8 @@ $(function() {
     @include('modules.statsmatches', ['matches' => $matches_versus, 'goals' => $goals_versus])
 </div>
 @include('modules.lastmatches', ['last_matches' => $last_matches_versus])
+@endif
+@if ($playable)
+@include('modules.modals.playfriendly')
 @endif
 @endsection

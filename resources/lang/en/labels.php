@@ -124,6 +124,7 @@ return [
     'pay_using_paypal'              => 'Pay using PayPal',
     'pay_value'                     => 'Pay :value',
     'play'                          => 'Play',
+    'play_friendly_match'           => 'Play friendly match',
     'player'                        => 'Player',
     'players'                       => 'Players',
     'players_retiring'              => 'Players retiring',

@@ -124,6 +124,7 @@ return [
     'pay_using_paypal'              => 'Pagar amb PayPal',
     'pay_value'                     => 'Pagar :value',
     'play'                          => 'Jugar',
+    'play_friendly_match'           => 'Jugar partit amistós',
     'player'                        => 'Jugador',
     'players'                       => 'Jugadors',
     'players_retiring'              => 'Jugadors per retirar-se',
