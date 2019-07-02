@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Edujugon\PushNotification\PushNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Matches;
@@ -30,24 +29,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-//        $push_notification = new PushNotification();
-//        $push_notification->setService('fcm');
-//        $push_notification->setMessage([
-//            'notification' => [
-//                'title'=>'This is the title',
-//                'body'=>'This is the message',
-//                'sound' => 'default'
-//            ],
-//            'data' => [
-//                'extraPayLoad1' => 'value1',
-//                'extraPayLoad2' => 'value2'
-//            ]
-//        ])
-//            ->setApiKey(\Config('pushnotification.fcm.apiKey'))
-//            ->setDevicesToken(['QdDQaOWQBZLBSoJ53tFw6TdS5cekicpfGe6wRpH0KyVAgxnRHoCCPWU4fqf0', '55HZB04sq1bwRZJsxUq2ht2Vyui8I7ElrX0SWkuOTiMEoFJayADyk4KNkFFA'])
-//        ->send();
-////        $push_notification->send();
-//        dd($push_notification->getFeedback());
         $team = Auth::user()->team;
 
         if (is_null($team)) {

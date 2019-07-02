@@ -49,16 +49,15 @@ class LoginController extends Controller
     public function apiLogin(Request $request)
     {
         $this->validate($request, [
-            'email'                     => 'required|email|max:255',
-            'password'                  => 'required|min:6',
-            'device_id'                 => 'required|string',
-            'device_name'               => 'required|string',
-            'push_notification_token'   => 'required|string',
+            'email'         => 'required|email|max:255',
+            'password'      => 'required|min:6',
+            'device_id'     => 'required|string',
+            'device_name'   => 'required|string'
         ]);
 
         if ($this->attemptLogin($request)) {
             $user = $this->guard()->user();
-            $token = $user->generateToken($request->input('device_id'), $request->input('device_name'), $request->input('push_notification_token'));
+            $token = $user->generateToken($request->input('device_id'), $request->input('device_name'));
 
             return response()->json([
                 'token'     => $token
