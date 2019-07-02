@@ -160,4 +160,12 @@ Route::group(['middleware' => ['auth', 'liveMatch']], function() {
             'icon'      => 'fa fa-book'
         ]);
     }]);
+
+    Route::get('/privacidad/', ['as' => 'privacy', 'uses' => function() {
+        return view('static.privacy', [
+            'title'     => 'Privacy',
+            'subtitle'  => 'Read the small letter too',
+            'icon'      => 'fa fa-folder'
+        ]);
+    }]);
 });
