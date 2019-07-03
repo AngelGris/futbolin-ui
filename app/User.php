@@ -142,7 +142,7 @@ class User extends Authenticatable
      * @param string $deviceName
      * @return string
      */
-    public function generateToken($deviceId, $deviceName)
+    public function generateToken($deviceId, $deviceName, $pushNotificationToken)
     {
         ApiToken::where('device_id', $deviceId)->delete();
 
@@ -150,6 +150,7 @@ class User extends Authenticatable
         $apiToken->user_id = $this->id;
         $apiToken->device_id = $deviceId;
         $apiToken->device_name = $deviceName;
+        $apiToken->push_notification_token = $pushNotificationToken;
         $apiToken->used_on = date('Y-m-d H:i:s');
         $apiToken->api_token = str_random(60);
         $apiToken->save();

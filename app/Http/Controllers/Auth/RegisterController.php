@@ -89,13 +89,14 @@ class RegisterController extends Controller
     public function apiRegister(Request $request)
     {
         $this->validate($request, [
-            'first_name'    => 'required|max:255',
-            'last_name'     => 'required|max:255',
-            'email'         => 'required|email|max:255|unique:users',
-            'language'      => 'required|max:2',
-            'password'      => 'required|min:6|confirmed',
-            'device_id'     => 'required|string',
-            'device_name'   => 'required|string'
+            'first_name'                => 'required|max:255',
+            'last_name'                 => 'required|max:255',
+            'email'                     => 'required|email|max:255|unique:users',
+            'language'                  => 'required|max:2',
+            'password'                  => 'required|min:6|confirmed',
+            'device_id'                 => 'required|string',
+            'device_name'               => 'required|string',
+            'push_notification_token'   => 'required|string',
         ]);
 
         // Create new user
@@ -103,7 +104,7 @@ class RegisterController extends Controller
         // Login in the system
         Auth::loginUsingId($user->id);
         // Generate token
-        $token = $user->generateToken($request->input('device_id'), $request->input('device_name'));
+        $token = $user->generateToken($request->input('device_id'), $request->input('device_name'), $request->input('push_notification_token'));
 
         return response()->json([
             'first_name'    => $user->first_name,

@@ -169,7 +169,7 @@ return [
 
     'providers' => [
 
-        /*
+        /**
          * Laravel Framework Service Providers...
          */
         Illuminate\Auth\AuthServiceProvider::class,
@@ -195,12 +195,12 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
-        /*
+        /**
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
 
-        /*
+        /**
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
@@ -211,10 +211,15 @@ return [
         App\Providers\RouteServiceProvider::class,
         Mariuzzo\LaravelJsLocalization\LaravelJsLocalizationServiceProvider::class,
 
-        /*
+        /**
          * Debugbar
          */
         Barryvdh\Debugbar\ServiceProvider::class,
+
+        /**
+         * PushNotifications
+         */
+        Edujugon\PushNotification\Providers\PushNotificationServiceProvider::class,
     ],
 
     /*
@@ -251,6 +256,7 @@ return [
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,
+        'PushNotification' => Edujugon\PushNotification\Facades\PushNotification::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
         'Redirect' => Illuminate\Support\Facades\Redirect::class,
         'Redis' => Illuminate\Support\Facades\Redis::class,
