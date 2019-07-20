@@ -13,7 +13,7 @@ class PushNotification extends Model
      * @param string $message
      * @param string $sound
      */
-    public static function send(int $user_id, string $title, string $message, string $sound = 'default'): void {
+    public static function send(int $user_id, string $title, string $message, string $sound = 'default') {
         // Get all tokens for the user in the last month
         $tokens = ApiToken::where('user_id', $user_id)->where('used_on', '>', Carbon::now()->subMonth())->get();
         $token_array = [];
