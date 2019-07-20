@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Edujugon\PushNotification\PushNotification;
-use Illuminate\Http\Request;
+use App\PushNotification;
+use function Config;
+use DB;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Matches;
 use App\Team;
@@ -11,43 +13,20 @@ use App\Player;
 use App\TournamentCategory;
 use Mail;
 
-class HomeController extends Controller
-{
+class HomeController extends Controller {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * HomeController constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth');
     }
 
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index()
-    {
-//        $push_notification = new PushNotification();
-//        $push_notification->setService('fcm');
-//        $push_notification->setMessage([
-//            'notification' => [
-//                'title'=>'This is the title',
-//                'body'=>'This is the message',
-//                'sound' => 'default'
-//            ],
-//            'data' => [
-//                'extraPayLoad1' => 'value1',
-//                'extraPayLoad2' => 'value2'
-//            ]
-//        ])
-//            ->setApiKey(\Config('pushnotification.fcm.apiKey'))
-//            ->setDevicesToken(['QdDQaOWQBZLBSoJ53tFw6TdS5cekicpfGe6wRpH0KyVAgxnRHoCCPWU4fqf0', '55HZB04sq1bwRZJsxUq2ht2Vyui8I7ElrX0SWkuOTiMEoFJayADyk4KNkFFA'])
-//        ->send();
-////        $push_notification->send();
-//        dd($push_notification->getFeedback());
+    public function index() {
         $team = Auth::user()->team;
 
         if (is_null($team)) {
@@ -64,7 +43,7 @@ class HomeController extends Controller
                 'position' => $player['position'],
                 'number' => $player['number'],
                 'retiring' => $player['retiring'],
-                'cards' => $player['cards']['cards'] >= \Config('constants.YELLOW_CARDS_SUSPENSION') - 1,
+                'cards' => $player['cards']['cards'] >= Config('constants.YELLOW_CARDS_SUSPENSION') - 1,
                 'suspended' => $player['cards']['suspension'] > 0,
                 'recovery' => $player['recovery'],
                 'upgraded' => $player['upgraded'],
@@ -111,7 +90,7 @@ class HomeController extends Controller
             'last_matches' => $last_matches
         ];
 
-        $category_id =  \DB::table('tournament_categories')
+        $category_id =  DB::table('tournament_categories')
                         ->join('tournament_positions', 'tournament_positions.category_id', '=', 'tournament_categories.id')
                         ->where('tournament_positions.team_id', '=', Auth::user()->team->id)
                         ->max('tournament_categories.id');
@@ -120,7 +99,7 @@ class HomeController extends Controller
             $category = TournamentCategory::find($category_id);
             $tournament = $category->tournament;
 
-            $next_match =   \DB::table('matches_rounds')
+            $next_match =   DB::table('matches_rounds')
                             ->select('local_id', 'visit_id', 'datetime')
                             ->leftJoin('tournament_rounds', 'tournament_rounds.id', '=', 'matches_rounds.round_id')
                             ->where(function($query) use ($team) {
@@ -130,7 +109,7 @@ class HomeController extends Controller
                             ->orderBy('number', 'ASC')
                             ->first();
 
-            $last_matches =   \DB::table('matches_rounds')
+            $last_matches =   DB::table('matches_rounds')
                             ->select('match_id')
                             ->where(function($query) use ($team) {
                                 $query->where('local_id', '=', $team->id)

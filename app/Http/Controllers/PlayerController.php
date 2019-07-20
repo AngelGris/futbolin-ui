@@ -5,18 +5,24 @@ namespace App\Http\Controllers;
 use App\Notification;
 use App\Player;
 use App\PlayerSelling;
+use App\PushNotification;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Validator;
 
-class PlayerController extends Controller
-{
+class PlayerController extends Controller {
     /**
      * Free player
+     *
+     * @param Request $request
+     * @param Player $player
+     *
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function free(Request $request, Player $player)
-    {
+    public function free(Request $request, Player $player) {
         if ($request->expectsJson()) {
             $user = Auth::guard('api')->user()->user;
         } else {
@@ -97,9 +103,13 @@ class PlayerController extends Controller
 
     /**
      * Show player info
+     *
+     * @param Player $player
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
-    public function index(Player $player, Request $request)
-    {
+    public function index(Player $player, Request $request) {
         if ($request->expectsJson()) {
             $user = Auth::guard('api')->user()->user;
         } else {
@@ -133,9 +143,12 @@ class PlayerController extends Controller
 
     /**
      * Make a new offer on a transferable player
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function offer(Request $request)
-    {
+    public function offer(Request $request) {
         $validator = Validator::make($request->all(), [
             'player_id' => 'required|integer',
             'offer'     => 'required|integer'
@@ -233,6 +246,8 @@ class PlayerController extends Controller
             ]);
         }
 
+        PushNotification::send($user->id, 'Has hecho una oferta por ' . $selling->player->full_name, 'Tu oferta de ' . formatCurrency($request->input('offer')) .  ' por ' . $selling->player->full_name . ' ha sido recibida');
+
         $selling->best_offer_value = $request->input('offer');
         $selling->best_offer_team = $user->team->id;
         $selling->save();
@@ -249,9 +264,12 @@ class PlayerController extends Controller
 
     /**
      * Show players list
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|JsonResponse|\Illuminate\View\View
      */
-    public function showListing(Request $request)
-    {
+    public function showListing(Request $request) {
         if ($request->expectsJson()) {
             $user = Auth::guard('api')->user()->user;
             return response()->json([
@@ -271,9 +289,13 @@ class PlayerController extends Controller
 
     /**
      * Start selling a player
+     *
+     * @param Request $request
+     * @param Player $player
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function startSelling(Request $request, Player $player)
-    {
+    public function startSelling(Request $request, Player $player) {
         if ($request->expectsJson()) {
             $user = Auth::guard('api')->user()->user;
         } else {
@@ -334,9 +356,13 @@ class PlayerController extends Controller
 
     /**
      * Update player's value
+     *
+     * @param Request $request
+     * @param Player $player
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function updateValue(Request $request, Player $player)
-    {
+    public function updateValue(Request $request, Player $player) {
         $validator = Validator::make($request->all(), [
             'value' => 'required|integer|min:' . $player->value . '|max:' . $player->team->calculateSpendingMargin($player->value, FALSE)
         ]);
