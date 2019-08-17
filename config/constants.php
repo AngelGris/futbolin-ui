@@ -42,4 +42,7 @@ return [
     'NOTIFICATIONS_YOU_BOUGHT_PLAYER'               => 4,
     'NOTIFICATIONS_NO_OFFER_FOR_PLAYER'             => 5,
     'NOTIFICATIONS_PLAYER_TRANSFERRED'              => 6,
+
+    // Push notifications screens
+    'PUSH_NOTIFICATIONS_SCREEN_MARKET'              => 1,
 ];
