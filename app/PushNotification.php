@@ -23,7 +23,7 @@ class PushNotification extends Model
 
         // Filter unwanted $data
         $data_filtered = [];
-        $data_valid = ['screen', 'icon'];
+        $data_valid = ['screen'];
         foreach ($data as $key => $value) {
             if (in_array($key, $data_valid)) {
                 $data_filtered[$key] = $value;

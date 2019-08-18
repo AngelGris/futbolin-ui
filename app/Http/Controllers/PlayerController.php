@@ -246,7 +246,7 @@ class PlayerController extends Controller {
             ]);
         }
 
-        PushNotification::send($user->id, 'Has hecho una oferta por ' . $selling->player->full_name, 'Tu oferta de ' . formatCurrency($request->input('offer')) .  ' por ' . $selling->player->full_name . ' ha sido recibida', ['screen' => \Config::get('constants.PUSH_NOTIFICATION_SCREEN_MARKET')]);
+        PushNotification::send($user->id, 'Has hecho una oferta por ' . $selling->player->full_name, 'Tu oferta de ' . formatCurrency($request->input('offer')) .  ' por ' . $selling->player->full_name . ' ha sido recibida', ['screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_MARKET')]);
 
         $selling->best_offer_value = $request->input('offer');
         $selling->best_offer_team = $user->team->id;
