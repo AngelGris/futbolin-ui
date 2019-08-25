@@ -29,6 +29,7 @@ class UserActivity
                 \Session::forget('admin_message');
             }
             $user->last_activity = Carbon::now();
+            $user->ip_address = $request->ip();
             $user->save();
         }
 

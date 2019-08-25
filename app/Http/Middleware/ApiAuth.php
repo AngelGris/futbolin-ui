@@ -64,6 +64,7 @@ class ApiAuth
 
         // Update User activity
         $apiToken->user->last_activity = Carbon::now();
+        $apiToken->user->ip_address = $request->ip();
         $apiToken->user->save();
 
         return $next($request);
