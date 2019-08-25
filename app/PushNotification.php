@@ -35,8 +35,8 @@ class PushNotification extends Model
             $push_notification->setService('fcm');
             $push_notification->setMessage([
                 'notification' => [
-                    'title' => $title,
-                    'body' => $message,
+                    'title' => strip_tags($title),
+                    'body' => strip_tags($message),
                     'sound' => $sound
                 ],
                 'data' => $data_filtered,

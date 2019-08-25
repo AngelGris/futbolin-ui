@@ -5,6 +5,7 @@ namespace App\Console;
 use App\MarketTransaction;
 use App\MatchesRound;
 use App\PlayerSelling;
+use App\PushNotification;
 use App\Team;
 use App\TeamFundMovement;
 use App\Tournament;
@@ -67,10 +68,20 @@ class Kernel extends ConsoleKernel
                     $selling->delete();
                 } elseif ($selling->player->team) {
                     // Notify selling team
-                    Notification::create($selling->player->team->user->id, 5, [
+                    $notification_variables = [
                         'player'        => $selling->player->full_name,
                         'player_html'   => '<a href="/jugador/' . $selling->player->id . '/">' . $selling->player->full_name . '</a>',
-                    ]);
+                    ];
+                    Notification::create($selling->player->team->user->id, 5, $notification_variables);
+                    PushNotification::send(
+                        $selling->player->team->user->id,
+                        __('notifications.title_5', $notification_variables, $selling->player->team->user->language),
+                        __('notifications.message_5', $notification_variables, $selling->player->team->user->language),
+                        [
+                            'screen' => \Config::get('constants.PUSH_NOTIFICATION_SCREEN_PLAYERS'),
+                            'player_id' => $selling->player->id
+                        ]
+                    );
                     $selling->delete();
                 } elseif ($selling->created_at > Carbon::now()->subWeeks(2)) {
                     $selling->player->upgrade(TRUE);

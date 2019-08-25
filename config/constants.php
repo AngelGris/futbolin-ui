@@ -45,4 +45,5 @@ return [
 
     // Push notifications screens
     'PUSH_NOTIFICATIONS_SCREEN_MARKET'              => 1,
+    'PUSH_NOTIFICATIONS_SCREEN_PLAYERS'             => 2,
 ];

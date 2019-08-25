@@ -239,14 +239,22 @@ class PlayerController extends Controller {
 
         if ($selling->best_offer_team && $selling->best_offer_team != $user->team->id) {
             // Notify team with previous offer
-            Notification::create($selling->offeringTeam->user->id, 3, [
+            $notification_variables = [
                 'team_html'     => '<a href="/equipo/' . $user->team->id . '">' . $user->team->name . '</a>',
                 'player'        => $selling->player->full_name,
                 'player_html'   => '<a href="/jugador/' . $selling->player->id . '/">' . $selling->player->full_name . '</a>',
-            ]);
+            ];
+            Notification::create($selling->offeringTeam->user->id, 3, $notification_variables);
+            PushNotification::send(
+                $selling->offeringTeam->user->id,
+                __('notifications.title_3', $notification_variables),
+                __('notifications.message_3', $notification_variables),
+                [
+                    'screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_MARKET'),
+                    'player_id' => $selling->player->id
+                ]
+            );
         }
-
-        PushNotification::send($user->id, 'Has hecho una oferta por ' . $selling->player->full_name, 'Tu oferta de ' . formatCurrency($request->input('offer')) .  ' por ' . $selling->player->full_name . ' ha sido recibida', ['screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_MARKET')]);
 
         $selling->best_offer_value = $request->input('offer');
         $selling->best_offer_team = $user->team->id;

@@ -520,20 +520,41 @@ class Player extends Model
 
         // Notify selling team
         if ($this->team) {
-            Notification::create($this->team->user->id, 6, [
+            $notification_variables = [
                 'player'        => $this->full_name,
                 'player_html'   => '<a href="/jugador/' . $this->id . '/">' . $this->full_name . '</a>',
                 'buyer'         => '<a href="/equipo/' . $team->id . '">' . $team->name . '</a>',
                 'value'         => formatCurrency($value)
-            ]);
+            ];
+
+            Notification::create($this->team->user->id, 6, $notification_variables);
+
+            PushNotification::send(
+                $this->team->user->id,
+                __('notifications.title_6', $notification_variables, $this->team->user->language),
+                __('notifications.message_6', $notification_variables, $this->team->user->language),
+                [
+                    'screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_PLAYERS'),
+                    'player_id' => $this->id
+                ]
+            );
         }
 
         // Notify buying team
-        Notification::create($team->user->id, 4, [
+        $notification_variables = [
             'player'        => $this->full_name,
             'player_html'   => '<a href="/jugador/' . $this->id . '/">' . $this->full_name . '</a>',
             'value'         => formatCurrency($value)
-        ]);
+        ];
+        Notification::create($team->user->id, 4, $notification_variables);
+        PushNotification::send(
+            $team->user->id,
+            __('notifications.title_4', $notification_variables, $team->user->language),
+            __('notifications.message_4', $notification_variables, $team->user->language),
+            [
+                'screen' => \Config::get('constants.PUSH_NOTIFICATION_SCREEN_PLAYERS')
+            ]
+        );
 
         $this->team_id = $team->id;
         $this->number = $team->freeNumber();
