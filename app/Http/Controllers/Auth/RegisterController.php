@@ -130,6 +130,7 @@ class RegisterController extends Controller
             'email'         => $data['email'],
             'language'      => $data['language'],
             'password'      => bcrypt($data['password']),
+            'ip_address'    => request()->ip(),
         ]);
     }
 }
