@@ -13,4 +13,6 @@ return [
     'message_5' => 'No has pogut vendre a :player_html i continua a disposició del teu cos tècnic.',
     'title_6'   => ':player ha sigut transferit',
     'message_6' => ':player_html ha sigut transferit a :buyer per :value.',
+    'Title_7'   => 'La temporada :season_number està per començar!',
+    'Message_7' => 'Està tot a punt per al començament d\'una nova temporada a Futbolin i el teu primer partit serà amb :rival_name. ¡Assegura\'t que el teu equip estigui preparat! ',
 ];

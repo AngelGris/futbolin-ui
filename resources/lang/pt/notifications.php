@@ -13,4 +13,6 @@ return [
     'message_5' => 'Você não conseguiu vender :player_html e ele ainda está disponível para sua equipe de treinamento.',
     'title_6'   => ':player foi transferido',
     'message_6' => ':player_html foi transferido para :buyer por :value.',
+    'title_7'   => 'A temporada :season_number está prestes a começar!',
+    'message_7' => 'Tudo está pronto para o início de uma nova temporada em Futbolin e seu primeiro jogo será com :rival_name. Verifique se seu time está pronto!',
 ];

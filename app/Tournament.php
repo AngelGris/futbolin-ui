@@ -163,10 +163,12 @@ class Tournament extends Model
     }
 
     /**
-     *
+     * @param bool $name
+     * @param int $zones
      */
     public static function createTournament($name = FALSE, $zones = 1)
     {
+        $season_number = Tournament::count() + 1;
         $last_tournament = Tournament::latest()->limit(1)->get();
         $teams_count = Team::where('user_id', '>', 1)->where('playable', '=', 1)->count();
         $teams_added = 0;
@@ -180,7 +182,7 @@ class Tournament extends Model
         }
 
         if ($name === FALSE) {
-            $name = 'Temporada ' . (Tournament::count() + 1);
+            $name = 'Temporada ' . $season_number;
         }
         $tournament = Tournament::create(['name' => $name, 'categories' => $categories, 'zones' => $zones]);
 
@@ -222,22 +224,27 @@ class Tournament extends Model
             $teams_listing = []; // Teams IDs
 
             /**
+             * Create empty arrays for teams
+             */
+            for ($i = 1; $i <= $categories; $i++) {
+                $teams[$i] = [
+                    'upgrading'    => [],
+                    'downgrading'  => [],
+                ];
+            }
+
+            /**
              * Load teams from the last tournament
              * divided in active and inactive teams
              */
             foreach ($last_tournament[0]->tournamentCategories as $category) {
                 $positions = TournamentPosition::where('category_id', '=', $category->id)->orderBy('position')->get();
 
-                $max_category = tournamentCategory::orderBy('tournament_id', 'DESC')->orderBy('category', 'DESC')->first();
-                $teams[$category->category] = [
-                    'upgrading'    => [],
-                    'downgrading'  => [],
-                ];
                 foreach ($positions as $position) {
                     $team = Team::find($position->team_id);
                     if ($team->user_id > 1) {
                         $teams_listing[] = $team->id;
-                        if (!is_null($team->user->last_activity) and (Carbon::now()->timestamp - $team->user->last_activity->timestamp) < \Config::get('constants.USER_INACTIVE')) {
+                        if ($team->user->is_active) {
                             $teams[$category->category]['upgrading'][] = $team;
                         } else {
                             $teams[$category->category]['downgrading'][] = $team;
@@ -257,7 +264,7 @@ class Tournament extends Model
              */
             $new_teams = Team::where('user_id', '>', 1)->whereNotIn('id', $teams_listing)->where('playable', '=', 1)->get();
             foreach ($new_teams as $team) {
-                if (!is_null($team->user->last_activity) and (Carbon::now()->timestamp - $team->user->last_activity->timestamp) < \Config::get('constants.USER_INACTIVE')) {
+                if ($team->user->is_active) {
                     $teams[$categories]['upgrading'][] = $team;
                 } else {
                     $teams[$categories]['downgrading'][] = $team;
@@ -349,6 +356,7 @@ class Tournament extends Model
      */
     public function createCategory($category, $zone, $teams)
     {
+        $season_number = Tournament::count() + 1;
         /**
          * Create category
          */
@@ -359,7 +367,11 @@ class Tournament extends Model
          */
         foreach ($teams as $key => $team) {
             if (is_object($team)) {
-                $teams[$key] = $team->id;
+                $teams[$key] = [
+                    'team_id'   => $team->id,
+                    'team_name' => $team->name,
+                    'user_id'   => $team->user_id
+                ];
             }
         }
 
@@ -368,7 +380,7 @@ class Tournament extends Model
          */
         $i = 0;
         foreach($teams as $team) {
-            TournamentPosition::create(['category_id' => $category->id, 'team_id' => $team, 'position' => ++$i]);
+            TournamentPosition::create(['category_id' => $category->id, 'team_id' => $team['team_id'], 'position' => ++$i]);
         }
 
         /**
@@ -418,19 +430,44 @@ class Tournament extends Model
                 \DB::table('matches_rounds')->insert([
                     [
                         'round_id' => $round1,
-                        'local_id' => $team1,
-                        'visit_id' => $team2,
+                        'local_id' => $team1['team_id'],
+                        'visit_id' => $team2['team_id'],
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                     ],
                     [
                         'round_id' => $round2,
-                        'local_id' => $team2,
-                        'visit_id' => $team1,
+                        'local_id' => $team2['team_id'],
+                        'visit_id' => $team1['team_id'],
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                     ]
                 ]);
+
+                if ($round_number == 1) {
+                    /**
+                     * Notify users about the tournament creation
+                     */
+                    PushNotification::send(
+                        $team1['user_id'],
+                        __('notifications.title_7', ['season_number' => $season_number]),
+                        __('notifications.message_7', ['rival_name' => $team2['team_name']]),
+                        [
+                            'screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_TOURNAMENT'),
+                            'tournament_id' => $category->id
+                        ]
+                    );
+
+                    PushNotification::send(
+                        $team2['user_id'],
+                        __('notifications.title_7', ['season_number' => $season_number]),
+                        __('notifications.message_7', ['rival_name', $team1['team_name']]),
+                        [
+                            'screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_TOURNAMENT'),
+                            'tournament_id' => $category->id
+                        ]
+                    );
+                }
             }
 
             if ($round_number % 3) {

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\CreditItem;
@@ -200,6 +201,11 @@ class User extends Authenticatable
     public function getUnreadMessagesAttribute()
     {
         return Notification::where('user_id', '=', $this->id)->whereNull('read_on')->count();
+    }
+
+    public function getIsActiveAttribute()
+    {
+        return !is_null($this->last_activity) and (Carbon::now()->timestamp - $this->last_activity->timestamp) < \Config::get('constants.USER_INACTIVE');
     }
 
     /**

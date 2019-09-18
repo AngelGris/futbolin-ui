@@ -21,16 +21,20 @@ class PushNotification extends Model
             $token_array[] = $token->push_notification_token;
         }
 
-        // Filter unwanted $data
-        $data_filtered = [];
-        $data_valid = ['screen'];
-        foreach ($data as $key => $value) {
-            if (in_array($key, $data_valid)) {
-                $data_filtered[$key] = $value;
-            }
-        }
-
         if (!empty($token_array)) {
+            // Filter unwanted $data
+            $data_filtered = [];
+            $data_valid = [
+                'screen',
+                'player_id',
+                'tournament_id'
+            ];
+            foreach ($data as $key => $value) {
+                if (in_array($key, $data_valid)) {
+                    $data_filtered[$key] = $value;
+                }
+            }
+
             $push_notification = new \Edujugon\PushNotification\PushNotification();
             $push_notification->setService('fcm');
             $push_notification->setMessage([

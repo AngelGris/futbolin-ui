@@ -247,8 +247,8 @@ class PlayerController extends Controller {
             Notification::create($selling->offeringTeam->user->id, 3, $notification_variables);
             PushNotification::send(
                 $selling->offeringTeam->user->id,
-                __('notifications.title_3', $notification_variables),
-                __('notifications.message_3', $notification_variables),
+                __('notifications.title_3', $notification_variables, $selling->offeringTeam->user->language),
+                __('notifications.message_3', $notification_variables, $selling->offeringTeam->user->language),
                 [
                     'screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_MARKET'),
                     'player_id' => $selling->player->id
