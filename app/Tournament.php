@@ -368,9 +368,10 @@ class Tournament extends Model
         foreach ($teams as $key => $team) {
             if (is_object($team)) {
                 $teams[$key] = [
-                    'team_id'   => $team->id,
-                    'team_name' => $team->name,
-                    'user_id'   => $team->user_id
+                    'team_id'       => $team->id,
+                    'team_name'     => $team->name,
+                    'user_id'       => $team->user_id,
+                    'user_language' => $team->user->language
                 ];
             }
         }
@@ -450,8 +451,8 @@ class Tournament extends Model
                      */
                     PushNotification::send(
                         $team1['user_id'],
-                        __('notifications.title_7', ['season_number' => $season_number]),
-                        __('notifications.message_7', ['rival_name' => $team2['team_name']]),
+                        __('notifications.title_7', ['season_number' => $season_number], $team1['user_language']),
+                        __('notifications.message_7', ['rival_name' => $team2['team_name']], $team1['user_language']),
                         [
                             'screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_TOURNAMENT'),
                             'tournament_id' => $category->id
@@ -460,8 +461,8 @@ class Tournament extends Model
 
                     PushNotification::send(
                         $team2['user_id'],
-                        __('notifications.title_7', ['season_number' => $season_number]),
-                        __('notifications.message_7', ['rival_name', $team1['team_name']]),
+                        __('notifications.title_7', ['season_number' => $season_number], $team2['user_language']),
+                        __('notifications.message_7', ['rival_name' => $team1['team_name']], $team2['user_language']),
                         [
                             'screen' => \Config::get('constants.PUSH_NOTIFICATIONS_SCREEN_TOURNAMENT'),
                             'tournament_id' => $category->id

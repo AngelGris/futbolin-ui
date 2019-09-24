@@ -178,10 +178,11 @@ class Player extends Model
 
         if ($max_age) {
             $age = randomGauss(17, 20, 1);
+            $age_diff = 32 - $age;
         } else {
-            $age = randomGauss(17, 32, 5);
+            $age = randomGauss(22, 32, 5);
+            $age_diff = (int)((32 - $age) / 2);
         }
-        $age_diff = 32 - $age;
 
         $player = new Player();
         $player->team_id        = $team_id;
